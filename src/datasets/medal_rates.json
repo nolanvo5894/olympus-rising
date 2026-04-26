@@ -1,0 +1,978 @@
+{
+  "_meta": {
+    "description": "Team USA Olympic/Paralympic medal rates per event",
+    "method": "Option A: deduplicated team events, rate = medals / Games entered",
+    "source": "data/team_usa_results_unified.csv",
+    "total_results": 26859,
+    "total_deduped_entries": 8343,
+    "moves_computed": 137,
+    "moves_no_data": 6
+  },
+  "rates": {
+    "Swimming|100m Freestyle": {
+      "gold": 0.43,
+      "silver": 0.16,
+      "bronze": 0.16,
+      "sample_size": 51,
+      "events_matched": 2
+    },
+    "Swimming|200m Butterfly": {
+      "gold": 0.45,
+      "silver": 0.16,
+      "bronze": 0.06,
+      "sample_size": 31,
+      "events_matched": 2
+    },
+    "Swimming|4\u00d7100m Medley Relay": {
+      "gold": 0.79,
+      "silver": 0.18,
+      "bronze": 0.0,
+      "sample_size": 34,
+      "events_matched": 3
+    },
+    "Swimming|10km Open Water": null,
+    "Swimming|200m Backstroke": {
+      "gold": 0.45,
+      "silver": 0.24,
+      "bronze": 0.0,
+      "sample_size": 29,
+      "events_matched": 2
+    },
+    "Track & Field|100m Sprint": {
+      "gold": 0.51,
+      "silver": 0.2,
+      "bronze": 0.08,
+      "sample_size": 51,
+      "events_matched": 2
+    },
+    "Track & Field|400m Hurdles": {
+      "gold": 0.63,
+      "silver": 0.24,
+      "bronze": 0.0,
+      "sample_size": 38,
+      "events_matched": 2
+    },
+    "Track & Field|4\u00d7400m Relay": {
+      "gold": 0.7,
+      "silver": 0.2,
+      "bronze": 0.03,
+      "sample_size": 40,
+      "events_matched": 3
+    },
+    "Track & Field|Marathon": {
+      "gold": 0.1,
+      "silver": 0.05,
+      "bronze": 0.12,
+      "sample_size": 40,
+      "events_matched": 2
+    },
+    "Track & Field|Shot Put": {
+      "gold": 0.44,
+      "silver": 0.12,
+      "bronze": 0.06,
+      "sample_size": 48,
+      "events_matched": 2
+    },
+    "Gymnastics|All-Around": {
+      "gold": 0.2,
+      "silver": 0.05,
+      "bronze": 0.02,
+      "sample_size": 44,
+      "events_matched": 2
+    },
+    "Gymnastics|Floor Exercise": {
+      "gold": 0.08,
+      "silver": 0.08,
+      "bronze": 0.08,
+      "sample_size": 39,
+      "events_matched": 2
+    },
+    "Gymnastics|Vault": {
+      "gold": 0.1,
+      "silver": 0.15,
+      "bronze": 0.0,
+      "sample_size": 40,
+      "events_matched": 2
+    },
+    "Gymnastics|Balance Beam": {
+      "gold": 0.11,
+      "silver": 0.17,
+      "bronze": 0.22,
+      "sample_size": 18,
+      "events_matched": 1
+    },
+    "Basketball|Men's Tournament": {
+      "gold": 0.82,
+      "silver": 0.06,
+      "bronze": 0.09,
+      "sample_size": 33,
+      "events_matched": 2
+    },
+    "Basketball|Women's Tournament": {
+      "gold": 0.83,
+      "silver": 0.08,
+      "bronze": 0.08,
+      "sample_size": 12,
+      "events_matched": 1
+    },
+    "Wrestling|Freestyle 74kg": {
+      "gold": 0.26,
+      "silver": 0.15,
+      "bronze": 0.12,
+      "sample_size": 199,
+      "events_matched": 10
+    },
+    "Wrestling|Greco-Roman 67kg": {
+      "gold": 0.02,
+      "silver": 0.04,
+      "bronze": 0.04,
+      "sample_size": 137,
+      "events_matched": 10
+    },
+    "Wrestling|Women's Freestyle 57kg": {
+      "gold": 0.14,
+      "silver": 0.11,
+      "bronze": 0.21,
+      "sample_size": 28,
+      "events_matched": 6
+    },
+    "Rowing|Men's Eight": {
+      "gold": 0.29,
+      "silver": 0.07,
+      "bronze": 0.11,
+      "sample_size": 56,
+      "events_matched": 5
+    },
+    "Rowing|Women's Single Sculls": {
+      "gold": 0.0,
+      "silver": 0.42,
+      "bronze": 0.0,
+      "sample_size": 12,
+      "events_matched": 1
+    },
+    "Rowing|Men's Coxless Pair": {
+      "gold": 0.09,
+      "silver": 0.11,
+      "bronze": 0.09,
+      "sample_size": 35,
+      "events_matched": 2
+    },
+    "Shooting|Air Rifle 10m": {
+      "gold": 0.17,
+      "silver": 0.04,
+      "bronze": 0.0,
+      "sample_size": 24,
+      "events_matched": 3
+    },
+    "Shooting|Skeet": {
+      "gold": 0.33,
+      "silver": 0.05,
+      "bronze": 0.14,
+      "sample_size": 21,
+      "events_matched": 3
+    },
+    "Shooting|Rapid Fire Pistol": {
+      "gold": 0.1,
+      "silver": 0.0,
+      "bronze": 0.0,
+      "sample_size": 21,
+      "events_matched": 2
+    },
+    "Diving|10m Platform": {
+      "gold": 0.42,
+      "silver": 0.15,
+      "bronze": 0.12,
+      "sample_size": 48,
+      "events_matched": 2
+    },
+    "Diving|3m Springboard": {
+      "gold": 0.53,
+      "silver": 0.06,
+      "bronze": 0.1,
+      "sample_size": 51,
+      "events_matched": 2
+    },
+    "Diving|Synchro 10m": {
+      "gold": 0.0,
+      "silver": 0.18,
+      "bronze": 0.09,
+      "sample_size": 11,
+      "events_matched": 2
+    },
+    "Fencing|Foil Individual": {
+      "gold": 0.04,
+      "silver": 0.06,
+      "bronze": 0.04,
+      "sample_size": 50,
+      "events_matched": 2
+    },
+    "Fencing|\u00c9p\u00e9e Team": {
+      "gold": 0.0,
+      "silver": 0.0,
+      "bronze": 0.08,
+      "sample_size": 24,
+      "events_matched": 2
+    },
+    "Fencing|Sabre Individual": {
+      "gold": 0.06,
+      "silver": 0.06,
+      "bronze": 0.03,
+      "sample_size": 33,
+      "events_matched": 2
+    },
+    "Boxing|Welterweight": {
+      "gold": 0.17,
+      "silver": 0.05,
+      "bronze": 0.17,
+      "sample_size": 42,
+      "events_matched": 3
+    },
+    "Boxing|Lightweight": {
+      "gold": 0.21,
+      "silver": 0.07,
+      "bronze": 0.18,
+      "sample_size": 28,
+      "events_matched": 2
+    },
+    "Boxing|Heavyweight": {
+      "gold": 0.26,
+      "silver": 0.06,
+      "bronze": 0.13,
+      "sample_size": 31,
+      "events_matched": 2
+    },
+    "Volleyball|Indoor Men's": {
+      "gold": 0.15,
+      "silver": 0.15,
+      "bronze": 0.19,
+      "sample_size": 26,
+      "events_matched": 2
+    },
+    "Volleyball|Indoor Women's": {
+      "gold": 0.08,
+      "silver": 0.31,
+      "bronze": 0.15,
+      "sample_size": 13,
+      "events_matched": 1
+    },
+    "Volleyball|Beach Volleyball": {
+      "gold": 0.44,
+      "silver": 0.0,
+      "bronze": 0.06,
+      "sample_size": 16,
+      "events_matched": 2
+    },
+    "Water Polo|Men's Tournament": {
+      "gold": 0.13,
+      "silver": 0.16,
+      "bronze": 0.16,
+      "sample_size": 31,
+      "events_matched": 2
+    },
+    "Water Polo|Women's Tournament": {
+      "gold": 0.43,
+      "silver": 0.29,
+      "bronze": 0.14,
+      "sample_size": 7,
+      "events_matched": 1
+    },
+    "Surfing|Shortboard Men's": {
+      "gold": 0.5,
+      "silver": 0.0,
+      "bronze": 0.0,
+      "sample_size": 4,
+      "events_matched": 2
+    },
+    "Surfing|Shortboard Women's": {
+      "gold": 1.0,
+      "silver": 0.0,
+      "bronze": 0.0,
+      "sample_size": 2,
+      "events_matched": 1
+    },
+    "Skateboarding|Street": {
+      "gold": 0.0,
+      "silver": 0.25,
+      "bronze": 0.25,
+      "sample_size": 4,
+      "events_matched": 2
+    },
+    "Skateboarding|Park": {
+      "gold": 0.0,
+      "silver": 0.25,
+      "bronze": 0.25,
+      "sample_size": 4,
+      "events_matched": 2
+    },
+    "Alpine Skiing|Slalom": {
+      "gold": 0.14,
+      "silver": 0.07,
+      "bronze": 0.02,
+      "sample_size": 42,
+      "events_matched": 2
+    },
+    "Alpine Skiing|Giant Slalom": {
+      "gold": 0.12,
+      "silver": 0.1,
+      "bronze": 0.0,
+      "sample_size": 42,
+      "events_matched": 3
+    },
+    "Alpine Skiing|Downhill": {
+      "gold": 0.1,
+      "silver": 0.07,
+      "bronze": 0.1,
+      "sample_size": 42,
+      "events_matched": 2
+    },
+    "Ice Hockey|Men's Tournament": {
+      "gold": 0.18,
+      "silver": 0.36,
+      "bronze": 0.06,
+      "sample_size": 33,
+      "events_matched": 2
+    },
+    "Ice Hockey|Women's Tournament": {
+      "gold": 0.38,
+      "silver": 0.5,
+      "bronze": 0.12,
+      "sample_size": 8,
+      "events_matched": 1
+    },
+    "Snowboarding|Halfpipe": {
+      "gold": 0.56,
+      "silver": 0.12,
+      "bronze": 0.12,
+      "sample_size": 16,
+      "events_matched": 2
+    },
+    "Snowboarding|Slopestyle": {
+      "gold": 0.5,
+      "silver": 0.12,
+      "bronze": 0.12,
+      "sample_size": 8,
+      "events_matched": 2
+    },
+    "Snowboarding|Snowboard Cross": {
+      "gold": 0.29,
+      "silver": 0.07,
+      "bronze": 0.07,
+      "sample_size": 14,
+      "events_matched": 3
+    },
+    "Golf|Men's Individual": {
+      "gold": 0.56,
+      "silver": 0.11,
+      "bronze": 0.11,
+      "sample_size": 9,
+      "events_matched": 2
+    },
+    "Golf|Women's Individual": {
+      "gold": 0.5,
+      "silver": 0.0,
+      "bronze": 0.0,
+      "sample_size": 4,
+      "events_matched": 1
+    },
+    "Tennis|Men's Singles": {
+      "gold": 0.27,
+      "silver": 0.07,
+      "bronze": 0.07,
+      "sample_size": 30,
+      "events_matched": 2
+    },
+    "Tennis|Women's Singles": {
+      "gold": 0.36,
+      "silver": 0.0,
+      "bronze": 0.14,
+      "sample_size": 14,
+      "events_matched": 1
+    },
+    "Tennis|Mixed Doubles": {
+      "gold": 0.29,
+      "silver": 0.0,
+      "bronze": 0.29,
+      "sample_size": 7,
+      "events_matched": 1
+    },
+    "Archery|Individual Recurve": {
+      "gold": 0.27,
+      "silver": 0.08,
+      "bronze": 0.04,
+      "sample_size": 26,
+      "events_matched": 2
+    },
+    "Archery|Team Recurve": {
+      "gold": 0.05,
+      "silver": 0.16,
+      "bronze": 0.16,
+      "sample_size": 19,
+      "events_matched": 3
+    },
+    "Cycling|Track Sprint": {
+      "gold": 0.07,
+      "silver": 0.04,
+      "bronze": 0.07,
+      "sample_size": 28,
+      "events_matched": 2
+    },
+    "Cycling|Team Pursuit": {
+      "gold": 0.05,
+      "silver": 0.15,
+      "bronze": 0.05,
+      "sample_size": 20,
+      "events_matched": 2
+    },
+    "Cycling|Road Race": {
+      "gold": 0.08,
+      "silver": 0.0,
+      "bronze": 0.03,
+      "sample_size": 37,
+      "events_matched": 2
+    },
+    "Cycling|BMX Racing": {
+      "gold": 0.1,
+      "silver": 0.2,
+      "bronze": 0.1,
+      "sample_size": 10,
+      "events_matched": 2
+    },
+    "Cycling|Mountain Bike XC": null,
+    "Sailing|49er": {
+      "gold": 0.06,
+      "silver": 0.15,
+      "bronze": 0.11,
+      "sample_size": 66,
+      "events_matched": 8
+    },
+    "Sailing|Laser/ILCA": {
+      "gold": 0.03,
+      "silver": 0.14,
+      "bronze": 0.11,
+      "sample_size": 37,
+      "events_matched": 4
+    },
+    "Sailing|Nacra 17 Mixed": {
+      "gold": 0.29,
+      "silver": 0.18,
+      "bronze": 0.15,
+      "sample_size": 34,
+      "events_matched": 4
+    },
+    "Figure Skating|Men's Singles": {
+      "gold": 0.3,
+      "silver": 0.15,
+      "bronze": 0.15,
+      "sample_size": 53,
+      "events_matched": 2
+    },
+    "Figure Skating|Women's Singles": {
+      "gold": 0.31,
+      "silver": 0.23,
+      "bronze": 0.19,
+      "sample_size": 26,
+      "events_matched": 1
+    },
+    "Figure Skating|Ice Dance": {
+      "gold": 0.07,
+      "silver": 0.2,
+      "bronze": 0.2,
+      "sample_size": 15,
+      "events_matched": 1
+    },
+    "Figure Skating|Pairs": {
+      "gold": 0.0,
+      "silver": 0.12,
+      "bronze": 0.12,
+      "sample_size": 26,
+      "events_matched": 1
+    },
+    "Speed Skating|500m": {
+      "gold": 0.18,
+      "silver": 0.09,
+      "bronze": 0.06,
+      "sample_size": 125,
+      "events_matched": 4
+    },
+    "Speed Skating|1500m": {
+      "gold": 0.08,
+      "silver": 0.1,
+      "bronze": 0.05,
+      "sample_size": 60,
+      "events_matched": 2
+    },
+    "Speed Skating|5000m": {
+      "gold": 0.09,
+      "silver": 0.03,
+      "bronze": 0.0,
+      "sample_size": 33,
+      "events_matched": 2
+    },
+    "Speed Skating|Short Track 1000m": {
+      "gold": 0.17,
+      "silver": 0.11,
+      "bronze": 0.13,
+      "sample_size": 54,
+      "events_matched": 2
+    },
+    "Speed Skating|Short Track Relay": {
+      "gold": 0.0,
+      "silver": 0.16,
+      "bronze": 0.21,
+      "sample_size": 19,
+      "events_matched": 3
+    },
+    "Judo|73kg": {
+      "gold": 0.01,
+      "silver": 0.09,
+      "bronze": 0.13,
+      "sample_size": 78,
+      "events_matched": 11
+    },
+    "Judo|57kg Women's": {
+      "gold": 0.05,
+      "silver": 0.0,
+      "bronze": 0.05,
+      "sample_size": 42,
+      "events_matched": 7
+    },
+    "Judo|100kg+": {
+      "gold": 0.06,
+      "silver": 0.0,
+      "bronze": 0.03,
+      "sample_size": 32,
+      "events_matched": 4
+    },
+    "Triathlon|Individual": {
+      "gold": 0.07,
+      "silver": 0.0,
+      "bronze": 0.14,
+      "sample_size": 14,
+      "events_matched": 2
+    },
+    "Triathlon|Mixed Relay": {
+      "gold": 0.0,
+      "silver": 1.0,
+      "bronze": 0.0,
+      "sample_size": 2,
+      "events_matched": 1
+    },
+    "Weightlifting|61kg": {
+      "gold": 0.15,
+      "silver": 0.0,
+      "bronze": 0.08,
+      "sample_size": 13,
+      "events_matched": 2
+    },
+    "Weightlifting|81kg": {
+      "gold": 0.21,
+      "silver": 0.11,
+      "bronze": 0.11,
+      "sample_size": 19,
+      "events_matched": 3
+    },
+    "Weightlifting|109kg+": {
+      "gold": 0.1,
+      "silver": 0.1,
+      "bronze": 0.11,
+      "sample_size": 70,
+      "events_matched": 9
+    },
+    "Baseball|Tournament": {
+      "gold": 0.08,
+      "silver": 0.08,
+      "bronze": 0.17,
+      "sample_size": 12,
+      "events_matched": 1
+    },
+    "Softball|Tournament": {
+      "gold": 0.6,
+      "silver": 0.4,
+      "bronze": 0.0,
+      "sample_size": 5,
+      "events_matched": 1
+    },
+    "Rugby Sevens|Men's Tournament": {
+      "gold": 0.25,
+      "silver": 0.0,
+      "bronze": 0.12,
+      "sample_size": 8,
+      "events_matched": 3
+    },
+    "Rugby Sevens|Women's Tournament": {
+      "gold": 0.0,
+      "silver": 0.0,
+      "bronze": 0.33,
+      "sample_size": 3,
+      "events_matched": 1
+    },
+    "Sport Climbing|Lead": null,
+    "Sport Climbing|Bouldering": null,
+    "Sport Climbing|Speed": null,
+    "Table Tennis|Men's Singles": {
+      "gold": 0.16,
+      "silver": 0.12,
+      "bronze": 0.09,
+      "sample_size": 32,
+      "events_matched": 7
+    },
+    "Table Tennis|Women's Singles": {
+      "gold": 0.14,
+      "silver": 0.14,
+      "bronze": 0.0,
+      "sample_size": 14,
+      "events_matched": 3
+    },
+    "Table Tennis|Team Event": {
+      "gold": 0.0,
+      "silver": 0.0,
+      "bronze": 0.0,
+      "sample_size": 7,
+      "events_matched": 2
+    },
+    "Equestrian|Eventing Individual": {
+      "gold": 0.06,
+      "silver": 0.1,
+      "bronze": 0.12,
+      "sample_size": 69,
+      "events_matched": 2
+    },
+    "Equestrian|Jumping Team": {
+      "gold": 0.1,
+      "silver": 0.19,
+      "bronze": 0.18,
+      "sample_size": 67,
+      "events_matched": 2
+    },
+    "Equestrian|Dressage Individual": null,
+    "Freestyle Skiing|Moguls": {
+      "gold": 0.18,
+      "silver": 0.18,
+      "bronze": 0.18,
+      "sample_size": 22,
+      "events_matched": 2
+    },
+    "Freestyle Skiing|Aerials": {
+      "gold": 0.17,
+      "silver": 0.08,
+      "bronze": 0.04,
+      "sample_size": 24,
+      "events_matched": 3
+    },
+    "Freestyle Skiing|Ski Cross": {
+      "gold": 0.0,
+      "silver": 0.0,
+      "bronze": 0.0,
+      "sample_size": 3,
+      "events_matched": 1
+    },
+    "Freestyle Skiing|Halfpipe": {
+      "gold": 0.5,
+      "silver": 0.12,
+      "bronze": 0.12,
+      "sample_size": 8,
+      "events_matched": 2
+    },
+    "Canoe / Kayak|Sprint K-1 1000m": {
+      "gold": 0.06,
+      "silver": 0.0,
+      "bronze": 0.12,
+      "sample_size": 16,
+      "events_matched": 1
+    },
+    "Canoe / Kayak|Sprint C-2 500m": {
+      "gold": 0.04,
+      "silver": 0.03,
+      "bronze": 0.0,
+      "sample_size": 68,
+      "events_matched": 8
+    },
+    "Canoe / Kayak|Slalom K-1": {
+      "gold": 0.03,
+      "silver": 0.05,
+      "bronze": 0.08,
+      "sample_size": 39,
+      "events_matched": 5
+    },
+    "Taekwondo|68kg": {
+      "gold": 0.09,
+      "silver": 0.05,
+      "bronze": 0.09,
+      "sample_size": 22,
+      "events_matched": 8
+    },
+    "Taekwondo|57kg Women's": {
+      "gold": 0.05,
+      "silver": 0.05,
+      "bronze": 0.18,
+      "sample_size": 22,
+      "events_matched": 5
+    },
+    "Modern Pentathlon|Individual": {
+      "gold": 0.0,
+      "silver": 0.1,
+      "bronze": 0.07,
+      "sample_size": 30,
+      "events_matched": 2
+    },
+    "Flag Football|Tournament": {
+      "gold": 0.0,
+      "silver": 0.0,
+      "bronze": 0.0,
+      "sample_size": 2,
+      "events_matched": 1
+    },
+    "Para Swimming|50m Freestyle": {
+      "gold": 0.45,
+      "silver": 0.29,
+      "bronze": 0.26,
+      "sample_size": 86,
+      "events_matched": 55
+    },
+    "Para Swimming|100m Freestyle": {
+      "gold": 0.42,
+      "silver": 0.3,
+      "bronze": 0.27,
+      "sample_size": 73,
+      "events_matched": 39
+    },
+    "Para Swimming|400m Freestyle": {
+      "gold": 0.52,
+      "silver": 0.28,
+      "bronze": 0.2,
+      "sample_size": 46,
+      "events_matched": 24
+    },
+    "Para Swimming|100m Backstroke": {
+      "gold": 0.43,
+      "silver": 0.24,
+      "bronze": 0.33,
+      "sample_size": 63,
+      "events_matched": 31
+    },
+    "Para Swimming|100m Breaststroke": {
+      "gold": 0.33,
+      "silver": 0.37,
+      "bronze": 0.31,
+      "sample_size": 52,
+      "events_matched": 28
+    },
+    "Para Swimming|100m Butterfly": {
+      "gold": 0.64,
+      "silver": 0.14,
+      "bronze": 0.21,
+      "sample_size": 28,
+      "events_matched": 17
+    },
+    "Para Swimming|Individual Medley": {
+      "gold": 0.56,
+      "silver": 0.21,
+      "bronze": 0.24,
+      "sample_size": 68,
+      "events_matched": 47
+    },
+    "Para Track & Field|100m T54 Wheelchair": {
+      "gold": 0.2,
+      "silver": 0.4,
+      "bronze": 0.4,
+      "sample_size": 5,
+      "events_matched": 1
+    },
+    "Para Track & Field|400m T54 Wheelchair": {
+      "gold": 0.67,
+      "silver": 0.33,
+      "bronze": 0.0,
+      "sample_size": 6,
+      "events_matched": 2
+    },
+    "Para Track & Field|5000m T54 Wheelchair": {
+      "gold": 0.5,
+      "silver": 0.17,
+      "bronze": 0.33,
+      "sample_size": 6,
+      "events_matched": 1
+    },
+    "Para Track & Field|Marathon T54 Wheelchair": {
+      "gold": 0.33,
+      "silver": 0.33,
+      "bronze": 0.33,
+      "sample_size": 6,
+      "events_matched": 2
+    },
+    "Para Track & Field|Shot Put": {
+      "gold": 0.36,
+      "silver": 0.35,
+      "bronze": 0.29,
+      "sample_size": 91,
+      "events_matched": 68
+    },
+    "Para Track & Field|Discus Throw": {
+      "gold": 0.44,
+      "silver": 0.27,
+      "bronze": 0.3,
+      "sample_size": 98,
+      "events_matched": 70
+    },
+    "Para Track & Field|Long Jump": {
+      "gold": 0.26,
+      "silver": 0.44,
+      "bronze": 0.29,
+      "sample_size": 34,
+      "events_matched": 26
+    },
+    "Para Track & Field|Pentathlon": {
+      "gold": 0.38,
+      "silver": 0.38,
+      "bronze": 0.24,
+      "sample_size": 42,
+      "events_matched": 28
+    },
+    "Para Alpine|Downhill": {
+      "gold": 0.5,
+      "silver": 0.3,
+      "bronze": 0.2,
+      "sample_size": 54,
+      "events_matched": 30
+    },
+    "Para Alpine|Slalom": {
+      "gold": 0.31,
+      "silver": 0.37,
+      "bronze": 0.31,
+      "sample_size": 54,
+      "events_matched": 30
+    },
+    "Para Alpine|Giant Slalom": {
+      "gold": 0.45,
+      "silver": 0.36,
+      "bronze": 0.18,
+      "sample_size": 55,
+      "events_matched": 30
+    },
+    "Para Alpine|Super-G": {
+      "gold": 0.49,
+      "silver": 0.33,
+      "bronze": 0.18,
+      "sample_size": 39,
+      "events_matched": 28
+    },
+    "Para Nordic|Sitting Events": {
+      "gold": 0.53,
+      "silver": 0.35,
+      "bronze": 0.12,
+      "sample_size": 17,
+      "events_matched": 17
+    },
+    "Para Nordic|Visually Impaired": {
+      "gold": 0.0,
+      "silver": 1.0,
+      "bronze": 0.0,
+      "sample_size": 3,
+      "events_matched": 3
+    },
+    "Para Nordic|Standing Events": {
+      "gold": 0.33,
+      "silver": 0.33,
+      "bronze": 0.33,
+      "sample_size": 6,
+      "events_matched": 6
+    },
+    "Para Cycling|Time Trial": {
+      "gold": 0.31,
+      "silver": 0.44,
+      "bronze": 0.25,
+      "sample_size": 32,
+      "events_matched": 29
+    },
+    "Para Cycling|Road Race": {
+      "gold": 0.4,
+      "silver": 0.27,
+      "bronze": 0.33,
+      "sample_size": 15,
+      "events_matched": 13
+    },
+    "Para Cycling|Individual Pursuit": {
+      "gold": 0.25,
+      "silver": 0.42,
+      "bronze": 0.33,
+      "sample_size": 12,
+      "events_matched": 11
+    },
+    "Para Archery|Individual": {
+      "gold": 0.38,
+      "silver": 0.25,
+      "bronze": 0.38,
+      "sample_size": 8,
+      "events_matched": 6
+    },
+    "Para Archery|Individual Compound": {
+      "gold": 0.5,
+      "silver": 0.25,
+      "bronze": 0.25,
+      "sample_size": 4,
+      "events_matched": 2
+    },
+    "Para Archery|Columbia Round": {
+      "gold": 0.5,
+      "silver": 0.5,
+      "bronze": 0.0,
+      "sample_size": 4,
+      "events_matched": 2
+    },
+    "Para Powerlifting|+100 kg": {
+      "gold": 1.0,
+      "silver": 0.0,
+      "bronze": 0.0,
+      "sample_size": 2,
+      "events_matched": 1
+    },
+    "Para Powerlifting|-75 kg": {
+      "gold": 0.5,
+      "silver": 0.5,
+      "bronze": 0.0,
+      "sample_size": 2,
+      "events_matched": 1
+    },
+    "Para Powerlifting|-82.5 kg": {
+      "gold": 0.0,
+      "silver": 0.0,
+      "bronze": 1.0,
+      "sample_size": 2,
+      "events_matched": 1
+    },
+    "Para Powerlifting|-52 kg": {
+      "gold": 0.5,
+      "silver": 0.5,
+      "bronze": 0.0,
+      "sample_size": 2,
+      "events_matched": 1
+    },
+    "Para Triathlon|PTS5 / PT2": {
+      "gold": 1.0,
+      "silver": 0.0,
+      "bronze": 0.0,
+      "sample_size": 2,
+      "events_matched": 2
+    },
+    "Para Triathlon|PTVI": {
+      "gold": 1.0,
+      "silver": 0.0,
+      "bronze": 0.0,
+      "sample_size": 1,
+      "events_matched": 1
+    },
+    "Wheelchair Tennis|Men's Singles": {
+      "gold": 0.33,
+      "silver": 0.67,
+      "bronze": 0.0,
+      "sample_size": 3,
+      "events_matched": 1
+    },
+    "Wheelchair Tennis|Quad Singles": {
+      "gold": 0.0,
+      "silver": 0.5,
+      "bronze": 0.5,
+      "sample_size": 4,
+      "events_matched": 2
+    }
+  }
+}

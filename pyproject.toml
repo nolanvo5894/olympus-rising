@@ -1,0 +1,9 @@
+[project]
+name = "olympus-rising-data"
+version = "0.1.0"
+description = "Data-prep pipeline for the Olympus Rising React game."
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.32",
+    "beautifulsoup4>=4.12",
+]

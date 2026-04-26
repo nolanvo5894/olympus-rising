@@ -1,0 +1,6744 @@
+{
+  "3x3 Basketball": {
+    "totalMedals": {
+      "gold": 1,
+      "silver": 0,
+      "bronze": 1
+    },
+    "totalAthletes": 13,
+    "eventCount": 2,
+    "firstYear": 2020,
+    "lastYear": 2024,
+    "gamesCount": 2,
+    "season": "Summer",
+    "gender": {
+      "Female": 8,
+      "Male": 4
+    },
+    "bodyStats": {
+      "avgH": 185.1,
+      "avgW": 83.7
+    },
+    "medalsByDecade": {
+      "2020": [
+        1,
+        0,
+        1
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in 3x3 Basketball at the Olympic Games."
+  },
+  "ALP": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 178.0,
+      "avgW": 75.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in ALP at the Olympic Games."
+  },
+  "ARC": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 170.0,
+      "avgW": 64.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in ARC at the Olympic Games."
+  },
+  "ART": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 7,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Male": 7
+    },
+    "bodyStats": {
+      "avgH": 182.0,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in ART at the Olympic Games."
+  },
+  "ATH": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 16,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 16
+    },
+    "bodyStats": {
+      "avgH": 168.8,
+      "avgW": 59.1
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in ATH at the Olympic Games."
+  },
+  "Alpine Skiing": {
+    "totalMedals": {
+      "gold": 19,
+      "silver": 19,
+      "bronze": 8
+    },
+    "totalAthletes": 219,
+    "eventCount": 17,
+    "firstYear": 1936,
+    "lastYear": 2026,
+    "gamesCount": 22,
+    "season": "Winter",
+    "gender": {
+      "Male": 112,
+      "Female": 101
+    },
+    "bodyStats": {
+      "avgH": 172.8,
+      "avgW": 71.5
+    },
+    "medalsByDecade": {
+      "1940": [
+        1,
+        1,
+        0
+      ],
+      "1950": [
+        2,
+        0,
+        0
+      ],
+      "1960": [
+        0,
+        5,
+        1
+      ],
+      "1970": [
+        1,
+        0,
+        2
+      ],
+      "1980": [
+        3,
+        1,
+        0
+      ],
+      "1990": [
+        3,
+        4,
+        0
+      ],
+      "2000": [
+        2,
+        2,
+        0
+      ],
+      "2010": [
+        5,
+        4,
+        4
+      ],
+      "2020": [
+        2,
+        2,
+        1
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Slalom",
+        "gold": 0.14,
+        "silver": 0.07,
+        "bronze": 0.02,
+        "n": 42
+      },
+      {
+        "name": "Giant Slalom",
+        "gold": 0.12,
+        "silver": 0.1,
+        "bronze": 0.0,
+        "n": 42
+      },
+      {
+        "name": "Downhill",
+        "gold": 0.1,
+        "silver": 0.07,
+        "bronze": 0.1,
+        "n": 42
+      }
+    ],
+    "la28": false,
+    "isNew": false,
+    "funFact": "US Alpine skiing peaks in the downhill \u2014 America's most decorated winter event with a 29% gold rate."
+  },
+  "Archery": {
+    "totalMedals": {
+      "gold": 14,
+      "silver": 5,
+      "bronze": 5
+    },
+    "totalAthletes": 69,
+    "eventCount": 14,
+    "firstYear": 1904,
+    "lastYear": 2024,
+    "gamesCount": 15,
+    "season": "Summer",
+    "gender": {
+      "Male": 38,
+      "Female": 29
+    },
+    "bodyStats": {
+      "avgH": 174.6,
+      "avgW": 69.9
+    },
+    "medalsByDecade": {
+      "1900": [
+        6,
+        0,
+        1
+      ],
+      "1970": [
+        4,
+        0,
+        0
+      ],
+      "1980": [
+        2,
+        1,
+        1
+      ],
+      "1990": [
+        2,
+        0,
+        0
+      ],
+      "2000": [
+        0,
+        1,
+        1
+      ],
+      "2010": [
+        0,
+        2,
+        1
+      ],
+      "2020": [
+        0,
+        1,
+        1
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Individual Recurve",
+        "gold": 0.27,
+        "silver": 0.08,
+        "bronze": 0.04,
+        "n": 26
+      },
+      {
+        "name": "Team Recurve",
+        "gold": 0.05,
+        "silver": 0.16,
+        "bronze": 0.16,
+        "n": 19
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "US men's individual archery has a 30% gold rate \u2014 one of the highest individual precision sport records."
+  },
+  "Art Competitions": {
+    "totalMedals": {
+      "gold": 4,
+      "silver": 4,
+      "bronze": 0
+    },
+    "totalAthletes": 258,
+    "eventCount": 17,
+    "firstYear": 1912,
+    "lastYear": 1952,
+    "gamesCount": 6,
+    "season": "Summer",
+    "gender": {
+      "Female": 49,
+      "Male": 208
+    },
+    "bodyStats": {
+      "avgH": 175.6,
+      "avgW": 71.1
+    },
+    "medalsByDecade": {
+      "1910": [
+        1,
+        0,
+        0
+      ],
+      "1930": [
+        3,
+        4,
+        0
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Art Competitions at the Olympic Games."
+  },
+  "Artistic Swimming": {
+    "totalMedals": {
+      "gold": 5,
+      "silver": 3,
+      "bronze": 2
+    },
+    "totalAthletes": 56,
+    "eventCount": 4,
+    "firstYear": 1984,
+    "lastYear": 2024,
+    "gamesCount": 11,
+    "season": "Summer",
+    "gender": {
+      "Female": 50
+    },
+    "bodyStats": {
+      "avgH": 167.1,
+      "avgW": 56.1
+    },
+    "medalsByDecade": {
+      "1980": [
+        2,
+        2,
+        0
+      ],
+      "1990": [
+        3,
+        0,
+        0
+      ],
+      "2000": [
+        0,
+        0,
+        2
+      ],
+      "2020": [
+        0,
+        1,
+        0
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Artistic Swimming at the Olympic Games."
+  },
+  "BMX": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 158.0,
+      "avgW": 58.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in BMX at the Olympic Games."
+  },
+  "BOB": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 2,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 2
+    },
+    "bodyStats": {
+      "avgH": 168.5,
+      "avgW": 69.5
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in BOB at the Olympic Games."
+  },
+  "BOX": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 3,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Male": 3
+    },
+    "bodyStats": {
+      "avgH": 170.0,
+      "avgW": 63.5
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in BOX at the Olympic Games."
+  },
+  "Badminton": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 29,
+    "eventCount": 5,
+    "firstYear": 1992,
+    "lastYear": 2024,
+    "gamesCount": 9,
+    "season": "Summer",
+    "gender": {
+      "Male": 15,
+      "Female": 13
+    },
+    "bodyStats": {
+      "avgH": 172.2,
+      "avgW": 67.2
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Badminton at the Olympic Games."
+  },
+  "Baseball": {
+    "totalMedals": {
+      "gold": 1,
+      "silver": 1,
+      "bronze": 2
+    },
+    "totalAthletes": 231,
+    "eventCount": 1,
+    "firstYear": 1900,
+    "lastYear": 2020,
+    "gamesCount": 12,
+    "season": "Summer",
+    "gender": {
+      "Male": 211
+    },
+    "bodyStats": {
+      "avgH": 185.9,
+      "avgW": 88.3
+    },
+    "medalsByDecade": {
+      "1990": [
+        0,
+        0,
+        1
+      ],
+      "2000": [
+        1,
+        0,
+        1
+      ],
+      "2020": [
+        0,
+        1,
+        0
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Tournament",
+        "gold": 0.08,
+        "silver": 0.08,
+        "bronze": 0.17,
+        "n": 12
+      }
+    ],
+    "la28": true,
+    "isNew": true,
+    "funFact": "Baseball returned to the Olympics in 2020 after 12 years away and will be back at LA28. Team USA has struggled against Japan and Cuba historically but remains a consistent medal contender."
+  },
+  "Basketball": {
+    "totalMedals": {
+      "gold": 27,
+      "silver": 2,
+      "bronze": 3
+    },
+    "totalAthletes": 349,
+    "eventCount": 3,
+    "firstYear": 1904,
+    "lastYear": 2024,
+    "gamesCount": 21,
+    "season": "Summer",
+    "gender": {
+      "Male": 247,
+      "Female": 84
+    },
+    "bodyStats": {
+      "avgH": 193.3,
+      "avgW": 88.1
+    },
+    "medalsByDecade": {
+      "1930": [
+        1,
+        0,
+        0
+      ],
+      "1940": [
+        1,
+        0,
+        0
+      ],
+      "1950": [
+        2,
+        0,
+        0
+      ],
+      "1960": [
+        3,
+        0,
+        0
+      ],
+      "1970": [
+        1,
+        2,
+        0
+      ],
+      "1980": [
+        3,
+        0,
+        1
+      ],
+      "1990": [
+        3,
+        0,
+        1
+      ],
+      "2000": [
+        5,
+        0,
+        1
+      ],
+      "2010": [
+        4,
+        0,
+        0
+      ],
+      "2020": [
+        4,
+        0,
+        0
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Women's Tournament",
+        "gold": 0.83,
+        "silver": 0.08,
+        "bronze": 0.08,
+        "n": 12
+      },
+      {
+        "name": "Men's Tournament",
+        "gold": 0.82,
+        "silver": 0.06,
+        "bronze": 0.09,
+        "n": 33
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Team USA men's basketball has an 82% Olympic gold rate \u2014 the most dominant team sport in Games history."
+  },
+  "Basque pelota": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 14,
+    "eventCount": 3,
+    "firstYear": 1968,
+    "lastYear": 1968,
+    "gamesCount": 1,
+    "season": "Summer",
+    "gender": {
+      "Male": 14
+    },
+    "bodyStats": {
+      "avgH": null,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Basque pelota at the Olympic Games."
+  },
+  "Biathlon": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 79,
+    "eventCount": 11,
+    "firstYear": 1960,
+    "lastYear": 2026,
+    "gamesCount": 18,
+    "season": "Winter",
+    "gender": {
+      "Male": 48,
+      "Female": 30
+    },
+    "bodyStats": {
+      "avgH": 174.1,
+      "avgW": 66.6
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Biathlon at the Olympic Games."
+  },
+  "Bobsled": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 11,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 173.5,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Bobsled at the Olympic Games."
+  },
+  "Bobsleigh": {
+    "totalMedals": {
+      "gold": 9,
+      "silver": 8,
+      "bronze": 5
+    },
+    "totalAthletes": 185,
+    "eventCount": 4,
+    "firstYear": 1928,
+    "lastYear": 2026,
+    "gamesCount": 23,
+    "season": "Winter",
+    "gender": {
+      "Male": 157,
+      "Female": 19
+    },
+    "bodyStats": {
+      "avgH": 181.5,
+      "avgW": 90.4
+    },
+    "medalsByDecade": {
+      "1920": [
+        1,
+        0,
+        0
+      ],
+      "1930": [
+        3,
+        0,
+        0
+      ],
+      "1940": [
+        1,
+        0,
+        1
+      ],
+      "1950": [
+        0,
+        2,
+        1
+      ],
+      "2000": [
+        1,
+        2,
+        0
+      ],
+      "2010": [
+        1,
+        4,
+        1
+      ],
+      "2020": [
+        2,
+        0,
+        2
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Bobsleigh at the Olympic Games."
+  },
+  "Boccia": {
+    "totalMedals": {
+      "gold": 2,
+      "silver": 2,
+      "bronze": 1
+    },
+    "totalAthletes": 7,
+    "eventCount": 4,
+    "firstYear": 1984,
+    "lastYear": 1996,
+    "gamesCount": 3,
+    "season": "Summer",
+    "gender": {
+      "Female": 2,
+      "Male": 2
+    },
+    "bodyStats": {
+      "avgH": 161.3,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "1980": [
+        2,
+        1,
+        0
+      ],
+      "1990": [
+        0,
+        1,
+        1
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Boccia at the Olympic Games."
+  },
+  "Bowling": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 3,
+    "eventCount": 2,
+    "firstYear": 1988,
+    "lastYear": 1988,
+    "gamesCount": 1,
+    "season": "Summer",
+    "gender": {
+      "Male": 1,
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 165.1,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Bowling at the Olympic Games."
+  },
+  "Boxing": {
+    "totalMedals": {
+      "gold": 50,
+      "silver": 19,
+      "bronze": 36
+    },
+    "totalAthletes": 331,
+    "eventCount": 17,
+    "firstYear": 1904,
+    "lastYear": 2024,
+    "gamesCount": 25,
+    "season": "Summer",
+    "gender": {
+      "Male": 243,
+      "Female": 13
+    },
+    "bodyStats": {
+      "avgH": 174.9,
+      "avgW": 67.2
+    },
+    "medalsByDecade": {
+      "1900": [
+        7,
+        0,
+        0
+      ],
+      "1920": [
+        5,
+        3,
+        3
+      ],
+      "1930": [
+        2,
+        1,
+        4
+      ],
+      "1940": [
+        0,
+        1,
+        0
+      ],
+      "1950": [
+        7,
+        1,
+        0
+      ],
+      "1960": [
+        6,
+        1,
+        8
+      ],
+      "1970": [
+        6,
+        1,
+        4
+      ],
+      "1980": [
+        12,
+        4,
+        3
+      ],
+      "1990": [
+        2,
+        1,
+        6
+      ],
+      "2000": [
+        1,
+        2,
+        4
+      ],
+      "2010": [
+        2,
+        1,
+        2
+      ],
+      "2020": [
+        0,
+        3,
+        2
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Heavyweight",
+        "gold": 0.26,
+        "silver": 0.06,
+        "bronze": 0.13,
+        "n": 31
+      },
+      {
+        "name": "Lightweight",
+        "gold": 0.21,
+        "silver": 0.07,
+        "bronze": 0.18,
+        "n": 28
+      },
+      {
+        "name": "Welterweight",
+        "gold": 0.17,
+        "silver": 0.05,
+        "bronze": 0.17,
+        "n": 42
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Olympic boxing has produced some of America's greatest sporting moments. The heavyweight division has a 26% gold rate."
+  },
+  "Breaking": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 1
+    },
+    "totalAthletes": 7,
+    "eventCount": 2,
+    "firstYear": 2024,
+    "lastYear": 2024,
+    "gamesCount": 1,
+    "season": "Summer",
+    "gender": {
+      "Male": 2,
+      "Female": 2
+    },
+    "bodyStats": {
+      "avgH": 166.8,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "2020": [
+        0,
+        0,
+        1
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Breaking at the Olympic Games."
+  },
+  "CCS": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 3,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 3
+    },
+    "bodyStats": {
+      "avgH": 167.7,
+      "avgW": 57.7
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in CCS at the Olympic Games."
+  },
+  "CRD": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 178.0,
+      "avgW": 61.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in CRD at the Olympic Games."
+  },
+  "CSP": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 168.0,
+      "avgW": 66.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in CSP at the Olympic Games."
+  },
+  "CUR": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 163.0,
+      "avgW": 52.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in CUR at the Olympic Games."
+  },
+  "Canoe / Kayak": {
+    "totalMedals": {
+      "gold": 6,
+      "silver": 6,
+      "bronze": 7
+    },
+    "totalAthletes": 184,
+    "eventCount": 34,
+    "firstYear": 1924,
+    "lastYear": 2024,
+    "gamesCount": 21,
+    "season": "Summer",
+    "gender": {
+      "Male": 144,
+      "Female": 36
+    },
+    "bodyStats": {
+      "avgH": 178.9,
+      "avgW": 74.1
+    },
+    "medalsByDecade": {
+      "1930": [
+        0,
+        0,
+        1
+      ],
+      "1940": [
+        1,
+        2,
+        0
+      ],
+      "1950": [
+        1,
+        0,
+        0
+      ],
+      "1960": [
+        0,
+        1,
+        1
+      ],
+      "1970": [
+        0,
+        0,
+        1
+      ],
+      "1980": [
+        2,
+        0,
+        1
+      ],
+      "1990": [
+        1,
+        1,
+        2
+      ],
+      "2000": [
+        0,
+        1,
+        0
+      ],
+      "2020": [
+        1,
+        1,
+        1
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Sprint K-1 1000m",
+        "gold": 0.06,
+        "silver": 0.0,
+        "bronze": 0.12,
+        "n": 16
+      },
+      {
+        "name": "Sprint C-2 500m",
+        "gold": 0.04,
+        "silver": 0.03,
+        "bronze": 0.0,
+        "n": 68
+      },
+      {
+        "name": "Slalom K-1",
+        "gold": 0.03,
+        "silver": 0.05,
+        "bronze": 0.08,
+        "n": 39
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Canoe & kayak is one of the USA's most challenging Olympic sports \u2014 gold has been rare historically."
+  },
+  "Canoe/Kayak": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 16,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 174.8,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Canoe/Kayak at the Olympic Games."
+  },
+  "Canoeing": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 1,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 1,
+    "firstYear": 2020,
+    "lastYear": 2020,
+    "gamesCount": 1,
+    "season": "Summer",
+    "gender": {
+      "Male": 1
+    },
+    "bodyStats": {
+      "avgH": null,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "2020": [
+        0,
+        1,
+        0
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Canoeing at the Olympic Games."
+  },
+  "Cross Country Skiing": {
+    "totalMedals": {
+      "gold": 1,
+      "silver": 4,
+      "bronze": 2
+    },
+    "totalAthletes": 156,
+    "eventCount": 20,
+    "firstYear": 1924,
+    "lastYear": 2026,
+    "gamesCount": 25,
+    "season": "Winter",
+    "gender": {
+      "Male": 95,
+      "Female": 53
+    },
+    "bodyStats": {
+      "avgH": 174.8,
+      "avgW": 68.3
+    },
+    "medalsByDecade": {
+      "1970": [
+        0,
+        1,
+        0
+      ],
+      "2010": [
+        1,
+        0,
+        0
+      ],
+      "2020": [
+        0,
+        3,
+        2
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Cross Country Skiing at the Olympic Games."
+  },
+  "Cross-Country Skiing": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 170.2,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Cross-Country Skiing at the Olympic Games."
+  },
+  "Curling": {
+    "totalMedals": {
+      "gold": 1,
+      "silver": 1,
+      "bronze": 1
+    },
+    "totalAthletes": 87,
+    "eventCount": 3,
+    "firstYear": 1932,
+    "lastYear": 2026,
+    "gamesCount": 11,
+    "season": "Winter",
+    "gender": {
+      "Male": 48,
+      "Female": 24
+    },
+    "bodyStats": {
+      "avgH": 174.2,
+      "avgW": 75.6
+    },
+    "medalsByDecade": {
+      "2000": [
+        0,
+        0,
+        1
+      ],
+      "2010": [
+        1,
+        0,
+        0
+      ],
+      "2020": [
+        0,
+        1,
+        0
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Curling at the Olympic Games."
+  },
+  "Cycling": {
+    "totalMedals": {
+      "gold": 20,
+      "silver": 15,
+      "bronze": 13
+    },
+    "totalAthletes": 330,
+    "eventCount": 59,
+    "firstYear": 1896,
+    "lastYear": 2024,
+    "gamesCount": 29,
+    "season": "Summer",
+    "gender": {
+      "Male": 260,
+      "Female": 56
+    },
+    "bodyStats": {
+      "avgH": 176.8,
+      "avgW": 71.2
+    },
+    "medalsByDecade": {
+      "1900": [
+        7,
+        0,
+        1
+      ],
+      "1910": [
+        0,
+        0,
+        2
+      ],
+      "1980": [
+        4,
+        1,
+        2
+      ],
+      "1990": [
+        0,
+        2,
+        3
+      ],
+      "2000": [
+        2,
+        4,
+        2
+      ],
+      "2010": [
+        3,
+        5,
+        1
+      ],
+      "2020": [
+        4,
+        3,
+        2
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "BMX Racing",
+        "gold": 0.1,
+        "silver": 0.2,
+        "bronze": 0.1,
+        "n": 10
+      },
+      {
+        "name": "Road Race",
+        "gold": 0.08,
+        "silver": 0.0,
+        "bronze": 0.03,
+        "n": 37
+      },
+      {
+        "name": "Track Sprint",
+        "gold": 0.07,
+        "silver": 0.04,
+        "bronze": 0.07,
+        "n": 28
+      },
+      {
+        "name": "Team Pursuit",
+        "gold": 0.05,
+        "silver": 0.15,
+        "bronze": 0.05,
+        "n": 20
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "BMX Racing is the USA's strongest cycling discipline, with a 10% gold and 20% silver rate."
+  },
+  "DIV": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 3,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 3
+    },
+    "bodyStats": {
+      "avgH": 158.7,
+      "avgW": 50.3
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in DIV at the Olympic Games."
+  },
+  "Diving": {
+    "totalMedals": {
+      "gold": 48,
+      "silver": 16,
+      "bronze": 13
+    },
+    "totalAthletes": 177,
+    "eventCount": 10,
+    "firstYear": 1904,
+    "lastYear": 2024,
+    "gamesCount": 27,
+    "season": "Summer",
+    "gender": {
+      "Male": 88,
+      "Female": 79
+    },
+    "bodyStats": {
+      "avgH": 167.5,
+      "avgW": 62.0
+    },
+    "medalsByDecade": {
+      "1900": [
+        1,
+        0,
+        1
+      ],
+      "1920": [
+        11,
+        0,
+        0
+      ],
+      "1930": [
+        8,
+        0,
+        0
+      ],
+      "1940": [
+        4,
+        0,
+        0
+      ],
+      "1950": [
+        7,
+        1,
+        0
+      ],
+      "1960": [
+        7,
+        3,
+        2
+      ],
+      "1970": [
+        3,
+        2,
+        2
+      ],
+      "1980": [
+        4,
+        3,
+        1
+      ],
+      "1990": [
+        1,
+        1,
+        3
+      ],
+      "2000": [
+        1,
+        0,
+        0
+      ],
+      "2010": [
+        1,
+        3,
+        3
+      ],
+      "2020": [
+        0,
+        3,
+        1
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "3m Springboard",
+        "gold": 0.53,
+        "silver": 0.06,
+        "bronze": 0.1,
+        "n": 51
+      },
+      {
+        "name": "10m Platform",
+        "gold": 0.42,
+        "silver": 0.15,
+        "bronze": 0.12,
+        "n": 48
+      },
+      {
+        "name": "Synchro 10m",
+        "gold": 0.0,
+        "silver": 0.18,
+        "bronze": 0.09,
+        "n": 11
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "USA divers dominate the springboard with a 53% gold rate \u2014 the highest of any individual Olympic event."
+  },
+  "Dogsled Racing": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 8,
+    "eventCount": 1,
+    "firstYear": 1932,
+    "lastYear": 1932,
+    "gamesCount": 1,
+    "season": "Winter",
+    "gender": {
+      "Male": 7,
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 175.0,
+      "avgW": 61.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Dogsled Racing at the Olympic Games."
+  },
+  "EDR": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 3,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 3
+    },
+    "bodyStats": {
+      "avgH": 167.0,
+      "avgW": 50.5
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in EDR at the Olympic Games."
+  },
+  "EJP": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 173.0,
+      "avgW": 57.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in EJP at the Olympic Games."
+  },
+  "EVE": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 3,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Male": 2,
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 168.0,
+      "avgW": 55.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in EVE at the Olympic Games."
+  },
+  "Equestrian": {
+    "totalMedals": {
+      "gold": 20,
+      "silver": 25,
+      "bronze": 20
+    },
+    "totalAthletes": 171,
+    "eventCount": 18,
+    "firstYear": 1912,
+    "lastYear": 2024,
+    "gamesCount": 24,
+    "season": "Summer",
+    "gender": {
+      "Male": 89,
+      "Female": 66
+    },
+    "bodyStats": {
+      "avgH": 173.3,
+      "avgW": 64.6
+    },
+    "medalsByDecade": {
+      "1910": [
+        0,
+        0,
+        1
+      ],
+      "1920": [
+        0,
+        0,
+        1
+      ],
+      "1930": [
+        1,
+        2,
+        2
+      ],
+      "1940": [
+        1,
+        1,
+        0
+      ],
+      "1950": [
+        0,
+        0,
+        2
+      ],
+      "1960": [
+        1,
+        3,
+        1
+      ],
+      "1970": [
+        2,
+        2,
+        2
+      ],
+      "1980": [
+        8,
+        7,
+        0
+      ],
+      "1990": [
+        2,
+        2,
+        4
+      ],
+      "2000": [
+        3,
+        4,
+        5
+      ],
+      "2010": [
+        0,
+        1,
+        2
+      ],
+      "2020": [
+        2,
+        3,
+        0
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Jumping Team",
+        "gold": 0.1,
+        "silver": 0.19,
+        "bronze": 0.18,
+        "n": 67
+      },
+      {
+        "name": "Eventing Individual",
+        "gold": 0.06,
+        "silver": 0.1,
+        "bronze": 0.12,
+        "n": 69
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Equestrian is the only Olympic sport where men and women compete directly against each other."
+  },
+  "FBL": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 3,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 3
+    },
+    "bodyStats": {
+      "avgH": 169.3,
+      "avgW": 63.3
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in FBL at the Olympic Games."
+  },
+  "FEN": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 3,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Male": 2,
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 176.0,
+      "avgW": 67.5
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in FEN at the Olympic Games."
+  },
+  "FSK": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 2,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 2
+    },
+    "bodyStats": {
+      "avgH": null,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in FSK at the Olympic Games."
+  },
+  "Fencing": {
+    "totalMedals": {
+      "gold": 7,
+      "silver": 8,
+      "bronze": 13
+    },
+    "totalAthletes": 292,
+    "eventCount": 15,
+    "firstYear": 1896,
+    "lastYear": 2024,
+    "gamesCount": 28,
+    "season": "Summer",
+    "gender": {
+      "Male": 203,
+      "Female": 76
+    },
+    "bodyStats": {
+      "avgH": 178.1,
+      "avgW": 72.7
+    },
+    "medalsByDecade": {
+      "1900": [
+        2,
+        3,
+        0
+      ],
+      "1920": [
+        0,
+        0,
+        2
+      ],
+      "1930": [
+        0,
+        1,
+        2
+      ],
+      "1940": [
+        0,
+        0,
+        1
+      ],
+      "1960": [
+        0,
+        0,
+        1
+      ],
+      "1980": [
+        0,
+        0,
+        1
+      ],
+      "2000": [
+        2,
+        2,
+        1
+      ],
+      "2010": [
+        0,
+        2,
+        3
+      ],
+      "2020": [
+        3,
+        0,
+        2
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Sabre Individual",
+        "gold": 0.06,
+        "silver": 0.06,
+        "bronze": 0.03,
+        "n": 33
+      },
+      {
+        "name": "Foil Individual",
+        "gold": 0.04,
+        "silver": 0.06,
+        "bronze": 0.04,
+        "n": 50
+      },
+      {
+        "name": "\u00c9p\u00e9e Team",
+        "gold": 0.0,
+        "silver": 0.0,
+        "bronze": 0.08,
+        "n": 24
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "The USA was a latecomer to fencing success. Most medals have come since the 2000s after decades of European dominance."
+  },
+  "Field Hockey": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 9,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 162.6,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Field Hockey at the Olympic Games."
+  },
+  "Figure Skating": {
+    "totalMedals": {
+      "gold": 19,
+      "silver": 14,
+      "bronze": 16
+    },
+    "totalAthletes": 246,
+    "eventCount": 6,
+    "firstYear": 1908,
+    "lastYear": 2026,
+    "gamesCount": 27,
+    "season": "Winter",
+    "gender": {
+      "Male": 115,
+      "Female": 120
+    },
+    "bodyStats": {
+      "avgH": 166.7,
+      "avgW": 59.0
+    },
+    "medalsByDecade": {
+      "1920": [
+        0,
+        1,
+        2
+      ],
+      "1930": [
+        0,
+        1,
+        1
+      ],
+      "1940": [
+        1,
+        0,
+        0
+      ],
+      "1950": [
+        3,
+        2,
+        0
+      ],
+      "1960": [
+        3,
+        1,
+        3
+      ],
+      "1970": [
+        1,
+        0,
+        2
+      ],
+      "1980": [
+        2,
+        3,
+        3
+      ],
+      "1990": [
+        2,
+        2,
+        0
+      ],
+      "2000": [
+        1,
+        2,
+        1
+      ],
+      "2010": [
+        2,
+        1,
+        3
+      ],
+      "2020": [
+        4,
+        1,
+        1
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Women's Singles",
+        "gold": 0.31,
+        "silver": 0.23,
+        "bronze": 0.19,
+        "n": 26
+      },
+      {
+        "name": "Men's Singles",
+        "gold": 0.3,
+        "silver": 0.15,
+        "bronze": 0.15,
+        "n": 53
+      },
+      {
+        "name": "Ice Dance",
+        "gold": 0.07,
+        "silver": 0.2,
+        "bronze": 0.2,
+        "n": 15
+      },
+      {
+        "name": "Pairs",
+        "gold": 0.0,
+        "silver": 0.12,
+        "bronze": 0.12,
+        "n": 26
+      }
+    ],
+    "la28": false,
+    "isNew": false,
+    "funFact": "US women's figure skating has a 31% gold rate \u2014 among the highest in any subjectively-judged sport."
+  },
+  "Firefighting": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 11,
+    "eventCount": 1,
+    "firstYear": 1900,
+    "lastYear": 1900,
+    "gamesCount": 1,
+    "season": "Summer",
+    "gender": {
+      "Male": 11
+    },
+    "bodyStats": {
+      "avgH": null,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Firefighting at the Olympic Games."
+  },
+  "Flag Football": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 203,
+    "eventCount": 1,
+    "firstYear": 1904,
+    "lastYear": 1932,
+    "gamesCount": 2,
+    "season": "Summer",
+    "gender": {
+      "Male": 194
+    },
+    "bodyStats": {
+      "avgH": 179.4,
+      "avgW": 77.3
+    },
+    "medalsByDecade": {},
+    "topEvents": [
+      {
+        "name": "Tournament",
+        "gold": 0.0,
+        "silver": 0.0,
+        "bronze": 0.0,
+        "n": 2
+      }
+    ],
+    "la28": true,
+    "isNew": true,
+    "funFact": "Flag Football debuts at LA 2028 \u2014 it's one of the newest Olympic sports and an American invention."
+  },
+  "Football": {
+    "totalMedals": {
+      "gold": 5,
+      "silver": 2,
+      "bronze": 1
+    },
+    "totalAthletes": 358,
+    "eventCount": 2,
+    "firstYear": 1904,
+    "lastYear": 2024,
+    "gamesCount": 19,
+    "season": "Summer",
+    "gender": {
+      "Male": 208,
+      "Female": 69
+    },
+    "bodyStats": {
+      "avgH": 175.9,
+      "avgW": 70.9
+    },
+    "medalsByDecade": {
+      "1900": [
+        0,
+        1,
+        0
+      ],
+      "1990": [
+        1,
+        0,
+        0
+      ],
+      "2000": [
+        2,
+        1,
+        0
+      ],
+      "2010": [
+        1,
+        0,
+        0
+      ],
+      "2020": [
+        1,
+        0,
+        1
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Football at the Olympic Games."
+  },
+  "Freestyle Skiing": {
+    "totalMedals": {
+      "gold": 14,
+      "silver": 13,
+      "bronze": 6
+    },
+    "totalAthletes": 133,
+    "eventCount": 16,
+    "firstYear": 1988,
+    "lastYear": 2026,
+    "gamesCount": 11,
+    "season": "Winter",
+    "gender": {
+      "Male": 70,
+      "Female": 61
+    },
+    "bodyStats": {
+      "avgH": 172.5,
+      "avgW": 69.2
+    },
+    "medalsByDecade": {
+      "1990": [
+        4,
+        1,
+        1
+      ],
+      "2000": [
+        0,
+        3,
+        1
+      ],
+      "2010": [
+        5,
+        3,
+        3
+      ],
+      "2020": [
+        5,
+        6,
+        1
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Halfpipe",
+        "gold": 0.5,
+        "silver": 0.12,
+        "bronze": 0.12,
+        "n": 8
+      },
+      {
+        "name": "Moguls",
+        "gold": 0.18,
+        "silver": 0.18,
+        "bronze": 0.18,
+        "n": 22
+      },
+      {
+        "name": "Aerials",
+        "gold": 0.17,
+        "silver": 0.08,
+        "bronze": 0.04,
+        "n": 24
+      },
+      {
+        "name": "Ski Cross",
+        "gold": 0.0,
+        "silver": 0.0,
+        "bronze": 0.0,
+        "n": 3
+      }
+    ],
+    "la28": false,
+    "isNew": false,
+    "funFact": "US freestyle skiers own the halfpipe \u2014 a 50% gold rate, the highest of any winter event."
+  },
+  "GAR": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 3,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 3
+    },
+    "bodyStats": {
+      "avgH": 160.0,
+      "avgW": 50.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in GAR at the Olympic Games."
+  },
+  "Gaelic Football": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 0,
+    "eventCount": 1,
+    "firstYear": 1904,
+    "lastYear": 1904,
+    "gamesCount": 1,
+    "season": "Summer",
+    "gender": {},
+    "bodyStats": {
+      "avgH": null,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Gaelic Football at the Olympic Games."
+  },
+  "Goalball": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 18,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 178.1,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Goalball was invented specifically for visually impaired athletes \u2014 all players wear blackout shades."
+  },
+  "Golf": {
+    "totalMedals": {
+      "gold": 6,
+      "silver": 1,
+      "bronze": 1
+    },
+    "totalAthletes": 129,
+    "eventCount": 6,
+    "firstYear": 1900,
+    "lastYear": 2024,
+    "gamesCount": 5,
+    "season": "Summer",
+    "gender": {
+      "Male": 95,
+      "Female": 10
+    },
+    "bodyStats": {
+      "avgH": 177.8,
+      "avgW": 74.6
+    },
+    "medalsByDecade": {
+      "1900": [
+        3,
+        1,
+        0
+      ],
+      "2010": [
+        0,
+        0,
+        1
+      ],
+      "2020": [
+        3,
+        0,
+        0
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Men's Individual",
+        "gold": 0.56,
+        "silver": 0.11,
+        "bronze": 0.11,
+        "n": 9
+      },
+      {
+        "name": "Women's Individual",
+        "gold": 0.5,
+        "silver": 0.0,
+        "bronze": 0.0,
+        "n": 4
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Golf returned to the Olympics in 2016 after a 112-year absence. Team USA men have won gold in 3 of 5 appearances historically."
+  },
+  "Gymnastics": {
+    "totalMedals": {
+      "gold": 41,
+      "silver": 30,
+      "bronze": 20
+    },
+    "totalAthletes": 371,
+    "eventCount": 22,
+    "firstYear": 1904,
+    "lastYear": 2024,
+    "gamesCount": 26,
+    "season": "Summer",
+    "gender": {
+      "Male": 248,
+      "Female": 97
+    },
+    "bodyStats": {
+      "avgH": 162.7,
+      "avgW": 56.3
+    },
+    "medalsByDecade": {
+      "1900": [
+        11,
+        1,
+        0
+      ],
+      "1920": [
+        1,
+        0,
+        0
+      ],
+      "1930": [
+        5,
+        2,
+        1
+      ],
+      "1940": [
+        0,
+        0,
+        1
+      ],
+      "1970": [
+        0,
+        0,
+        1
+      ],
+      "1980": [
+        5,
+        5,
+        3
+      ],
+      "1990": [
+        3,
+        4,
+        4
+      ],
+      "2000": [
+        4,
+        10,
+        2
+      ],
+      "2010": [
+        7,
+        5,
+        3
+      ],
+      "2020": [
+        5,
+        3,
+        5
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "All-Around",
+        "gold": 0.2,
+        "silver": 0.05,
+        "bronze": 0.02,
+        "n": 44
+      },
+      {
+        "name": "Balance Beam",
+        "gold": 0.11,
+        "silver": 0.17,
+        "bronze": 0.22,
+        "n": 18
+      },
+      {
+        "name": "Vault",
+        "gold": 0.1,
+        "silver": 0.15,
+        "bronze": 0.0,
+        "n": 40
+      },
+      {
+        "name": "Floor Exercise",
+        "gold": 0.08,
+        "silver": 0.08,
+        "bronze": 0.08,
+        "n": 39
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "USA Gymnastics has risen from underdog to powerhouse \u2014 the women's team has won team gold at the last 3 Olympics."
+  },
+  "HOC": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 4,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 4
+    },
+    "bodyStats": {
+      "avgH": 160.0,
+      "avgW": 59.2
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in HOC at the Olympic Games."
+  },
+  "Handball": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 110,
+    "eventCount": 2,
+    "firstYear": 1936,
+    "lastYear": 1996,
+    "gamesCount": 7,
+    "season": "Summer",
+    "gender": {
+      "Male": 69,
+      "Female": 35
+    },
+    "bodyStats": {
+      "avgH": 184.0,
+      "avgW": 80.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Handball at the Olympic Games."
+  },
+  "Hockey": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 2
+    },
+    "totalAthletes": 179,
+    "eventCount": 2,
+    "firstYear": 1932,
+    "lastYear": 2024,
+    "gamesCount": 11,
+    "season": "Summer",
+    "gender": {
+      "Male": 73,
+      "Female": 85
+    },
+    "bodyStats": {
+      "avgH": 171.2,
+      "avgW": 67.1
+    },
+    "medalsByDecade": {
+      "1930": [
+        0,
+        0,
+        1
+      ],
+      "1980": [
+        0,
+        0,
+        1
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Hockey at the Olympic Games."
+  },
+  "Hurling": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 2,
+    "eventCount": 1,
+    "firstYear": 1904,
+    "lastYear": 1904,
+    "gamesCount": 1,
+    "season": "Summer",
+    "gender": {},
+    "bodyStats": {
+      "avgH": null,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Hurling at the Olympic Games."
+  },
+  "IHO": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 2,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 2
+    },
+    "bodyStats": {
+      "avgH": 166.5,
+      "avgW": 67.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in IHO at the Olympic Games."
+  },
+  "Ice Hockey": {
+    "totalMedals": {
+      "gold": 6,
+      "silver": 12,
+      "bronze": 2
+    },
+    "totalAthletes": 548,
+    "eventCount": 3,
+    "firstYear": 1920,
+    "lastYear": 2026,
+    "gamesCount": 25,
+    "season": "Winter",
+    "gender": {
+      "Male": 388,
+      "Female": 93
+    },
+    "bodyStats": {
+      "avgH": 179.3,
+      "avgW": 81.7
+    },
+    "medalsByDecade": {
+      "1920": [
+        0,
+        2,
+        0
+      ],
+      "1930": [
+        0,
+        1,
+        1
+      ],
+      "1950": [
+        0,
+        2,
+        0
+      ],
+      "1960": [
+        1,
+        0,
+        0
+      ],
+      "1970": [
+        0,
+        1,
+        0
+      ],
+      "1980": [
+        1,
+        0,
+        0
+      ],
+      "1990": [
+        1,
+        0,
+        0
+      ],
+      "2000": [
+        0,
+        2,
+        1
+      ],
+      "2010": [
+        1,
+        3,
+        0
+      ],
+      "2020": [
+        2,
+        1,
+        0
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Women's Tournament",
+        "gold": 0.38,
+        "silver": 0.5,
+        "bronze": 0.12,
+        "n": 8
+      },
+      {
+        "name": "Men's Tournament",
+        "gold": 0.18,
+        "silver": 0.36,
+        "bronze": 0.06,
+        "n": 33
+      }
+    ],
+    "la28": false,
+    "isNew": false,
+    "funFact": "USA women's ice hockey is remarkable \u2014 they've medaled in every single Olympic tournament since the event began."
+  },
+  "Jeu De Paume": {
+    "totalMedals": {
+      "gold": 1,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 1,
+    "firstYear": 1908,
+    "lastYear": 1908,
+    "gamesCount": 1,
+    "season": "Summer",
+    "gender": {
+      "Male": 1
+    },
+    "bodyStats": {
+      "avgH": null,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "1900": [
+        1,
+        0,
+        0
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Jeu De Paume at the Olympic Games."
+  },
+  "Judo": {
+    "totalMedals": {
+      "gold": 4,
+      "silver": 11,
+      "bronze": 15
+    },
+    "totalAthletes": 96,
+    "eventCount": 25,
+    "firstYear": 1964,
+    "lastYear": 2024,
+    "gamesCount": 14,
+    "season": "Summer",
+    "gender": {
+      "Male": 60,
+      "Female": 29
+    },
+    "bodyStats": {
+      "avgH": 174.1,
+      "avgW": 77.2
+    },
+    "medalsByDecade": {
+      "1960": [
+        0,
+        0,
+        1
+      ],
+      "1970": [
+        0,
+        0,
+        1
+      ],
+      "1980": [
+        0,
+        2,
+        4
+      ],
+      "1990": [
+        0,
+        4,
+        1
+      ],
+      "2000": [
+        2,
+        2,
+        4
+      ],
+      "2010": [
+        2,
+        2,
+        4
+      ],
+      "2020": [
+        0,
+        1,
+        0
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "100kg+",
+        "gold": 0.06,
+        "silver": 0.0,
+        "bronze": 0.03,
+        "n": 32
+      },
+      {
+        "name": "57kg Women's",
+        "gold": 0.05,
+        "silver": 0.0,
+        "bronze": 0.05,
+        "n": 42
+      },
+      {
+        "name": "73kg",
+        "gold": 0.01,
+        "silver": 0.09,
+        "bronze": 0.13,
+        "n": 78
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Judo is one of the USA's toughest Olympic sports \u2014 the team has only a 1% gold rate historically."
+  },
+  "Karate": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 1
+    },
+    "totalAthletes": 4,
+    "eventCount": 4,
+    "firstYear": 2020,
+    "lastYear": 2020,
+    "gamesCount": 1,
+    "season": "Summer",
+    "gender": {
+      "Male": 3,
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 175.2,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "2020": [
+        0,
+        0,
+        1
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Karate at the Olympic Games."
+  },
+  "Kendo": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 1,
+    "firstYear": 1964,
+    "lastYear": 1964,
+    "gamesCount": 1,
+    "season": "Summer",
+    "gender": {
+      "Male": 1
+    },
+    "bodyStats": {
+      "avgH": null,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Kendo at the Olympic Games."
+  },
+  "LUG": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 2,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 2
+    },
+    "bodyStats": {
+      "avgH": 166.5,
+      "avgW": 66.5
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in LUG at the Olympic Games."
+  },
+  "Lacrosse": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 1,
+      "bronze": 0
+    },
+    "totalAthletes": 58,
+    "eventCount": 1,
+    "firstYear": 1904,
+    "lastYear": 1948,
+    "gamesCount": 4,
+    "season": "Summer",
+    "gender": {
+      "Male": 56
+    },
+    "bodyStats": {
+      "avgH": 181.0,
+      "avgW": 82.0
+    },
+    "medalsByDecade": {
+      "1900": [
+        0,
+        1,
+        0
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Lacrosse at the Olympic Games."
+  },
+  "Lawn Bowls": {
+    "totalMedals": {
+      "gold": 2,
+      "silver": 2,
+      "bronze": 1
+    },
+    "totalAthletes": 1,
+    "eventCount": 4,
+    "firstYear": 1968,
+    "lastYear": 1984,
+    "gamesCount": 4,
+    "season": "Summer",
+    "gender": {},
+    "bodyStats": {
+      "avgH": null,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "1960": [
+        0,
+        1,
+        0
+      ],
+      "1970": [
+        1,
+        0,
+        0
+      ],
+      "1980": [
+        1,
+        1,
+        1
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Lawn Bowls at the Olympic Games."
+  },
+  "Luge": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 3,
+      "bronze": 2
+    },
+    "totalAthletes": 99,
+    "eventCount": 5,
+    "firstYear": 1964,
+    "lastYear": 2026,
+    "gamesCount": 17,
+    "season": "Winter",
+    "gender": {
+      "Male": 66,
+      "Female": 28
+    },
+    "bodyStats": {
+      "avgH": 176.2,
+      "avgW": 74.3
+    },
+    "medalsByDecade": {
+      "1990": [
+        0,
+        1,
+        0
+      ],
+      "2000": [
+        0,
+        1,
+        0
+      ],
+      "2010": [
+        0,
+        1,
+        1
+      ],
+      "2020": [
+        0,
+        0,
+        1
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Luge at the Olympic Games."
+  },
+  "Marathon Swimming": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 1,
+      "bronze": 0
+    },
+    "totalAthletes": 8,
+    "eventCount": 2,
+    "firstYear": 2008,
+    "lastYear": 2024,
+    "gamesCount": 5,
+    "season": "Summer",
+    "gender": {
+      "Male": 5,
+      "Female": 3
+    },
+    "bodyStats": {
+      "avgH": 180.4,
+      "avgW": 74.4
+    },
+    "medalsByDecade": {
+      "2010": [
+        0,
+        1,
+        0
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Marathon Swimming at the Olympic Games."
+  },
+  "Military Ski Patrol": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 4,
+    "eventCount": 1,
+    "firstYear": 1948,
+    "lastYear": 1948,
+    "gamesCount": 1,
+    "season": "Winter",
+    "gender": {
+      "Male": 4
+    },
+    "bodyStats": {
+      "avgH": null,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Military Ski Patrol at the Olympic Games."
+  },
+  "Modern Pentathlon": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 6,
+      "bronze": 3
+    },
+    "totalAthletes": 51,
+    "eventCount": 3,
+    "firstYear": 1920,
+    "lastYear": 2024,
+    "gamesCount": 24,
+    "season": "Summer",
+    "gender": {
+      "Male": 42,
+      "Female": 8
+    },
+    "bodyStats": {
+      "avgH": 180.0,
+      "avgW": 72.2
+    },
+    "medalsByDecade": {
+      "1930": [
+        0,
+        1,
+        1
+      ],
+      "1940": [
+        0,
+        1,
+        0
+      ],
+      "1950": [
+        0,
+        1,
+        0
+      ],
+      "1960": [
+        0,
+        1,
+        2
+      ],
+      "1980": [
+        0,
+        1,
+        0
+      ],
+      "2000": [
+        0,
+        1,
+        0
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Individual",
+        "gold": 0.0,
+        "silver": 0.1,
+        "bronze": 0.07,
+        "n": 30
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "The USA has never won Olympic gold in modern pentathlon \u2014 but has collected silvers and bronzes since the 1920s."
+  },
+  "Nordic Combined": {
+    "totalMedals": {
+      "gold": 1,
+      "silver": 2,
+      "bronze": 0
+    },
+    "totalAthletes": 52,
+    "eventCount": 3,
+    "firstYear": 1924,
+    "lastYear": 2026,
+    "gamesCount": 25,
+    "season": "Winter",
+    "gender": {
+      "Male": 50
+    },
+    "bodyStats": {
+      "avgH": 177.0,
+      "avgW": 68.9
+    },
+    "medalsByDecade": {
+      "2010": [
+        1,
+        2,
+        0
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Nordic Combined at the Olympic Games."
+  },
+  "Para Alpine": {
+    "totalMedals": {
+      "gold": 91,
+      "silver": 71,
+      "bronze": 48
+    },
+    "totalAthletes": 106,
+    "eventCount": 126,
+    "firstYear": 1980,
+    "lastYear": 2022,
+    "gamesCount": 12,
+    "season": "Winter",
+    "gender": {
+      "Male": 38,
+      "Female": 31
+    },
+    "bodyStats": {
+      "avgH": 169.9,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "1980": [
+        17,
+        24,
+        18
+      ],
+      "1990": [
+        55,
+        23,
+        14
+      ],
+      "2000": [
+        14,
+        13,
+        6
+      ],
+      "2010": [
+        5,
+        10,
+        10
+      ],
+      "2020": [
+        0,
+        1,
+        0
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Downhill",
+        "gold": 0.5,
+        "silver": 0.3,
+        "bronze": 0.2,
+        "n": 54
+      },
+      {
+        "name": "Super-G",
+        "gold": 0.49,
+        "silver": 0.33,
+        "bronze": 0.18,
+        "n": 39
+      },
+      {
+        "name": "Giant Slalom",
+        "gold": 0.45,
+        "silver": 0.36,
+        "bronze": 0.18,
+        "n": 55
+      },
+      {
+        "name": "Slalom",
+        "gold": 0.31,
+        "silver": 0.37,
+        "bronze": 0.31,
+        "n": 54
+      }
+    ],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Para Alpine skiing covers standing, sitting, and visually impaired categories \u2014 a showcase of adaptive athletics."
+  },
+  "Para Archery": {
+    "totalMedals": {
+      "gold": 13,
+      "silver": 7,
+      "bronze": 12
+    },
+    "totalAthletes": 34,
+    "eventCount": 25,
+    "firstYear": 1960,
+    "lastYear": 2020,
+    "gamesCount": 14,
+    "season": "Summer",
+    "gender": {
+      "Male": 13,
+      "Female": 6
+    },
+    "bodyStats": {
+      "avgH": 171.2,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "1960": [
+        7,
+        3,
+        5
+      ],
+      "1970": [
+        1,
+        1,
+        2
+      ],
+      "1980": [
+        2,
+        1,
+        2
+      ],
+      "1990": [
+        0,
+        1,
+        0
+      ],
+      "2000": [
+        0,
+        0,
+        3
+      ],
+      "2010": [
+        2,
+        1,
+        0
+      ],
+      "2020": [
+        1,
+        0,
+        0
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Individual Compound",
+        "gold": 0.5,
+        "silver": 0.25,
+        "bronze": 0.25,
+        "n": 4
+      },
+      {
+        "name": "Columbia Round",
+        "gold": 0.5,
+        "silver": 0.5,
+        "bronze": 0.0,
+        "n": 4
+      },
+      {
+        "name": "Individual",
+        "gold": 0.38,
+        "silver": 0.25,
+        "bronze": 0.38,
+        "n": 8
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Para Archery athletes compete in compound and recurve divisions with various adaptive equipment."
+  },
+  "Para Badminton": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 2,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 129.5,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Para Badminton at the Olympic Games."
+  },
+  "Para Cycling": {
+    "totalMedals": {
+      "gold": 21,
+      "silver": 27,
+      "bronze": 20
+    },
+    "totalAthletes": 72,
+    "eventCount": 62,
+    "firstYear": 1984,
+    "lastYear": 2020,
+    "gamesCount": 10,
+    "season": "Summer",
+    "gender": {
+      "Male": 21,
+      "Female": 13
+    },
+    "bodyStats": {
+      "avgH": 176.0,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "1980": [
+        0,
+        2,
+        3
+      ],
+      "1990": [
+        3,
+        4,
+        3
+      ],
+      "2000": [
+        6,
+        8,
+        4
+      ],
+      "2010": [
+        9,
+        11,
+        8
+      ],
+      "2020": [
+        3,
+        2,
+        2
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Road Race",
+        "gold": 0.4,
+        "silver": 0.27,
+        "bronze": 0.33,
+        "n": 15
+      },
+      {
+        "name": "Time Trial",
+        "gold": 0.31,
+        "silver": 0.44,
+        "bronze": 0.25,
+        "n": 32
+      },
+      {
+        "name": "Individual Pursuit",
+        "gold": 0.25,
+        "silver": 0.42,
+        "bronze": 0.33,
+        "n": 12
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Para Cycling includes track, road, and tandem events for athletes with various impairments."
+  },
+  "Para Judo": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 3,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 154.9,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Para Judo at the Olympic Games."
+  },
+  "Para Nordic": {
+    "totalMedals": {
+      "gold": 14,
+      "silver": 17,
+      "bronze": 8
+    },
+    "totalAthletes": 35,
+    "eventCount": 39,
+    "firstYear": 1988,
+    "lastYear": 2022,
+    "gamesCount": 10,
+    "season": "Winter",
+    "gender": {
+      "Male": 8,
+      "Female": 4
+    },
+    "bodyStats": {
+      "avgH": 167.8,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "1980": [
+        1,
+        0,
+        1
+      ],
+      "1990": [
+        2,
+        3,
+        3
+      ],
+      "2000": [
+        2,
+        4,
+        1
+      ],
+      "2010": [
+        6,
+        6,
+        2
+      ],
+      "2020": [
+        3,
+        4,
+        1
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Sitting Events",
+        "gold": 0.53,
+        "silver": 0.35,
+        "bronze": 0.12,
+        "n": 17
+      },
+      {
+        "name": "Standing Events",
+        "gold": 0.33,
+        "silver": 0.33,
+        "bronze": 0.33,
+        "n": 6
+      },
+      {
+        "name": "Visually Impaired",
+        "gold": 0.0,
+        "silver": 1.0,
+        "bronze": 0.0,
+        "n": 3
+      }
+    ],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Para Nordic skiing includes both cross-country and biathlon \u2014 combining endurance with precision."
+  },
+  "Para Powerlifting": {
+    "totalMedals": {
+      "gold": 6,
+      "silver": 2,
+      "bronze": 4
+    },
+    "totalAthletes": 13,
+    "eventCount": 8,
+    "firstYear": 1984,
+    "lastYear": 2000,
+    "gamesCount": 5,
+    "season": "Summer",
+    "gender": {
+      "Male": 8
+    },
+    "bodyStats": {
+      "avgH": 170.2,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "1980": [
+        4,
+        1,
+        4
+      ],
+      "1990": [
+        1,
+        1,
+        0
+      ],
+      "2000": [
+        1,
+        0,
+        0
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "+100 kg",
+        "gold": 1.0,
+        "silver": 0.0,
+        "bronze": 0.0,
+        "n": 2
+      },
+      {
+        "name": "-75 kg",
+        "gold": 0.5,
+        "silver": 0.5,
+        "bronze": 0.0,
+        "n": 2
+      },
+      {
+        "name": "-52 kg",
+        "gold": 0.5,
+        "silver": 0.5,
+        "bronze": 0.0,
+        "n": 2
+      },
+      {
+        "name": "-82.5 kg",
+        "gold": 0.0,
+        "silver": 0.0,
+        "bronze": 1.0,
+        "n": 2
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Para Powerlifting is pure bench press \u2014 athletes are classified by body weight, not impairment type."
+  },
+  "Para Shooting": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 15,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 170.6,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Para Shooting at the Olympic Games."
+  },
+  "Para Snowboarding": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 15,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 170.6,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Para Snowboarding at the Olympic Games."
+  },
+  "Para Swimming": {
+    "totalMedals": {
+      "gold": 261,
+      "silver": 160,
+      "bronze": 162
+    },
+    "totalAthletes": 239,
+    "eventCount": 366,
+    "firstYear": 1960,
+    "lastYear": 2020,
+    "gamesCount": 16,
+    "season": "Summer",
+    "gender": {
+      "Male": 75,
+      "Female": 91
+    },
+    "bodyStats": {
+      "avgH": 166.8,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "1960": [
+        36,
+        25,
+        15
+      ],
+      "1970": [
+        18,
+        6,
+        13
+      ],
+      "1980": [
+        81,
+        53,
+        63
+      ],
+      "1990": [
+        38,
+        18,
+        19
+      ],
+      "2000": [
+        46,
+        29,
+        25
+      ],
+      "2010": [
+        28,
+        21,
+        19
+      ],
+      "2020": [
+        14,
+        8,
+        8
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "100m Butterfly",
+        "gold": 0.64,
+        "silver": 0.14,
+        "bronze": 0.21,
+        "n": 28
+      },
+      {
+        "name": "Individual Medley",
+        "gold": 0.56,
+        "silver": 0.21,
+        "bronze": 0.24,
+        "n": 68
+      },
+      {
+        "name": "400m Freestyle",
+        "gold": 0.52,
+        "silver": 0.28,
+        "bronze": 0.2,
+        "n": 46
+      },
+      {
+        "name": "50m Freestyle",
+        "gold": 0.45,
+        "silver": 0.29,
+        "bronze": 0.26,
+        "n": 86
+      },
+      {
+        "name": "100m Backstroke",
+        "gold": 0.43,
+        "silver": 0.24,
+        "bronze": 0.33,
+        "n": 63
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "US Para swimmers are among the world's best, competing across multiple classification categories."
+  },
+  "Para Table Tennis": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 2,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 175.3,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Para Table Tennis at the Olympic Games."
+  },
+  "Para Taekwondo": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 2,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 160.0,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Para Taekwondo at the Olympic Games."
+  },
+  "Para Track & Field": {
+    "totalMedals": {
+      "gold": 356,
+      "silver": 306,
+      "bronze": 235
+    },
+    "totalAthletes": 462,
+    "eventCount": 635,
+    "firstYear": 1960,
+    "lastYear": 2020,
+    "gamesCount": 16,
+    "season": "Summer",
+    "gender": {
+      "Male": 217,
+      "Female": 128
+    },
+    "bodyStats": {
+      "avgH": 170.9,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "1960": [
+        33,
+        16,
+        14
+      ],
+      "1970": [
+        49,
+        38,
+        29
+      ],
+      "1980": [
+        156,
+        146,
+        99
+      ],
+      "1990": [
+        57,
+        40,
+        37
+      ],
+      "2000": [
+        27,
+        34,
+        28
+      ],
+      "2010": [
+        25,
+        16,
+        17
+      ],
+      "2020": [
+        9,
+        16,
+        11
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "400m T54 Wheelchair",
+        "gold": 0.67,
+        "silver": 0.33,
+        "bronze": 0.0,
+        "n": 6
+      },
+      {
+        "name": "5000m T54 Wheelchair",
+        "gold": 0.5,
+        "silver": 0.17,
+        "bronze": 0.33,
+        "n": 6
+      },
+      {
+        "name": "Discus Throw",
+        "gold": 0.44,
+        "silver": 0.27,
+        "bronze": 0.3,
+        "n": 98
+      },
+      {
+        "name": "Pentathlon",
+        "gold": 0.38,
+        "silver": 0.38,
+        "bronze": 0.24,
+        "n": 42
+      },
+      {
+        "name": "Shot Put",
+        "gold": 0.36,
+        "silver": 0.35,
+        "bronze": 0.29,
+        "n": 91
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Para Track & Field is one of the largest Paralympic sports, with dozens of events across classifications."
+  },
+  "Para Triathlon": {
+    "totalMedals": {
+      "gold": 5,
+      "silver": 1,
+      "bronze": 0
+    },
+    "totalAthletes": 23,
+    "eventCount": 6,
+    "firstYear": 2016,
+    "lastYear": 2020,
+    "gamesCount": 2,
+    "season": "Summer",
+    "gender": {
+      "Female": 4
+    },
+    "bodyStats": {
+      "avgH": 168.6,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "2010": [
+        2,
+        0,
+        0
+      ],
+      "2020": [
+        3,
+        1,
+        0
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "PTS5 / PT2",
+        "gold": 1.0,
+        "silver": 0.0,
+        "bronze": 0.0,
+        "n": 2
+      },
+      {
+        "name": "PTVI",
+        "gold": 1.0,
+        "silver": 0.0,
+        "bronze": 0.0,
+        "n": 1
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Para Triathlon debuted at Rio 2016, covering swim-bike-run with adaptive equipment."
+  },
+  "Para-Equestrian": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 10,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 167.3,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Para-Equestrian at the Olympic Games."
+  },
+  "Para-Rowing": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 22,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 178.6,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Para-Rowing at the Olympic Games."
+  },
+  "Paracanoe": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": null,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Paracanoe at the Olympic Games."
+  },
+  "Polo": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 1,
+      "bronze": 1
+    },
+    "totalAthletes": 25,
+    "eventCount": 1,
+    "firstYear": 1900,
+    "lastYear": 1924,
+    "gamesCount": 3,
+    "season": "Summer",
+    "gender": {
+      "Male": 10
+    },
+    "bodyStats": {
+      "avgH": 173.5,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "1920": [
+        0,
+        1,
+        1
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Polo at the Olympic Games."
+  },
+  "ROW": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 2,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 2
+    },
+    "bodyStats": {
+      "avgH": 177.5,
+      "avgW": 70.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in ROW at the Olympic Games."
+  },
+  "Racquetball": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": null,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Racquetball at the Olympic Games."
+  },
+  "Rhythmic Gymnastics": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 26,
+    "eventCount": 2,
+    "firstYear": 1984,
+    "lastYear": 2024,
+    "gamesCount": 9,
+    "season": "Summer",
+    "gender": {
+      "Female": 26
+    },
+    "bodyStats": {
+      "avgH": 166.7,
+      "avgW": 50.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Rhythmic Gymnastics at the Olympic Games."
+  },
+  "Roller Hockey": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 10,
+    "eventCount": 1,
+    "firstYear": 1992,
+    "lastYear": 1992,
+    "gamesCount": 1,
+    "season": "Summer",
+    "gender": {
+      "Male": 10
+    },
+    "bodyStats": {
+      "avgH": null,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Roller Hockey at the Olympic Games."
+  },
+  "Roque": {
+    "totalMedals": {
+      "gold": 1,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 4,
+    "eventCount": 1,
+    "firstYear": 1904,
+    "lastYear": 1904,
+    "gamesCount": 1,
+    "season": "Summer",
+    "gender": {
+      "Male": 4
+    },
+    "bodyStats": {
+      "avgH": 186.0,
+      "avgW": 89.0
+    },
+    "medalsByDecade": {
+      "1900": [
+        1,
+        0,
+        0
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Roque at the Olympic Games."
+  },
+  "Rowing": {
+    "totalMedals": {
+      "gold": 34,
+      "silver": 28,
+      "bronze": 22
+    },
+    "totalAthletes": 789,
+    "eventCount": 28,
+    "firstYear": 1896,
+    "lastYear": 2024,
+    "gamesCount": 27,
+    "season": "Summer",
+    "gender": {
+      "Male": 564,
+      "Female": 184
+    },
+    "bodyStats": {
+      "avgH": 185.0,
+      "avgW": 79.9
+    },
+    "medalsByDecade": {
+      "1900": [
+        6,
+        0,
+        0
+      ],
+      "1920": [
+        7,
+        4,
+        3
+      ],
+      "1930": [
+        4,
+        1,
+        1
+      ],
+      "1940": [
+        2,
+        0,
+        1
+      ],
+      "1950": [
+        5,
+        2,
+        2
+      ],
+      "1960": [
+        3,
+        2,
+        3
+      ],
+      "1970": [
+        0,
+        3,
+        1
+      ],
+      "1980": [
+        2,
+        7,
+        2
+      ],
+      "1990": [
+        0,
+        5,
+        2
+      ],
+      "2000": [
+        2,
+        3,
+        4
+      ],
+      "2010": [
+        2,
+        1,
+        2
+      ],
+      "2020": [
+        1,
+        0,
+        1
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Men's Eight",
+        "gold": 0.29,
+        "silver": 0.07,
+        "bronze": 0.11,
+        "n": 56
+      },
+      {
+        "name": "Men's Coxless Pair",
+        "gold": 0.09,
+        "silver": 0.11,
+        "bronze": 0.09,
+        "n": 35
+      },
+      {
+        "name": "Women's Single Sculls",
+        "gold": 0.0,
+        "silver": 0.42,
+        "bronze": 0.0,
+        "n": 12
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "The Men's Eight is Team USA's signature rowing event \u2014 they've won gold in nearly half of all Olympic finals."
+  },
+  "Rugby Sevens": {
+    "totalMedals": {
+      "gold": 2,
+      "silver": 0,
+      "bronze": 1
+    },
+    "totalAthletes": 108,
+    "eventCount": 3,
+    "firstYear": 1920,
+    "lastYear": 2024,
+    "gamesCount": 5,
+    "season": "Summer",
+    "gender": {
+      "Male": 56,
+      "Female": 28
+    },
+    "bodyStats": {
+      "avgH": 178.4,
+      "avgW": 82.9
+    },
+    "medalsByDecade": {
+      "1920": [
+        2,
+        0,
+        0
+      ],
+      "2020": [
+        0,
+        0,
+        1
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Men's Tournament",
+        "gold": 0.25,
+        "silver": 0.0,
+        "bronze": 0.12,
+        "n": 8
+      },
+      {
+        "name": "Women's Tournament",
+        "gold": 0.0,
+        "silver": 0.0,
+        "bronze": 0.33,
+        "n": 3
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Rugby Sevens joined the Olympics in 2016. The US men surprised with early success including a gold."
+  },
+  "SBD": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 163.0,
+      "avgW": 57.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in SBD at the Olympic Games."
+  },
+  "SBL": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 175.0,
+      "avgW": 81.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in SBL at the Olympic Games."
+  },
+  "SHO": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 3,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 3
+    },
+    "bodyStats": {
+      "avgH": 166.0,
+      "avgW": 61.7
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in SHO at the Olympic Games."
+  },
+  "SSK": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 2,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 2
+    },
+    "bodyStats": {
+      "avgH": 174.0,
+      "avgW": 67.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in SSK at the Olympic Games."
+  },
+  "STK": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 152.0,
+      "avgW": 52.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in STK at the Olympic Games."
+  },
+  "SWM": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 2,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 2
+    },
+    "bodyStats": {
+      "avgH": 170.0,
+      "avgW": 64.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in SWM at the Olympic Games."
+  },
+  "Sailing": {
+    "totalMedals": {
+      "gold": 19,
+      "silver": 24,
+      "bronze": 20
+    },
+    "totalAthletes": 276,
+    "eventCount": 31,
+    "firstYear": 1900,
+    "lastYear": 2024,
+    "gamesCount": 23,
+    "season": "Summer",
+    "gender": {
+      "Male": 213,
+      "Female": 48
+    },
+    "bodyStats": {
+      "avgH": 179.3,
+      "avgW": 78.7
+    },
+    "medalsByDecade": {
+      "1900": [
+        0,
+        0,
+        2
+      ],
+      "1930": [
+        2,
+        1,
+        0
+      ],
+      "1940": [
+        2,
+        1,
+        0
+      ],
+      "1950": [
+        3,
+        1,
+        1
+      ],
+      "1960": [
+        3,
+        2,
+        4
+      ],
+      "1970": [
+        1,
+        2,
+        2
+      ],
+      "1980": [
+        4,
+        6,
+        2
+      ],
+      "1990": [
+        1,
+        6,
+        4
+      ],
+      "2000": [
+        3,
+        5,
+        3
+      ],
+      "2010": [
+        0,
+        0,
+        1
+      ],
+      "2020": [
+        0,
+        0,
+        1
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Nacra 17 Mixed",
+        "gold": 0.29,
+        "silver": 0.18,
+        "bronze": 0.15,
+        "n": 34
+      },
+      {
+        "name": "49er",
+        "gold": 0.06,
+        "silver": 0.15,
+        "bronze": 0.11,
+        "n": 66
+      },
+      {
+        "name": "Laser/ILCA",
+        "gold": 0.03,
+        "silver": 0.14,
+        "bronze": 0.11,
+        "n": 37
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "The USA's keelboat sailors have won gold in 29% of their events \u2014 strong in multi-crew boats."
+  },
+  "Shooting": {
+    "totalMedals": {
+      "gold": 59,
+      "silver": 26,
+      "bronze": 24
+    },
+    "totalAthletes": 340,
+    "eventCount": 79,
+    "firstYear": 1896,
+    "lastYear": 2024,
+    "gamesCount": 27,
+    "season": "Summer",
+    "gender": {
+      "Male": 260,
+      "Female": 58
+    },
+    "bodyStats": {
+      "avgH": 175.4,
+      "avgW": 76.6
+    },
+    "medalsByDecade": {
+      "1890": [
+        2,
+        0,
+        0
+      ],
+      "1900": [
+        3,
+        2,
+        1
+      ],
+      "1910": [
+        7,
+        3,
+        2
+      ],
+      "1920": [
+        18,
+        3,
+        4
+      ],
+      "1940": [
+        1,
+        0,
+        0
+      ],
+      "1950": [
+        1,
+        0,
+        2
+      ],
+      "1960": [
+        4,
+        5,
+        1
+      ],
+      "1970": [
+        4,
+        1,
+        0
+      ],
+      "1980": [
+        4,
+        2,
+        4
+      ],
+      "1990": [
+        2,
+        2,
+        0
+      ],
+      "2000": [
+        5,
+        4,
+        4
+      ],
+      "2010": [
+        4,
+        0,
+        4
+      ],
+      "2020": [
+        4,
+        4,
+        2
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Skeet",
+        "gold": 0.33,
+        "silver": 0.05,
+        "bronze": 0.14,
+        "n": 21
+      },
+      {
+        "name": "Air Rifle 10m",
+        "gold": 0.17,
+        "silver": 0.04,
+        "bronze": 0.0,
+        "n": 24
+      },
+      {
+        "name": "Rapid Fire Pistol",
+        "gold": 0.1,
+        "silver": 0.0,
+        "bronze": 0.0,
+        "n": 21
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Shooting was in the very first modern Olympics. Team USA's skeet shooters have a 33% gold rate \u2014 one of the highest in any event."
+  },
+  "Sitting Volleyball": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 31,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 179.0,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": true,
+    "isNew": false,
+    "funFact": "The US women's sitting volleyball team has been a consistent medal contender at the Paralympics."
+  },
+  "Skateboarding": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 2,
+      "bronze": 2
+    },
+    "totalAthletes": 20,
+    "eventCount": 4,
+    "firstYear": 2020,
+    "lastYear": 2024,
+    "gamesCount": 2,
+    "season": "Summer",
+    "gender": {
+      "Male": 10,
+      "Female": 10
+    },
+    "bodyStats": {
+      "avgH": 174.0,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "2020": [
+        0,
+        2,
+        2
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Street",
+        "gold": 0.0,
+        "silver": 0.25,
+        "bronze": 0.25,
+        "n": 4
+      },
+      {
+        "name": "Park",
+        "gold": 0.0,
+        "silver": 0.25,
+        "bronze": 0.25,
+        "n": 4
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Skateboarding joined the Olympics in 2021. Despite inventing the sport, Team USA hasn't won gold yet."
+  },
+  "Skeleton": {
+    "totalMedals": {
+      "gold": 3,
+      "silver": 2,
+      "bronze": 1
+    },
+    "totalAthletes": 33,
+    "eventCount": 3,
+    "firstYear": 1928,
+    "lastYear": 2026,
+    "gamesCount": 9,
+    "season": "Winter",
+    "gender": {
+      "Male": 15,
+      "Female": 7
+    },
+    "bodyStats": {
+      "avgH": 177.3,
+      "avgW": 75.4
+    },
+    "medalsByDecade": {
+      "1920": [
+        1,
+        0,
+        0
+      ],
+      "1940": [
+        0,
+        1,
+        0
+      ],
+      "2000": [
+        2,
+        0,
+        0
+      ],
+      "2010": [
+        0,
+        1,
+        1
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Skeleton at the Olympic Games."
+  },
+  "Ski Jumping": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 1
+    },
+    "totalAthletes": 84,
+    "eventCount": 6,
+    "firstYear": 1924,
+    "lastYear": 2026,
+    "gamesCount": 25,
+    "season": "Winter",
+    "gender": {
+      "Male": 73,
+      "Female": 9
+    },
+    "bodyStats": {
+      "avgH": 177.0,
+      "avgW": 68.5
+    },
+    "medalsByDecade": {
+      "1920": [
+        0,
+        0,
+        1
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Ski Jumping at the Olympic Games."
+  },
+  "Ski Mountaineering": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 2,
+    "eventCount": 3,
+    "firstYear": 2026,
+    "lastYear": 2026,
+    "gamesCount": 1,
+    "season": "Winter",
+    "gender": {
+      "Male": 1,
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 165.0,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Ski Mountaineering at the Olympic Games."
+  },
+  "Sled Hockey": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 33,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 168.6,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "US Sled Hockey has been dominant \u2014 one of the strongest Paralympic team programs."
+  },
+  "Snooker": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 2,
+      "bronze": 0
+    },
+    "totalAthletes": 0,
+    "eventCount": 2,
+    "firstYear": 1964,
+    "lastYear": 1976,
+    "gamesCount": 2,
+    "season": "Summer",
+    "gender": {},
+    "bodyStats": {
+      "avgH": null,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "1960": [
+        0,
+        1,
+        0
+      ],
+      "1970": [
+        0,
+        1,
+        0
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Snooker at the Olympic Games."
+  },
+  "Snowboard": {
+    "totalMedals": {
+      "gold": 6,
+      "silver": 5,
+      "bronze": 2
+    },
+    "totalAthletes": 9,
+    "eventCount": 10,
+    "firstYear": 2018,
+    "lastYear": 2022,
+    "gamesCount": 2,
+    "season": "Winter",
+    "gender": {
+      "Male": 6,
+      "Female": 3
+    },
+    "bodyStats": {
+      "avgH": 173.0,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "2010": [
+        5,
+        3,
+        1
+      ],
+      "2020": [
+        1,
+        2,
+        1
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Snowboard at the Olympic Games."
+  },
+  "Snowboarding": {
+    "totalMedals": {
+      "gold": 17,
+      "silver": 6,
+      "bronze": 6
+    },
+    "totalAthletes": 97,
+    "eventCount": 14,
+    "firstYear": 1998,
+    "lastYear": 2026,
+    "gamesCount": 8,
+    "season": "Winter",
+    "gender": {
+      "Male": 53,
+      "Female": 41
+    },
+    "bodyStats": {
+      "avgH": 172.5,
+      "avgW": 70.5
+    },
+    "medalsByDecade": {
+      "1990": [
+        0,
+        0,
+        2
+      ],
+      "2000": [
+        5,
+        1,
+        2
+      ],
+      "2010": [
+        9,
+        3,
+        1
+      ],
+      "2020": [
+        3,
+        2,
+        1
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Halfpipe",
+        "gold": 0.56,
+        "silver": 0.12,
+        "bronze": 0.12,
+        "n": 16
+      },
+      {
+        "name": "Slopestyle",
+        "gold": 0.5,
+        "silver": 0.12,
+        "bronze": 0.12,
+        "n": 8
+      },
+      {
+        "name": "Snowboard Cross",
+        "gold": 0.29,
+        "silver": 0.07,
+        "bronze": 0.07,
+        "n": 14
+      }
+    ],
+    "la28": false,
+    "isNew": false,
+    "funFact": "The USA invented competitive snowboarding and dominates it \u2014 56% gold rate in halfpipe across all Games."
+  },
+  "Soccer": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 16,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 177.0,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Soccer at the Olympic Games."
+  },
+  "Soccer 7-A-Side": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 3,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 176.6,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Soccer 7-A-Side at the Olympic Games."
+  },
+  "Softball": {
+    "totalMedals": {
+      "gold": 3,
+      "silver": 2,
+      "bronze": 0
+    },
+    "totalAthletes": 54,
+    "eventCount": 1,
+    "firstYear": 1996,
+    "lastYear": 2020,
+    "gamesCount": 5,
+    "season": "Summer",
+    "gender": {
+      "Female": 48
+    },
+    "bodyStats": {
+      "avgH": 171.9,
+      "avgW": 73.8
+    },
+    "medalsByDecade": {
+      "1990": [
+        1,
+        0,
+        0
+      ],
+      "2000": [
+        2,
+        1,
+        0
+      ],
+      "2020": [
+        0,
+        1,
+        0
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Tournament",
+        "gold": 0.6,
+        "silver": 0.4,
+        "bronze": 0.0,
+        "n": 5
+      }
+    ],
+    "la28": true,
+    "isNew": true,
+    "funFact": "Softball is Team USA's strongest ball sport by gold rate \u2014 60% across all Olympic appearances. The USA won gold in 3 of the 4 Olympic softball tournaments before LA28."
+  },
+  "Speed Skating": {
+    "totalMedals": {
+      "gold": 36,
+      "silver": 25,
+      "bronze": 23
+    },
+    "totalAthletes": 255,
+    "eventCount": 18,
+    "firstYear": 1924,
+    "lastYear": 2026,
+    "gamesCount": 25,
+    "season": "Winter",
+    "gender": {
+      "Male": 145,
+      "Female": 94
+    },
+    "bodyStats": {
+      "avgH": 172.5,
+      "avgW": 68.7
+    },
+    "medalsByDecade": {
+      "1920": [
+        1,
+        0,
+        1
+      ],
+      "1930": [
+        4,
+        0,
+        1
+      ],
+      "1940": [
+        0,
+        1,
+        0
+      ],
+      "1950": [
+        1,
+        0,
+        0
+      ],
+      "1960": [
+        1,
+        3,
+        2
+      ],
+      "1970": [
+        4,
+        3,
+        2
+      ],
+      "1980": [
+        6,
+        3,
+        2
+      ],
+      "1990": [
+        7,
+        3,
+        2
+      ],
+      "2000": [
+        8,
+        4,
+        5
+      ],
+      "2010": [
+        1,
+        6,
+        4
+      ],
+      "2020": [
+        3,
+        2,
+        4
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "500m",
+        "gold": 0.18,
+        "silver": 0.09,
+        "bronze": 0.06,
+        "n": 125
+      },
+      {
+        "name": "Short Track 1000m",
+        "gold": 0.17,
+        "silver": 0.11,
+        "bronze": 0.13,
+        "n": 54
+      },
+      {
+        "name": "5000m",
+        "gold": 0.09,
+        "silver": 0.03,
+        "bronze": 0.0,
+        "n": 33
+      },
+      {
+        "name": "1500m",
+        "gold": 0.08,
+        "silver": 0.1,
+        "bronze": 0.05,
+        "n": 60
+      },
+      {
+        "name": "Short Track Relay",
+        "gold": 0.0,
+        "silver": 0.16,
+        "bronze": 0.21,
+        "n": 19
+      }
+    ],
+    "la28": false,
+    "isNew": false,
+    "funFact": "The 500m sprint is the USA's strongest speed skating event \u2014 18% gold rate since 1924."
+  },
+  "Speed Skiing": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 8,
+    "eventCount": 2,
+    "firstYear": 1992,
+    "lastYear": 1992,
+    "gamesCount": 1,
+    "season": "Winter",
+    "gender": {
+      "Male": 4,
+      "Female": 4
+    },
+    "bodyStats": {
+      "avgH": null,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Speed Skiing at the Olympic Games."
+  },
+  "Sport Climbing": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 2,
+      "bronze": 1
+    },
+    "totalAthletes": 10,
+    "eventCount": 6,
+    "firstYear": 2020,
+    "lastYear": 2024,
+    "gamesCount": 2,
+    "season": "Summer",
+    "gender": {
+      "Male": 5,
+      "Female": 5
+    },
+    "bodyStats": {
+      "avgH": 169.4,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "2020": [
+        0,
+        2,
+        1
+      ]
+    },
+    "topEvents": [],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Sport Climbing debuted in 2021. The USA earned silver medals in the first two Olympic competitions."
+  },
+  "Surfing": {
+    "totalMedals": {
+      "gold": 2,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 6,
+    "eventCount": 2,
+    "firstYear": 2020,
+    "lastYear": 2024,
+    "gamesCount": 2,
+    "season": "Summer",
+    "gender": {
+      "Male": 3,
+      "Female": 3
+    },
+    "bodyStats": {
+      "avgH": 173.3,
+      "avgW": 74.0
+    },
+    "medalsByDecade": {
+      "2020": [
+        2,
+        0,
+        0
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Shortboard Women's",
+        "gold": 1.0,
+        "silver": 0.0,
+        "bronze": 0.0,
+        "n": 2
+      },
+      {
+        "name": "Shortboard Men's",
+        "gold": 0.5,
+        "silver": 0.0,
+        "bronze": 0.0,
+        "n": 4
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Surfing debuted at Tokyo 2020. Team USA women won gold in the inaugural competition."
+  },
+  "Swimming": {
+    "totalMedals": {
+      "gold": 264,
+      "silver": 118,
+      "bronze": 69
+    },
+    "totalAthletes": 786,
+    "eventCount": 54,
+    "firstYear": 1896,
+    "lastYear": 2024,
+    "gamesCount": 29,
+    "season": "Summer",
+    "gender": {
+      "Male": 416,
+      "Female": 332
+    },
+    "bodyStats": {
+      "avgH": 179.7,
+      "avgW": 71.9
+    },
+    "medalsByDecade": {
+      "1900": [
+        5,
+        3,
+        3
+      ],
+      "1910": [
+        2,
+        1,
+        0
+      ],
+      "1920": [
+        23,
+        1,
+        1
+      ],
+      "1930": [
+        7,
+        3,
+        5
+      ],
+      "1940": [
+        8,
+        2,
+        0
+      ],
+      "1950": [
+        6,
+        5,
+        6
+      ],
+      "1960": [
+        43,
+        12,
+        5
+      ],
+      "1970": [
+        30,
+        13,
+        2
+      ],
+      "1980": [
+        28,
+        9,
+        4
+      ],
+      "1990": [
+        24,
+        17,
+        6
+      ],
+      "2000": [
+        37,
+        18,
+        20
+      ],
+      "2010": [
+        32,
+        14,
+        9
+      ],
+      "2020": [
+        19,
+        20,
+        8
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "4\u00d7100m Medley Relay",
+        "gold": 0.79,
+        "silver": 0.18,
+        "bronze": 0.0,
+        "n": 34
+      },
+      {
+        "name": "200m Butterfly",
+        "gold": 0.45,
+        "silver": 0.16,
+        "bronze": 0.06,
+        "n": 31
+      },
+      {
+        "name": "200m Backstroke",
+        "gold": 0.45,
+        "silver": 0.24,
+        "bronze": 0.0,
+        "n": 29
+      },
+      {
+        "name": "100m Freestyle",
+        "gold": 0.43,
+        "silver": 0.16,
+        "bronze": 0.16,
+        "n": 51
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Team USA has won more Olympic swimming medals than any other country \u2014 over 550 and counting."
+  },
+  "TEN": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 178.0,
+      "avgW": 72.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in TEN at the Olympic Games."
+  },
+  "TRI": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 173.0,
+      "avgW": 63.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in TRI at the Olympic Games."
+  },
+  "TTE": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 2,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 2
+    },
+    "bodyStats": {
+      "avgH": 167.5,
+      "avgW": 57.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in TTE at the Olympic Games."
+  },
+  "Table Tennis": {
+    "totalMedals": {
+      "gold": 10,
+      "silver": 9,
+      "bronze": 7
+    },
+    "totalAthletes": 111,
+    "eventCount": 25,
+    "firstYear": 1964,
+    "lastYear": 2024,
+    "gamesCount": 16,
+    "season": "Summer",
+    "gender": {
+      "Male": 18,
+      "Female": 23
+    },
+    "bodyStats": {
+      "avgH": 171.3,
+      "avgW": 62.8
+    },
+    "medalsByDecade": {
+      "1960": [
+        1,
+        0,
+        2
+      ],
+      "1970": [
+        0,
+        3,
+        1
+      ],
+      "1980": [
+        5,
+        4,
+        3
+      ],
+      "1990": [
+        3,
+        2,
+        0
+      ],
+      "2000": [
+        0,
+        0,
+        1
+      ],
+      "2020": [
+        1,
+        0,
+        0
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Men's Singles",
+        "gold": 0.16,
+        "silver": 0.12,
+        "bronze": 0.09,
+        "n": 32
+      },
+      {
+        "name": "Women's Singles",
+        "gold": 0.14,
+        "silver": 0.14,
+        "bronze": 0.0,
+        "n": 14
+      },
+      {
+        "name": "Team Event",
+        "gold": 0.0,
+        "silver": 0.0,
+        "bronze": 0.0,
+        "n": 7
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "The USA has struggled against Asian dominance in Olympic table tennis \u2014 but Para table tennis tells a different story."
+  },
+  "Taekwondo": {
+    "totalMedals": {
+      "gold": 3,
+      "silver": 2,
+      "bronze": 7
+    },
+    "totalAthletes": 41,
+    "eventCount": 17,
+    "firstYear": 1988,
+    "lastYear": 2024,
+    "gamesCount": 9,
+    "season": "Summer",
+    "gender": {
+      "Male": 16,
+      "Female": 21
+    },
+    "bodyStats": {
+      "avgH": 176.8,
+      "avgW": 66.0
+    },
+    "medalsByDecade": {
+      "2000": [
+        2,
+        2,
+        2
+      ],
+      "2010": [
+        0,
+        0,
+        3
+      ],
+      "2020": [
+        1,
+        0,
+        2
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "68kg",
+        "gold": 0.09,
+        "silver": 0.05,
+        "bronze": 0.09,
+        "n": 22
+      },
+      {
+        "name": "57kg Women's",
+        "gold": 0.05,
+        "silver": 0.05,
+        "bronze": 0.18,
+        "n": 22
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Taekwondo joined the Olympics in 2000. The US women have shown more medal potential than the men's team."
+  },
+  "Team Handball": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 28,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 184.2,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Team Handball at the Olympic Games."
+  },
+  "Tennis": {
+    "totalMedals": {
+      "gold": 21,
+      "silver": 4,
+      "bronze": 6
+    },
+    "totalAthletes": 154,
+    "eventCount": 10,
+    "firstYear": 1900,
+    "lastYear": 2024,
+    "gamesCount": 16,
+    "season": "Summer",
+    "gender": {
+      "Male": 100,
+      "Female": 42
+    },
+    "bodyStats": {
+      "avgH": 181.5,
+      "avgW": 76.2
+    },
+    "medalsByDecade": {
+      "1900": [
+        2,
+        1,
+        2
+      ],
+      "1920": [
+        5,
+        0,
+        0
+      ],
+      "1980": [
+        2,
+        1,
+        1
+      ],
+      "1990": [
+        5,
+        0,
+        0
+      ],
+      "2000": [
+        3,
+        1,
+        1
+      ],
+      "2010": [
+        4,
+        0,
+        2
+      ],
+      "2020": [
+        0,
+        1,
+        0
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Women's Singles",
+        "gold": 0.36,
+        "silver": 0.0,
+        "bronze": 0.14,
+        "n": 14
+      },
+      {
+        "name": "Mixed Doubles",
+        "gold": 0.29,
+        "silver": 0.0,
+        "bronze": 0.29,
+        "n": 7
+      },
+      {
+        "name": "Men's Singles",
+        "gold": 0.27,
+        "silver": 0.07,
+        "bronze": 0.07,
+        "n": 30
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "The US women's doubles team has an incredible 58% gold rate \u2014 the most dominant doubles program in Olympic tennis."
+  },
+  "Track & Field": {
+    "totalMedals": {
+      "gold": 357,
+      "silver": 118,
+      "bronze": 80
+    },
+    "totalAthletes": 2601,
+    "eventCount": 155,
+    "firstYear": 1896,
+    "lastYear": 2024,
+    "gamesCount": 29,
+    "season": "Summer",
+    "gender": {
+      "Male": 1788,
+      "Female": 544
+    },
+    "bodyStats": {
+      "avgH": 178.9,
+      "avgW": 73.0
+    },
+    "medalsByDecade": {
+      "1890": [
+        9,
+        1,
+        0
+      ],
+      "1900": [
+        54,
+        5,
+        3
+      ],
+      "1910": [
+        16,
+        4,
+        1
+      ],
+      "1920": [
+        30,
+        15,
+        13
+      ],
+      "1930": [
+        30,
+        5,
+        3
+      ],
+      "1940": [
+        12,
+        1,
+        5
+      ],
+      "1950": [
+        31,
+        3,
+        2
+      ],
+      "1960": [
+        41,
+        6,
+        5
+      ],
+      "1970": [
+        12,
+        13,
+        10
+      ],
+      "1980": [
+        29,
+        10,
+        4
+      ],
+      "1990": [
+        25,
+        7,
+        7
+      ],
+      "2000": [
+        23,
+        17,
+        8
+      ],
+      "2010": [
+        24,
+        13,
+        11
+      ],
+      "2020": [
+        21,
+        18,
+        8
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "4\u00d7400m Relay",
+        "gold": 0.7,
+        "silver": 0.2,
+        "bronze": 0.03,
+        "n": 40
+      },
+      {
+        "name": "400m Hurdles",
+        "gold": 0.63,
+        "silver": 0.24,
+        "bronze": 0.0,
+        "n": 38
+      },
+      {
+        "name": "100m Sprint",
+        "gold": 0.51,
+        "silver": 0.2,
+        "bronze": 0.08,
+        "n": 51
+      },
+      {
+        "name": "Shot Put",
+        "gold": 0.44,
+        "silver": 0.12,
+        "bronze": 0.06,
+        "n": 48
+      },
+      {
+        "name": "Marathon",
+        "gold": 0.1,
+        "silver": 0.05,
+        "bronze": 0.12,
+        "n": 40
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "The USA has dominated Olympic Track & Field since 1896, winning more medals than the next two countries combined."
+  },
+  "Track and Field": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 19,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 175.1,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Track and Field at the Olympic Games."
+  },
+  "Trampolining": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 9,
+    "eventCount": 2,
+    "firstYear": 2000,
+    "lastYear": 2024,
+    "gamesCount": 7,
+    "season": "Summer",
+    "gender": {
+      "Female": 5,
+      "Male": 4
+    },
+    "bodyStats": {
+      "avgH": 165.8,
+      "avgW": 58.4
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Trampolining at the Olympic Games."
+  },
+  "Triathlon": {
+    "totalMedals": {
+      "gold": 1,
+      "silver": 2,
+      "bronze": 2
+    },
+    "totalAthletes": 30,
+    "eventCount": 3,
+    "firstYear": 2000,
+    "lastYear": 2024,
+    "gamesCount": 7,
+    "season": "Summer",
+    "gender": {
+      "Female": 14,
+      "Male": 14
+    },
+    "bodyStats": {
+      "avgH": 175.5,
+      "avgW": 64.0
+    },
+    "medalsByDecade": {
+      "2000": [
+        0,
+        0,
+        1
+      ],
+      "2010": [
+        1,
+        0,
+        0
+      ],
+      "2020": [
+        0,
+        2,
+        1
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Individual",
+        "gold": 0.07,
+        "silver": 0.0,
+        "bronze": 0.14,
+        "n": 14
+      },
+      {
+        "name": "Mixed Relay",
+        "gold": 0.0,
+        "silver": 1.0,
+        "bronze": 0.0,
+        "n": 2
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Triathlon debuted in 2000. The USA has been building strength, especially in the mixed relay format."
+  },
+  "Tug-Of-War": {
+    "totalMedals": {
+      "gold": 1,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 20,
+    "eventCount": 1,
+    "firstYear": 1904,
+    "lastYear": 1920,
+    "gamesCount": 3,
+    "season": "Summer",
+    "gender": {
+      "Male": 20
+    },
+    "bodyStats": {
+      "avgH": null,
+      "avgW": 97.6
+    },
+    "medalsByDecade": {
+      "1900": [
+        1,
+        0,
+        0
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Tug-Of-War at the Olympic Games."
+  },
+  "USF": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 12,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Male": 12
+    },
+    "bodyStats": {
+      "avgH": 176.0,
+      "avgW": 93.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in USF at the Olympic Games."
+  },
+  "VBV": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": 185.0,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in VBV at the Olympic Games."
+  },
+  "VVO": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 3,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {
+      "Female": 3
+    },
+    "bodyStats": {
+      "avgH": 182.7,
+      "avgW": 71.0
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in VVO at the Olympic Games."
+  },
+  "Volleyball": {
+    "totalMedals": {
+      "gold": 11,
+      "silver": 4,
+      "bronze": 6
+    },
+    "totalAthletes": 248,
+    "eventCount": 4,
+    "firstYear": 1964,
+    "lastYear": 2024,
+    "gamesCount": 13,
+    "season": "Summer",
+    "gender": {
+      "Female": 114,
+      "Male": 117
+    },
+    "bodyStats": {
+      "avgH": 188.3,
+      "avgW": 80.9
+    },
+    "medalsByDecade": {
+      "1980": [
+        2,
+        1,
+        0
+      ],
+      "1990": [
+        1,
+        0,
+        2
+      ],
+      "2000": [
+        5,
+        1,
+        0
+      ],
+      "2010": [
+        1,
+        1,
+        3
+      ],
+      "2020": [
+        2,
+        1,
+        1
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Beach Volleyball",
+        "gold": 0.44,
+        "silver": 0.0,
+        "bronze": 0.06,
+        "n": 16
+      },
+      {
+        "name": "Indoor Men's",
+        "gold": 0.15,
+        "silver": 0.15,
+        "bronze": 0.19,
+        "n": 26
+      },
+      {
+        "name": "Indoor Women's",
+        "gold": 0.08,
+        "silver": 0.31,
+        "bronze": 0.15,
+        "n": 13
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Beach volleyball is a USA invention \u2014 and Americans have won gold in nearly half of all Olympic tournaments."
+  },
+  "Water Polo": {
+    "totalMedals": {
+      "gold": 4,
+      "silver": 5,
+      "bronze": 5
+    },
+    "totalAthletes": 228,
+    "eventCount": 2,
+    "firstYear": 1904,
+    "lastYear": 2024,
+    "gamesCount": 24,
+    "season": "Summer",
+    "gender": {
+      "Male": 161,
+      "Female": 53
+    },
+    "bodyStats": {
+      "avgH": 186.7,
+      "avgW": 85.7
+    },
+    "medalsByDecade": {
+      "1900": [
+        1,
+        0,
+        0
+      ],
+      "1920": [
+        0,
+        0,
+        1
+      ],
+      "1930": [
+        0,
+        0,
+        1
+      ],
+      "1970": [
+        0,
+        0,
+        1
+      ],
+      "1980": [
+        0,
+        2,
+        0
+      ],
+      "2000": [
+        0,
+        3,
+        1
+      ],
+      "2010": [
+        2,
+        0,
+        0
+      ],
+      "2020": [
+        1,
+        0,
+        1
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Women's Tournament",
+        "gold": 0.43,
+        "silver": 0.29,
+        "bronze": 0.14,
+        "n": 7
+      },
+      {
+        "name": "Men's Tournament",
+        "gold": 0.13,
+        "silver": 0.16,
+        "bronze": 0.16,
+        "n": 31
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "The US women's water polo team has dominated since the sport added a women's event, with a 43% gold rate."
+  },
+  "Waterski/Wakeboard": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 1,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 170.2,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Waterski/Wakeboard at the Olympic Games."
+  },
+  "Waterskiing": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 3,
+    "eventCount": 6,
+    "firstYear": 1972,
+    "lastYear": 1972,
+    "gamesCount": 1,
+    "season": "Summer",
+    "gender": {
+      "Male": 2,
+      "Female": 1
+    },
+    "bodyStats": {
+      "avgH": null,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Waterskiing at the Olympic Games."
+  },
+  "Weightlifting": {
+    "totalMedals": {
+      "gold": 24,
+      "silver": 21,
+      "bronze": 16
+    },
+    "totalAthletes": 137,
+    "eventCount": 35,
+    "firstYear": 1904,
+    "lastYear": 2024,
+    "gamesCount": 23,
+    "season": "Summer",
+    "gender": {
+      "Male": 115,
+      "Female": 17
+    },
+    "bodyStats": {
+      "avgH": 172.1,
+      "avgW": 91.1
+    },
+    "medalsByDecade": {
+      "1900": [
+        1,
+        1,
+        0
+      ],
+      "1930": [
+        1,
+        0,
+        2
+      ],
+      "1940": [
+        4,
+        0,
+        0
+      ],
+      "1950": [
+        8,
+        3,
+        0
+      ],
+      "1960": [
+        1,
+        5,
+        5
+      ],
+      "1970": [
+        3,
+        4,
+        1
+      ],
+      "1980": [
+        2,
+        7,
+        3
+      ],
+      "1990": [
+        2,
+        0,
+        1
+      ],
+      "2000": [
+        1,
+        0,
+        1
+      ],
+      "2010": [
+        0,
+        0,
+        1
+      ],
+      "2020": [
+        1,
+        1,
+        2
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "81kg",
+        "gold": 0.21,
+        "silver": 0.11,
+        "bronze": 0.11,
+        "n": 19
+      },
+      {
+        "name": "61kg",
+        "gold": 0.15,
+        "silver": 0.0,
+        "bronze": 0.08,
+        "n": 13
+      },
+      {
+        "name": "109kg+",
+        "gold": 0.1,
+        "silver": 0.1,
+        "bronze": 0.11,
+        "n": 70
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "US weightlifting peaked mid-century. The heavyweight division remains the strongest class."
+  },
+  "Wheelchair Basketball": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 58,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 164.1,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Wheelchair basketball was one of the founding Paralympic sports in 1960."
+  },
+  "Wheelchair Curling": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 13,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 176.5,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Wheelchair Curling at the Olympic Games."
+  },
+  "Wheelchair Fencing": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 1,
+      "bronze": 1
+    },
+    "totalAthletes": 12,
+    "eventCount": 2,
+    "firstYear": 1964,
+    "lastYear": 2004,
+    "gamesCount": 2,
+    "season": "Summer",
+    "gender": {
+      "Male": 1
+    },
+    "bodyStats": {
+      "avgH": 171.0,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "1960": [
+        0,
+        1,
+        0
+      ],
+      "2000": [
+        0,
+        0,
+        1
+      ]
+    },
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Wheelchair Fencing at the Olympic Games."
+  },
+  "Wheelchair Rugby": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 20,
+    "eventCount": 0,
+    "firstYear": null,
+    "lastYear": null,
+    "gamesCount": 0,
+    "season": "Unknown",
+    "gender": {},
+    "bodyStats": {
+      "avgH": 170.9,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Wheelchair Rugby (aka 'Murderball') is one of the most intense Paralympic team sports."
+  },
+  "Wheelchair Tennis": {
+    "totalMedals": {
+      "gold": 1,
+      "silver": 4,
+      "bronze": 2
+    },
+    "totalAthletes": 12,
+    "eventCount": 3,
+    "firstYear": 1992,
+    "lastYear": 2016,
+    "gamesCount": 7,
+    "season": "Summer",
+    "gender": {
+      "Male": 3
+    },
+    "bodyStats": {
+      "avgH": 169.9,
+      "avgW": null
+    },
+    "medalsByDecade": {
+      "1990": [
+        1,
+        1,
+        0
+      ],
+      "2000": [
+        0,
+        2,
+        1
+      ],
+      "2010": [
+        0,
+        1,
+        1
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Men's Singles",
+        "gold": 0.33,
+        "silver": 0.67,
+        "bronze": 0.0,
+        "n": 3
+      },
+      {
+        "name": "Quad Singles",
+        "gold": 0.0,
+        "silver": 0.5,
+        "bronze": 0.5,
+        "n": 4
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Wheelchair Tennis uses the same courts and rules as able-bodied tennis \u2014 with a two-bounce allowance."
+  },
+  "Wrestling": {
+    "totalMedals": {
+      "gold": 74,
+      "silver": 40,
+      "bronze": 35
+    },
+    "totalAthletes": 392,
+    "eventCount": 37,
+    "firstYear": 1904,
+    "lastYear": 2024,
+    "gamesCount": 28,
+    "season": "Summer",
+    "gender": {
+      "Male": 324,
+      "Female": 20
+    },
+    "bodyStats": {
+      "avgH": 173.2,
+      "avgW": 76.0
+    },
+    "medalsByDecade": {
+      "1900": [
+        9,
+        0,
+        0
+      ],
+      "1920": [
+        6,
+        2,
+        3
+      ],
+      "1930": [
+        4,
+        5,
+        0
+      ],
+      "1940": [
+        2,
+        1,
+        1
+      ],
+      "1950": [
+        1,
+        3,
+        2
+      ],
+      "1960": [
+        3,
+        2,
+        1
+      ],
+      "1970": [
+        4,
+        5,
+        3
+      ],
+      "1980": [
+        26,
+        6,
+        4
+      ],
+      "1990": [
+        6,
+        7,
+        3
+      ],
+      "2000": [
+        4,
+        5,
+        7
+      ],
+      "2010": [
+        4,
+        0,
+        4
+      ],
+      "2020": [
+        5,
+        4,
+        7
+      ]
+    },
+    "topEvents": [
+      {
+        "name": "Freestyle 74kg",
+        "gold": 0.26,
+        "silver": 0.15,
+        "bronze": 0.12,
+        "n": 199
+      },
+      {
+        "name": "Women's Freestyle 57kg",
+        "gold": 0.14,
+        "silver": 0.11,
+        "bronze": 0.21,
+        "n": 28
+      },
+      {
+        "name": "Greco-Roman 67kg",
+        "gold": 0.02,
+        "silver": 0.04,
+        "bronze": 0.04,
+        "n": 137
+      }
+    ],
+    "la28": true,
+    "isNew": false,
+    "funFact": "Wrestling is one of the original Olympic sports from 1896. The USA excels in freestyle but struggles in Greco-Roman."
+  },
+  "Wushu": {
+    "totalMedals": {
+      "gold": 0,
+      "silver": 0,
+      "bronze": 0
+    },
+    "totalAthletes": 5,
+    "eventCount": 5,
+    "firstYear": 2008,
+    "lastYear": 2008,
+    "gamesCount": 1,
+    "season": "Summer",
+    "gender": {
+      "Male": 2,
+      "Female": 3
+    },
+    "bodyStats": {
+      "avgH": 173.0,
+      "avgW": null
+    },
+    "medalsByDecade": {},
+    "topEvents": [],
+    "la28": false,
+    "isNew": false,
+    "funFact": "Team USA has competed in Wushu at the Olympic Games."
+  }
+}
