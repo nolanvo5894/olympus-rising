@@ -1,7 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import medalRatesData from "./datasets/medal_rates.json";
 import sportStatsData from "./datasets/sport_stats.json";
+import { geminiText, geminiImage, hasApiKey, GeminiKeyMissingError } from "./lib/gemini.js";
+import { generateMonster, pickSpawnBasis, buildImagePrompt } from "./lib/monsterGen.js";
+import { loadCampaign, saveCampaign, clearCampaign } from "./lib/storage.js";
+import { matchSports, PERSONALITY_QUESTIONS, SPORT_BODY_TYPES } from "./lib/sportMatch.js";
 
 /* ═══════════════════════════════════════════════════════════════
    OLYMPUS RISING v3 — Moves Edition
@@ -71,7 +75,7 @@ const REGIONS=[
   {id:"south",name:"South",states:"FL, GA, AL, TN, NC, SC",sports:["Track & Field","Swimming","Tennis","Sailing","Equestrian"],color:"#22c55e",cx:400,cy:210},
   {id:"northeast",name:"Northeast",states:"NY, NJ, MA, PA, ME",sports:["Rowing","Ice Hockey","Fencing","Freestyle Skiing","Sled Hockey"],color:"#a855f7",cx:510,cy:85},
   {id:"capital",name:"Capital",states:"DC, MD, VA, WV, DE",sports:["Canoe / Kayak","Equestrian","Swimming","Track & Field"],color:"#6366f1",cx:465,cy:140},
-  {id:"la28",name:"LA28",states:"Los Angeles",sports:["ALL"],color:"#d4a843",cx:68,cy:195},
+  {id:"la28",name:"LA28",states:"Los Angeles",sports:["ALL"],color:"#ffd400",cx:68,cy:195},
 ];
 
 // ── Spirits (1 per sport, moves = events) ───────────────────
@@ -383,83 +387,17 @@ SPIRITS.forEach(s=>{if(REGION_SPORT_STRENGTH[s.sport])s.regions=REGION_SPORT_STR
 // Only includes sports that are in-game SPIRITS (Olympic only — body quiz
 // doesn't apply to Paralympic sports). Counts reflect merged SPORT_MAP
 // categories (e.g. Cycling includes Track/Road/BMX/MTB).
-const SPORT_BODY_TYPES=[
-  {sport:"Track & Field",emoji:"🏃",avgH:179.1,avgW:73.0,n:1742},
-  {sport:"Rowing",emoji:"🚣",avgH:185.0,avgW:80.0,n:535},
-  {sport:"Swimming",emoji:"🏊",avgH:179.8,avgW:71.9,n:510},
-  {sport:"Ice Hockey",emoji:"🏒",avgH:179.4,avgW:81.8,n:374},
-  {sport:"Basketball",emoji:"🏀",avgH:193.3,avgW:88.1,n:283},
-  {sport:"Wrestling",emoji:"🤼",avgH:173.1,avgW:76.0,n:205},
-  {sport:"Volleyball",emoji:"🏐",avgH:188.2,avgW:80.9,n:204},
-  {sport:"Cycling",emoji:"🚴",avgH:177.0,avgW:71.2,n:195},
-  {sport:"Speed Skating",emoji:"⏱️",avgH:172.7,avgW:68.7,n:179},
-  {sport:"Shooting",emoji:"🎯",avgH:175.4,avgW:76.6,n:176},
-  {sport:"Boxing",emoji:"🥊",avgH:175.2,avgW:67.3,n:171},
-  {sport:"Sailing",emoji:"⛵",avgH:180.0,avgW:78.7,n:169},
-  {sport:"Fencing",emoji:"🤺",avgH:178.1,avgW:72.7,n:164},
-  {sport:"Alpine Skiing",emoji:"⛷️",avgH:172.7,avgW:71.5,n:163},
-  {sport:"Canoe / Kayak",emoji:"🛶",avgH:178.9,avgW:74.1,n:151},
-  {sport:"Water Polo",emoji:"🤽",avgH:186.9,avgW:85.7,n:147},
-  {sport:"Gymnastics",emoji:"🤸",avgH:161.9,avgW:56.3,n:144},
-  {sport:"Figure Skating",emoji:"⛸️",avgH:166.8,avgW:59.0,n:144},
-  {sport:"Diving",emoji:"🤿",avgH:168.4,avgW:62.0,n:103},
-  {sport:"Baseball",emoji:"⚾",avgH:186.1,avgW:88.3,n:97},
-  {sport:"Equestrian",emoji:"🐴",avgH:173.5,avgW:64.6,n:92},
-  {sport:"Freestyle Skiing",emoji:"🎿",avgH:172.8,avgW:69.2,n:91},
-  {sport:"Weightlifting",emoji:"🏋️",avgH:172.5,avgW:94.3,n:89},
-  {sport:"Snowboarding",emoji:"🏂",avgH:172.7,avgW:70.5,n:71},
-  {sport:"Judo",emoji:"🥋",avgH:174.1,avgW:78.2,n:65},
-  {sport:"Tennis",emoji:"🎾",avgH:182.6,avgW:76.2,n:59},
-  {sport:"Rugby Sevens",emoji:"🏉",avgH:177.7,avgW:82.7,n:46},
-  {sport:"Archery",emoji:"🏹",avgH:175.2,avgW:69.9,n:34},
-  {sport:"Modern Pentathlon",emoji:"🤺",avgH:180.6,avgW:72.2,n:32},
-  {sport:"Softball",emoji:"🥎",avgH:173.7,avgW:73.8,n:28},
-  {sport:"Table Tennis",emoji:"🏓",avgH:171.3,avgW:62.8,n:26},
-  {sport:"Triathlon",emoji:"🏊‍♂️",avgH:175.0,avgW:64.0,n:22},
-  {sport:"Flag Football",emoji:"🏈",avgH:178.3,avgW:77.6,n:14},
-  {sport:"Taekwondo",emoji:"🥋",avgH:176.0,avgW:66.0,n:13},
-  {sport:"Skateboarding",emoji:"🛹",avgH:170.0,avgW:65.0,n:10}, // estimated — <3 athletes in CSV
-  {sport:"Surfing",emoji:"🏄",avgH:175.0,avgW:72.0,n:9},        // estimated
-  {sport:"Golf",emoji:"⛳",avgH:178.9,avgW:74.6,n:9},
-  {sport:"Sport Climbing",emoji:"🧗",avgH:172.0,avgW:62.0,n:8}, // estimated
-];
+// SPORT_BODY_TYPES and matchSports moved to src/lib/sportMatch.js (Gemini-driven)
 
-function bodyMatch(heightCm,weightKg){
-  const hR=30,wR=40,sigma=0.45;
-  return SPORT_BODY_TYPES.map(s=>{
-    const d=Math.sqrt(((heightCm-s.avgH)/hR)**2+((weightKg-s.avgW)/wR)**2);
-    const pct=Math.round(Math.exp(-Math.pow(d/sigma,2))*100);
-    return {...s,dist:d,pct};
-  }).sort((a,b)=>a.dist-b.dist).slice(0,5);
-}
-
-// ── Rounds (monsters array per round — supports multi-monster encounters) ──
-const ROUNDS=[
-  {regionId:"pacific",monsters:[
-    {name:"Scylla",emoji:"🌊",hp:120,special:null,desc:"A sea beast drowning the Pacific's aquatic spirit."},
-  ]},
-  {regionId:"heartland",monsters:[
-    {name:"Minotaur",emoji:"🐂",hp:100,special:"hit_strongest",desc:"Charges your strongest spirit first."},
-    {name:"Harpy",emoji:"🦅",hp:80,special:"hit_weakest",desc:"Swoops on the weakest spirit."},
-  ]},
-  {regionId:"southwest",monsters:[
-    {name:"Chimera",emoji:"🦁",hp:150,special:"shift_weakness",desc:"Its weakness shifts each turn — match the medal type for +50% damage."},
-  ]},
-  {regionId:"south",monsters:[
-    {name:"Cerberus",emoji:"🐺",hp:120,special:"block_weak",desc:"Blocks moves with <25% total hit rate."},
-    {name:"Hydra",emoji:"🐍",hp:100,special:"regenerate",desc:"Regenerates 10 HP each turn. Focus fire!"},
-  ]},
-  {regionId:"la28",monsters:[
-    {name:"Typhon",emoji:"⚡",hp:200,special:"aoe",desc:"Father of Monsters. Hits ALL spirits each turn."},
-  ]},
-];
+// ── Active region slots (endless mode: 1 monster per region, regenerated on defeat) ──
+const ACTIVE_REGIONS=REGIONS.filter(r=>r.id!=="la28");
 
 // ── Helpers ─────────────────────────────────────────────────
 const shuffle=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]];}return b;};
 const HP=100; // flat HP for all spirits
 const totalRate=m=>m[1]+m[2]+m[3];
 const bestGold=s=>Math.max(...s.moves.map(m=>m[1]));
-const tier=s=>{const g=bestGold(s);return g>=.30?{n:"Elite",c:"#d4a843"}:g>=.18?{n:"Strong",c:"#a855f7"}:g>=.10?{n:"Solid",c:"#60a5fa"}:{n:"Underdog",c:"#a1887f"};};
+const tier=s=>{const g=bestGold(s);return g>=.30?{n:"Elite",c:"#ffd400"}:g>=.18?{n:"Strong",c:"#ff2d95"}:g>=.10?{n:"Solid",c:"#22e0ff"}:{n:"Underdog",c:"#9a7fc0"};};
 
 function rollMove(move,affinity,bodyAff,synergies={}){
   const [name,g,s,b,kw]=move;
@@ -557,11 +495,11 @@ function simulateBattle(team,monsters,numSims=1000,regionId="",bodyTop5=[]){
   return{winRate:Math.round(wins/numSims*100),avgDmg:Math.round(damages.reduce((a,b)=>a+b,0)/numSims),damages,wins,numSims};
 }
 
-async function gemini(p){try{const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:250,messages:[{role:"user",content:p}]})});const d=await r.json();return d.content?.[0]?.text||"";}catch{return"";}}
+async function gemini(p){try{return await geminiText(p);}catch(e){console.warn("[gemini text]",e);return"";}}
 
 // ── Theme ───────────────────────────────────────────────────
-const T={bg:"#06080c",s1:"#0c0f16",s2:"#111620",gold:"#d4a843",gd:"#8b7530",red:"#ef4444",grn:"#22c55e",blu:"#3b82f6",pur:"#a855f7",para:"#38bdf8",txt:"#e8e0d4",dim:"#8a8278",fnt:"#3a3630",hd:"'Cinzel',serif",bd:"'Crimson Pro',Georgia,serif"};
-const medalColors={gold:"#d4a843",silver:"#94a3b8",bronze:"#cd7f32",miss:"#3a3630"};
+const T={bg:"#0a0014",s1:"#1a0033",s2:"#260047",gold:"#ffd400",gd:"#22e0ff",red:"#ff3939",grn:"#caff00",blu:"#22e0ff",pur:"#ff2d95",para:"#22e0ff",txt:"#fbfbff",dim:"#9a7fc0",fnt:"#3a1a6a",hd:"'Press Start 2P','VT323',monospace",bd:"'VT323',monospace"};
+const medalColors={gold:"#ffd400",silver:"#b8c4ff",bronze:"#ff8844",miss:"#3a1a6a"};
 
 // ═══════════════════════════════════════════════════════════════
 // COMPONENTS
@@ -600,127 +538,233 @@ function SpiritCard({spirit:s,compact,selected,onClick,disabled,showHp,hp:curHp,
 
 const Btn=({children,onClick,color=T.gold,disabled:d,small:s})=><button disabled={d} onClick={onClick} style={{background:"transparent",border:`2px solid ${d?T.fnt:color}`,color:d?T.fnt:color,fontFamily:T.hd,fontSize:s?10:12,padding:s?"4px 10px":"8px 20px",borderRadius:7,cursor:d?"default":"pointer",letterSpacing:2,textTransform:"uppercase"}}>{children}</button>;
 
-function USMap({atk,results,compact}){
+function USMap({atk,results={},slots={},compact,onPick}){
   const rc={pacific:"#3b82f6",mountain:"#94a3b8",southwest:"#ef4444",heartland:"#eab308",south:"#22c55e",northeast:"#a855f7",capital:"#6366f1"};
-  return(<svg viewBox="-5 0 600 320" style={{width:"100%",maxWidth:compact?420:540}}>
-    <defs><filter id="ag"><feGaussianBlur stdDeviation="6" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="wg"><feGaussianBlur stdDeviation="3" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-    {ST.map(([ab,rg,d])=>{const ia=atk===rg,rs=results[rg],bc=rc[rg]||"#555";return <path key={ab} d={d} fill={rs==="won"?T.grn+"30":rs==="lost"?T.red+"18":ia?T.red+"35":bc+"18"} stroke={rs==="won"?T.grn+"88":rs==="lost"?T.red+"44":ia?T.red+"cc":bc+"44"} strokeWidth={ia?1.5:.5} filter={ia?"url(#ag)":rs==="won"?"url(#wg)":"none"} style={{transition:"all .5s"}}/>;})}
-    {REGIONS.filter(r=>r.id!=="la28").map(r=>{const rs=results[r.id],ia=atk===r.id;return <g key={r.id}><text x={r.cx} y={r.cy} textAnchor="middle" fill={ia?T.red:rs==="won"?T.grn:rs==="lost"?T.red+"88":"#fff8"} fontSize={compact?8:10} fontFamily="Cinzel" fontWeight={700} style={{textShadow:"0 1px 4px #000a"}}>{r.name}</text>{ia&&<text x={r.cx} y={r.cy+16} textAnchor="middle" fontSize={compact?14:18}>{ROUNDS.find(x=>x.regionId===r.id)?.monsters.map(m=>m.emoji).join("")}</text>}{rs==="won"&&!ia&&<text x={r.cx} y={r.cy+14} textAnchor="middle" fontSize={10}>🛡️</text>}{rs==="lost"&&!ia&&<text x={r.cx} y={r.cy+14} textAnchor="middle" fontSize={10}>💀</text>}</g>;})}
-    <circle cx={68} cy={195} r={atk==="la28"?8:5} fill={results.la28==="won"?T.grn:results.la28==="lost"?T.red:atk==="la28"?T.red:T.gold} opacity={.8}>{atk==="la28"&&<animate attributeName="r" values="6;10;6" dur="1.5s" repeatCount="indefinite"/>}</circle>
-    <text x={68} y={213} textAnchor="middle" fill={atk==="la28"?T.red:T.gold} fontSize={8} fontFamily="Cinzel" fontWeight={700}>LA28</text>
-    {atk==="la28"&&<text x={68} y={183} textAnchor="middle" fontSize={16}>⚡</text>}
+  return(<svg viewBox="-5 0 600 320" style={{width:"100%",maxWidth:compact?420:540,filter:"drop-shadow(0 8px 24px rgba(0,0,0,0.6))"}}>
+    <defs>
+      <filter id="ag" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="wg" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="liveGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      {Object.entries(rc).map(([id,col])=>(<radialGradient key={id} id={`hl-${id}`} cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor={col} stopOpacity="0.35"/><stop offset="100%" stopColor={col} stopOpacity="0"/></radialGradient>))}
+    </defs>
+    {/* Soft region halos behind state paths */}
+    {REGIONS.filter(r=>r.id!=="la28").map(r=>(<circle key={"halo-"+r.id} cx={r.cx} cy={r.cy+5} r={compact?38:48} fill={`url(#hl-${r.id})`} style={{pointerEvents:"none"}}/>))}
+    {/* Pass 1: opaque-ish fills (no stroke) so they hide inner seams in pass 2 */}
+    {ST.map(([ab,rg,d])=>{
+      const ia=atk===rg,rs=results[rg],bc=rc[rg]||"#555";const hasMon=!!slots[rg];
+      const fill=rs==="won"?T.grn+"66":rs==="lost"?T.red+"44":ia?T.red+"77":hasMon?bc+"66":bc+"33";
+      return <path key={"f-"+ab} d={d} fill={fill} stroke="none" style={{transition:"all .5s",cursor:onPick&&slots[rg]?"pointer":"default"}} onClick={onPick&&slots[rg]?()=>onPick(rg):undefined}/>;
+    })}
+    {/* Pass 2: thick stroke per state with paint-order=stroke so each state's fill covers the inner half — leaves only the region perimeter visible */}
+    {ST.map(([ab,rg,d])=>{
+      const ia=atk===rg,rs=results[rg],bc=rc[rg]||"#555";const hasMon=!!slots[rg];
+      const fill=rs==="won"?T.grn+"66":rs==="lost"?T.red+"44":ia?T.red+"77":hasMon?bc+"66":bc+"33";
+      const stroke=rs==="won"?T.grn:rs==="lost"?T.red:ia?T.red:bc;
+      const sw=ia?5:hasMon?4:3;
+      return <path key={"s-"+ab} d={d} fill={fill} stroke={stroke} strokeWidth={sw} strokeLinejoin="round" filter={ia?"url(#ag)":rs==="won"?"url(#wg)":"none"} style={{paintOrder:"stroke",transition:"all .5s",cursor:onPick&&slots[rg]?"pointer":"default",pointerEvents:"none"}}/>;
+    })}
+    {REGIONS.filter(r=>r.id!=="la28").map(r=>{
+      const rs=results[r.id],ia=atk===r.id,mon=slots[r.id];
+      const labelColor=ia?"#fff":rs==="won"?T.grn:rs==="lost"?T.red+"cc":mon?"#fff":T.dim;
+      return <g key={r.id} style={{cursor:onPick&&mon?"pointer":"default"}} onClick={onPick&&mon?()=>onPick(r.id):undefined}>
+        <text x={r.cx} y={r.cy} textAnchor="middle" fill={labelColor} fontSize={compact?9:11} fontFamily="Cinzel" fontWeight={900} letterSpacing="1.5" style={{textShadow:`0 0 8px ${rc[r.id]||"#000"}, 0 2px 4px #000`}}>{r.name.toUpperCase()}</text>
+        {mon&&<g filter="url(#liveGlow)"><text x={r.cx} y={r.cy+(compact?18:22)} textAnchor="middle" fontSize={compact?18:24} style={{filter:"drop-shadow(0 2px 6px #000)"}}>{mon.emoji}</text></g>}
+        {!mon&&!ia&&rs!=="won"&&rs!=="lost"&&<text x={r.cx} y={r.cy+15} textAnchor="middle" fontSize={9} fill={T.gold+"aa"} fontFamily={T.bd} fontStyle="italic">summoning…</text>}
+        {rs==="won"&&!ia&&<text x={r.cx} y={r.cy+15} textAnchor="middle" fontSize={14}>🛡️</text>}
+        {rs==="lost"&&!ia&&<text x={r.cx} y={r.cy+15} textAnchor="middle" fontSize={14}>💀</text>}
+      </g>;
+    })}
   </svg>);
 }
 
 // ═══════════════════════════════════════════════════════════════
 // SCREENS
 // ═══════════════════════════════════════════════════════════════
+function StartMap(){
+  // null = probing, true = png available, false = use svg fallback
+  const [hasPng,setHasPng]=useState(null);
+  useEffect(()=>{
+    let cancelled=false;
+    fetch("/usa-map.png",{method:"HEAD",cache:"no-cache"})
+      .then(r=>{
+        const ct=r.headers.get("content-type")||"";
+        if(!cancelled) setHasPng(r.ok&&ct.startsWith("image/"));
+      })
+      .catch(()=>{if(!cancelled) setHasPng(false);});
+    return()=>{cancelled=true;};
+  },[]);
+  if(hasPng) return <img src="/usa-map.png" alt="USA regions" style={{width:"100%",maxWidth:540,borderRadius:14,filter:"drop-shadow(0 8px 24px rgba(0,0,0,0.6))",display:"block"}}/>;
+  return <USMap results={{}}/>;
+}
+
 function Start({go,howto,explore}){return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100vh",gap:20,padding:20,textAlign:"center"}}>
   <div style={{fontSize:11,letterSpacing:8,color:T.gd,fontFamily:T.hd}}>TEAM USA × DATA SCIENCE</div>
   <h1 style={{fontSize:44,fontFamily:T.hd,color:T.gold,margin:0,textShadow:`0 0 40px ${T.gold}33`}}>OLYMPUS RISING</h1>
   <p style={{fontSize:14,color:T.dim,fontFamily:T.bd,maxWidth:440,lineHeight:1.7,fontStyle:"italic"}}>Monsters attack America before LA28. Summon sport spirits — each with real event moves powered by 120 years of medal data. Study the stats. Pick the right move. Defend every region.</p>
-  <USMap results={{}}/>
+  <StartMap/>
   <div style={{display:"flex",gap:12,flexWrap:"wrap",justifyContent:"center"}}><Btn onClick={howto} color={T.blu}>How to Play</Btn><Btn onClick={explore} color={T.pur}>Explore Sports</Btn><Btn onClick={go}>Defend America</Btn></div>
 </div>);}
 
+async function compressImageFile(file, maxEdge = 1024, quality = 0.85){
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((resolve, reject) => {
+      const i = new Image();
+      i.onload = () => resolve(i);
+      i.onerror = reject;
+      i.src = url;
+    });
+    const scale = Math.min(1, maxEdge / Math.max(img.width, img.height));
+    const w = Math.round(img.width * scale);
+    const h = Math.round(img.height * scale);
+    const canvas = document.createElement("canvas");
+    canvas.width = w; canvas.height = h;
+    canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+    const dataUrl = canvas.toDataURL("image/jpeg", quality);
+    const base64 = dataUrl.split(",")[1] || "";
+    return { dataUrl, base64, mimeType: "image/jpeg" };
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+const RANK_LABELS = ["1st", "2nd", "3rd", "4th", "5th"];
+
 function BodyQuiz({done}){
-  const [unit,setUnit]=useState("imperial"); // imperial | metric
+  const [unit,setUnit]=useState("imperial");
   const [ft,setFt]=useState("");const [inch,setInch]=useState("");const [cm,setCm]=useState("");
   const [lbs,setLbs]=useState("");const [kg,setKg]=useState("");
+  const [photo,setPhoto]=useState(null); // {dataUrl, base64, mimeType} or null
+  const [photoErr,setPhotoErr]=useState(null);
+  const [personality,setPersonality]=useState({}); // {questionId: choiceText}
   const [results,setResults]=useState(null);
+  const [loading,setLoading]=useState(false);
+  const [error,setError]=useState(null);
 
   const getH=()=>unit==="imperial"?(parseFloat(ft||0)*30.48+parseFloat(inch||0)*2.54):parseFloat(cm||0);
   const getW=()=>unit==="imperial"?(parseFloat(lbs||0)*0.4536):parseFloat(kg||0);
+  const heightOk=()=>{const h=getH();return h>100&&h<260;};
+  const weightOk=()=>{const w=getW();return w>20&&w<300;};
+  const personalityComplete=PERSONALITY_QUESTIONS.every(q=>personality[q.id]);
+  const canSubmit=heightOk()&&weightOk()&&personalityComplete&&!loading;
 
-  const run=()=>{const h=getH(),w=getW();if(h>100&&w>20){setResults(bodyMatch(h,w));}};
+  const onPickPhoto=async(e)=>{
+    const file=e.target.files?.[0];e.target.value="";if(!file)return;
+    setPhotoErr(null);
+    try{const result=await compressImageFile(file);setPhoto(result);}
+    catch(err){console.error(err);setPhotoErr("Couldn't read that image. Try a JPEG or PNG.");}
+  };
+
+  const run=async()=>{
+    setError(null);setLoading(true);
+    try{
+      const ranked=await matchSports({
+        heightCm:getH(),weightKg:getW(),personality,
+        photoBase64:photo?.base64,photoMimeType:photo?.mimeType,
+      });
+      if(!ranked.length)throw new Error("Empty ranking returned.");
+      setResults(ranked);
+    }catch(err){console.error(err);setError(err.message||"Sport matching failed.");}
+    finally{setLoading(false);}
+  };
 
   const IS={background:T.s2,border:`1px solid ${T.fnt}`,borderRadius:6,color:T.txt,fontFamily:T.bd,fontSize:16,padding:"8px 10px",width:70,textAlign:"center",outline:"none"};
+  const sectionLabel={fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:3};
+  const sectionBox={background:T.s1,border:`1px solid ${T.fnt}`,borderRadius:10,padding:14,width:"100%",maxWidth:520};
 
-  return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100vh",gap:20,padding:20,textAlign:"center"}}>
+  return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:20,gap:16}}>
     <div style={{fontSize:11,letterSpacing:8,color:T.gd,fontFamily:T.hd}}>BODY TYPE SCANNER</div>
-    <h2 style={{fontSize:32,fontFamily:T.hd,color:T.gold,margin:0}}>Find Your Sport Match</h2>
-    <p style={{fontSize:13,color:T.dim,fontFamily:T.bd,maxWidth:400,lineHeight:1.6,fontStyle:"italic"}}>
-      Enter your height and weight. We'll compare you to the body types of 7,600+ Team USA Olympians across 39 sports.
+    <h2 style={{fontSize:30,fontFamily:T.hd,color:T.gold,margin:0,textAlign:"center"}}>Find Your Sport Match</h2>
+    <p style={{fontSize:13,color:T.dim,fontFamily:T.bd,maxWidth:480,lineHeight:1.6,fontStyle:"italic",textAlign:"center"}}>
+      Enter your height + weight, optionally upload a photo, and answer 5 quick scenarios. Gemini ranks the 5 sports that fit you best out of 39 Team USA Olympic sports.
     </p>
 
-    {/* Unit toggle */}
-    <div style={{display:"flex",gap:4,background:T.s1,borderRadius:8,padding:3}}>
-      {["imperial","metric"].map(u=>(
-        <button key={u} onClick={()=>setUnit(u)} style={{background:unit===u?T.gold+"22":"transparent",border:unit===u?`1px solid ${T.gold}`:"1px solid transparent",color:unit===u?T.gold:T.dim,fontFamily:T.hd,fontSize:11,letterSpacing:2,borderRadius:6,padding:"6px 16px",cursor:"pointer",textTransform:"uppercase"}}>{u==="imperial"?"FT / LB":"CM / KG"}</button>
-      ))}
-    </div>
-
-    {/* Inputs */}
-    <div style={{display:"flex",gap:16,alignItems:"flex-end",flexWrap:"wrap",justifyContent:"center"}}>
-      {unit==="imperial"?(
-        <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+    {/* ── Section 1: body ── */}
+    <div style={sectionBox}>
+      <div style={{...sectionLabel,marginBottom:10,textAlign:"center"}}>1. BODY</div>
+      <div style={{display:"flex",justifyContent:"center",marginBottom:10}}>
+        <div style={{display:"flex",gap:4,background:T.s2,borderRadius:8,padding:3}}>
+          {["imperial","metric"].map(u=>(<button key={u} onClick={()=>setUnit(u)} style={{background:unit===u?T.gold+"22":"transparent",border:unit===u?`1px solid ${T.gold}`:"1px solid transparent",color:unit===u?T.gold:T.dim,fontFamily:T.hd,fontSize:11,letterSpacing:2,borderRadius:6,padding:"6px 16px",cursor:"pointer",textTransform:"uppercase"}}>{u==="imperial"?"FT / LB":"CM / KG"}</button>))}
+        </div>
+      </div>
+      <div style={{display:"flex",gap:16,alignItems:"flex-end",flexWrap:"wrap",justifyContent:"center"}}>
+        {unit==="imperial"?(<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
           <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:2}}>HEIGHT</div>
           <div style={{display:"flex",gap:4,alignItems:"center"}}>
-            <input value={ft} onChange={e=>setFt(e.target.value)} placeholder="5" style={IS} type="number" min="3" max="8"/>
-            <span style={{color:T.dim,fontSize:13,fontFamily:T.bd}}>ft</span>
-            <input value={inch} onChange={e=>setInch(e.target.value)} placeholder="10" style={IS} type="number" min="0" max="11"/>
-            <span style={{color:T.dim,fontSize:13,fontFamily:T.bd}}>in</span>
+            <input value={ft} onChange={e=>setFt(e.target.value)} placeholder="5" style={IS} type="number" min="3" max="8"/><span style={{color:T.dim,fontSize:13}}>ft</span>
+            <input value={inch} onChange={e=>setInch(e.target.value)} placeholder="10" style={IS} type="number" min="0" max="11"/><span style={{color:T.dim,fontSize:13}}>in</span>
           </div>
-        </div>
-      ):(
-        <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+        </div>):(<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
           <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:2}}>HEIGHT</div>
           <div style={{display:"flex",gap:4,alignItems:"center"}}>
-            <input value={cm} onChange={e=>setCm(e.target.value)} placeholder="178" style={{...IS,width:90}} type="number" min="100" max="250"/>
-            <span style={{color:T.dim,fontSize:13,fontFamily:T.bd}}>cm</span>
+            <input value={cm} onChange={e=>setCm(e.target.value)} placeholder="178" style={{...IS,width:90}} type="number" min="100" max="250"/><span style={{color:T.dim,fontSize:13}}>cm</span>
           </div>
-        </div>
-      )}
-      {unit==="imperial"?(
-        <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+        </div>)}
+        {unit==="imperial"?(<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
           <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:2}}>WEIGHT</div>
-          <div style={{display:"flex",gap:4,alignItems:"center"}}>
-            <input value={lbs} onChange={e=>setLbs(e.target.value)} placeholder="160" style={{...IS,width:90}} type="number" min="50" max="500"/>
-            <span style={{color:T.dim,fontSize:13,fontFamily:T.bd}}>lbs</span>
-          </div>
-        </div>
-      ):(
-        <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+          <div style={{display:"flex",gap:4,alignItems:"center"}}><input value={lbs} onChange={e=>setLbs(e.target.value)} placeholder="160" style={{...IS,width:90}} type="number" min="50" max="500"/><span style={{color:T.dim,fontSize:13}}>lbs</span></div>
+        </div>):(<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
           <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:2}}>WEIGHT</div>
-          <div style={{display:"flex",gap:4,alignItems:"center"}}>
-            <input value={kg} onChange={e=>setKg(e.target.value)} placeholder="73" style={{...IS,width:90}} type="number" min="20" max="250"/>
-            <span style={{color:T.dim,fontSize:13,fontFamily:T.bd}}>kg</span>
-          </div>
-        </div>
-      )}
+          <div style={{display:"flex",gap:4,alignItems:"center"}}><input value={kg} onChange={e=>setKg(e.target.value)} placeholder="73" style={{...IS,width:90}} type="number" min="20" max="250"/><span style={{color:T.dim,fontSize:13}}>kg</span></div>
+        </div>)}
+      </div>
     </div>
 
-    <Btn onClick={run} color={T.gold}>Find My Sports</Btn>
+    {/* ── Section 2: photo (optional) ── */}
+    <div style={sectionBox}>
+      <div style={{...sectionLabel,marginBottom:10,textAlign:"center"}}>2. PHOTO <span style={{color:T.dim}}>(optional)</span></div>
+      <div style={{display:"flex",gap:14,alignItems:"center",justifyContent:"center",flexWrap:"wrap"}}>
+        {photo?(<>
+          <img src={photo.dataUrl} alt="you" style={{width:80,height:80,objectFit:"cover",borderRadius:8,border:`1px solid ${T.gold}55`}}/>
+          <button onClick={()=>setPhoto(null)} style={{background:"transparent",border:`1px solid ${T.dim}`,color:T.dim,fontFamily:T.hd,fontSize:10,padding:"5px 10px",borderRadius:5,cursor:"pointer",letterSpacing:2,textTransform:"uppercase"}}>Remove</button>
+        </>):(<label style={{cursor:"pointer",border:`1px dashed ${T.fnt}`,borderRadius:8,padding:"14px 22px",color:T.dim,fontFamily:T.bd,fontSize:12}}>
+          <input type="file" accept="image/*" onChange={onPickPhoto} style={{display:"none"}}/>
+          + Upload a photo of yourself
+        </label>)}
+      </div>
+      {photoErr&&<div style={{color:T.red,fontSize:11,fontFamily:T.bd,textAlign:"center",marginTop:6}}>{photoErr}</div>}
+      <p style={{fontSize:10,color:T.dim,fontFamily:T.bd,fontStyle:"italic",textAlign:"center",lineHeight:1.5,marginTop:8}}>Photo is sent to Gemini for analysis and not stored anywhere.</p>
+    </div>
 
-    {/* Results */}
+    {/* ── Section 3: personality ── */}
+    <div style={sectionBox}>
+      <div style={{...sectionLabel,marginBottom:10,textAlign:"center"}}>3. QUICK VIBE CHECK</div>
+      <div style={{display:"flex",flexDirection:"column",gap:14}}>
+        {PERSONALITY_QUESTIONS.map((q)=>(<div key={q.id}>
+          <div style={{fontFamily:T.hd,fontSize:13,color:T.txt,marginBottom:6}}>{q.q}</div>
+          <div style={{display:"flex",flexDirection:"column",gap:5}}>
+            {q.choices.map((c)=>{const sel=personality[q.id]===c;return(<button key={c} onClick={()=>setPersonality(p=>({...p,[q.id]:c}))} style={{textAlign:"left",background:sel?T.gold+"18":T.s2,border:`1px solid ${sel?T.gold:T.fnt}`,color:sel?T.gold:T.txt,fontFamily:T.bd,fontSize:12,padding:"8px 12px",borderRadius:6,cursor:"pointer",lineHeight:1.4}}>{c}</button>);})}
+          </div>
+        </div>))}
+      </div>
+    </div>
+
+    {/* ── Submit ── */}
+    {!results&&(<>
+      <Btn onClick={run} disabled={!canSubmit} color={T.gold}>{loading?"Reading the auras…":"Find My Sports"}</Btn>
+      {error&&<div style={{color:T.red,fontFamily:T.bd,fontSize:12,maxWidth:480,textAlign:"center"}}>{error}</div>}
+      <button onClick={()=>done(null)} style={{background:"none",border:"none",color:T.dim,fontFamily:T.bd,fontSize:12,cursor:"pointer",textDecoration:"underline"}}>Skip →</button>
+    </>)}
+
+    {/* ── Results ── */}
     {results&&(
-      <div style={{display:"flex",flexDirection:"column",gap:10,width:"100%",maxWidth:420,marginTop:8}}>
+      <div style={{display:"flex",flexDirection:"column",gap:10,width:"100%",maxWidth:520}}>
         <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:3,textAlign:"center"}}>YOUR TOP 5 SPORT MATCHES</div>
-        {results.map((r,i)=>{
-          const barCol=i===0?T.gold:i===1?"#c0c0c0":i===2?"#cd7f32":T.blu;
-          return(
-            <div key={r.sport} style={{background:T.s1,borderRadius:10,padding:"12px 16px",display:"flex",alignItems:"center",gap:12,border:`1px solid ${i===0?T.gold+"44":T.fnt}`}}>
-              <div style={{fontSize:28,minWidth:36,textAlign:"center"}}>{r.emoji}</div>
-              <div style={{flex:1,textAlign:"left"}}>
-                <div style={{fontFamily:T.hd,color:i===0?T.gold:T.txt,fontSize:14}}>{i===0?"🏆 ":""}{r.sport}</div>
-                <div style={{fontFamily:T.bd,color:T.dim,fontSize:11,marginTop:2}}>
-                  Avg: {Math.round(r.avgH)}cm / {Math.round(r.avgW)}kg · {r.n.toLocaleString()} athletes
-                </div>
-              </div>
-              <div style={{display:"flex",flexDirection:"column",alignItems:"center",minWidth:50}}>
-                <div style={{fontFamily:T.hd,fontSize:18,color:barCol}}>{r.pct}%</div>
-                <div style={{width:40,height:4,borderRadius:2,background:T.s2,marginTop:3,overflow:"hidden"}}>
-                  <div style={{width:`${r.pct}%`,height:"100%",background:barCol,borderRadius:2}}/>
-                </div>
-              </div>
+        {results.map((r,i)=>{const isFirst=i===0;return(
+          <div key={r.sport} style={{background:T.s1,borderRadius:10,padding:"12px 16px",display:"flex",alignItems:"center",gap:12,border:`1px solid ${isFirst?T.gold+"66":T.fnt}`,boxShadow:isFirst?`0 0 18px ${T.gold}22`:"none"}}>
+            <div style={{minWidth:48,textAlign:"center"}}>
+              <div style={{fontFamily:T.hd,fontSize:18,color:isFirst?T.gold:T.txt}}>{RANK_LABELS[i]||`${i+1}th`}</div>
             </div>
-          );
-        })}
-        <div style={{marginTop:8}}><Btn onClick={()=>done(results)}>Continue to Battle</Btn></div>
+            <div style={{fontSize:28,minWidth:36,textAlign:"center"}}>{r.emoji}</div>
+            <div style={{flex:1,textAlign:"left"}}>
+              <div style={{fontFamily:T.hd,color:isFirst?T.gold:T.txt,fontSize:14}}>{isFirst?"🏆 ":""}{r.sport}</div>
+              <div style={{fontFamily:T.bd,color:T.dim,fontSize:11,marginTop:2}}>Avg: {Math.round(r.avgH)}cm / {Math.round(r.avgW)}kg · {r.n.toLocaleString()} athletes</div>
+            </div>
+          </div>
+        );})}
+        <div style={{marginTop:8,display:"flex",justifyContent:"center"}}><Btn onClick={()=>done(results)}>Continue to Battle</Btn></div>
       </div>
     )}
-
-    {!results&&<button onClick={()=>done(null)} style={{background:"none",border:"none",color:T.dim,fontFamily:T.bd,fontSize:12,cursor:"pointer",marginTop:8,textDecoration:"underline"}}>Skip →</button>}
   </div>);
 }
 
@@ -731,27 +775,46 @@ function HowTo({back,go}){
   const D={fontFamily:T.bd,fontSize:11,color:T.dim,lineHeight:1.6,margin:"4px 0 0"};
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:20,gap:12,maxWidth:520,margin:"0 auto"}}>
     <div style={{fontSize:10,letterSpacing:6,color:T.gd,fontFamily:T.hd}}>HOW TO PLAY</div>
-    <h2 style={{fontFamily:T.hd,color:T.gold,margin:0,fontSize:22}}>Defend America in 5 Rounds</h2>
-    <div style={B}><h3 style={H}>🗺️ The Story</h3><p style={P}>Mythological monsters are draining America's Olympic spirit before LA28. You summon <span style={{color:T.gold}}>sport spirits</span> — each with real event moves — to fight back across the US map.</p></div>
-    <div style={B}><h3 style={H}>🔄 Each Round</h3><p style={P}><span style={{color:T.gold}}>1. Map</span> — See which region is under attack and its signature sports.</p><p style={P}><span style={{color:T.gold}}>2. Scout</span> — Choose 1 spirit from 3. Each has unique moves from real Olympic events.</p><p style={P}><span style={{color:T.gold}}>3. Battle</span> — Pick a spirit and a move. The attack <span style={{color:T.blu}}>rolls against real medal rates</span> — 🥇 Gold = 30 dmg, 🥈 Silver = 20, 🥉 Bronze = 10, ❌ Miss = 0.</p><p style={P}><span style={{color:T.gold}}>4. Debrief</span> — AI explains what worked and teaches a data concept.</p></div>
-    <div style={B}><h3 style={H}>🎲 The Medal Roll</h3><p style={P}>Each move has its own gold/silver/bronze probability from real data. A <span style={{color:medalColors.gold}}>4×100m Relay</span> might have 35% gold but 0% silver — huge hit or total miss. A <span style={{color:medalColors.silver}}>200m Backstroke</span> has 12% each — consistent but rarely spectacular.</p><p style={D}>You're learning probability by choosing which move to use!</p></div>
+    <h2 style={{fontFamily:T.hd,color:T.gold,margin:0,fontSize:22}}>Endless Defense Across America</h2>
+
+    <div style={B}><h3 style={H}>🗺️ The Story</h3><p style={P}>Mythological monsters are draining America's Olympic spirit before LA28. You summon <span style={{color:T.gold}}>sport spirits</span> — each with real event moves — to fight back across the US map. Defeat one monster and a new one rises in its place. There is no last round.</p></div>
+
+    <div style={B}><h3 style={H}>🧬 Body Type Scanner</h3>
+      <p style={P}>Before you fight, the scanner takes <span style={{color:T.gold}}>your height + weight</span>, an <span style={{color:T.gold}}>optional photo</span>, and a quick <span style={{color:T.gold}}>5-question vibe check</span>. A formula ranks all 39 Olympic sports by body match, then Gemini reweights the top 10 with your photo and personality to pick your final Top 5.</p>
+      <p style={D}>Spirits matching your Top 5 sports deal <span style={{color:T.blu}}>+15% damage</span>.</p>
+    </div>
+
+    <div style={B}><h3 style={H}>👹 The Monsters</h3>
+      <p style={P}>Seven regions, seven slots. Each monster is generated fresh by Gemini — its name, lore, stats, and portrait are unique to your run. When you defeat one, a new monster takes its slot in the background; sometimes it's a brand-new threat, sometimes a <span style={{color:T.gold}}>stronger reincarnation</span> of a foe you already beat (with a "Reborn" or "Elder" suffix and tougher stats).</p>
+      <p style={D}>Monsters carry one of six abilities: charge the strongest spirit, target the weakest, hit all spirits, regenerate, block low-percentage moves, or shift their weakness each turn.</p>
+    </div>
+
+    <div style={B}><h3 style={H}>🔄 Each Engagement</h3>
+      <p style={P}><span style={{color:T.gold}}>1. Map</span> — Tap any region with a live monster. Your kill count, win streak, and held regions live at the top.</p>
+      <p style={P}><span style={{color:T.gold}}>2. Scout</span> — Choose 3 spirits from 5. Each has unique moves drawn from real Olympic events.</p>
+      <p style={P}><span style={{color:T.gold}}>3. Trivia & Sim</span> — Answer a quick trivia question, then watch a Monte Carlo simulation predict your odds.</p>
+      <p style={P}><span style={{color:T.gold}}>4. Battle</span> — Pick a spirit and a move. The attack <span style={{color:T.blu}}>rolls against real medal rates</span> — 🥇 Gold = 30 dmg, 🥈 Silver = 20, 🥉 Bronze = 10, ❌ Miss = 0.</p>
+      <p style={P}><span style={{color:T.gold}}>5. Debrief</span> — AI explains what worked and teaches a data concept. A new monster spawns in the slot you just cleared.</p>
+    </div>
+
+    <div style={B}><h3 style={H}>🎲 The Medal Roll</h3><p style={P}>Each move has its own gold/silver/bronze probability from real data. A <span style={{color:medalColors.gold}}>4×100m Relay</span> might have 35% gold but 0% silver — huge hit or total miss. A <span style={{color:medalColors.silver}}>200m Backstroke</span> has 12% each — consistent but rarely spectacular.</p><p style={D}>You're learning probability by choosing which move to use.</p></div>
+
     <div style={B}><h3 style={H}>✨ Move Keywords</h3>
       <p style={P}>🤝 <span style={{color:T.gold}}>RELAY</span> — On 🥇 gold, damage doubles (team power)</p>
       <p style={P}>💥 <span style={{color:T.gold}}>EXPLOSIVE</span> — On 🥇 gold, deals 60 instead of 30</p>
       <p style={P}>🎯 <span style={{color:T.gold}}>PRECISION</span> — On 🥇 or 🥈, +10 bonus damage</p>
       <p style={P}>💚 <span style={{color:T.gold}}>ENDURANCE</span> — On any hit, heals your spirit 8 HP</p>
     </div>
-    <div style={B}><h3 style={H}>🌟 Regional Affinity</h3><p style={P}>Cards matching the attacked region deal <span style={{color:T.grn}}>+50% damage</span>. Swimming dominates the Pacific. Wrestling owns the Heartland. Check the region tags!</p></div>
+
+    <div style={B}><h3 style={H}>🌟 Regional Affinity</h3><p style={P}>Spirits whose home regions match the slot you're defending deal <span style={{color:T.grn}}>+50% damage</span>. Swimming dominates the Pacific, wrestling owns the Heartland — check the region tags on each card.</p></div>
+
     <div style={{...B,borderColor:T.para+"33"}}><h3 style={{...H,color:T.para}}>⚡ Paralympic Mech Warriors</h3><p style={P}>Paralympic spirits have <span style={{color:T.para}}>ADAPT</span> — activate once per game to cancel a monster's attack entirely. Many Para moves have high gold rates, making them elite strikers <em>and</em> clutch defenders.</p></div>
-    <div style={B}><h3 style={H}>👹 The Monsters</h3>
-      <div style={{display:"grid",gridTemplateColumns:"28px 1fr",gap:"4px 6px",marginTop:4}}>
-        <span>🌊</span><p style={D}><strong>Scylla</strong> — Standard fight. Learn the ropes.</p>
-        <span>🐂</span><p style={D}><strong>Minotaur</strong> — Targets your strongest spirit first.</p>
-        <span>🦁</span><p style={D}><strong>Chimera</strong> — Weakness shifts each turn.</p>
-        <span>🐺</span><p style={D}><strong>Cerberus</strong> — Blocks moves with &lt;25% total hit rate.</p>
-        <span>⚡</span><p style={D}><strong>Typhon</strong> — Double damage. ADAPT saves lives.</p>
-      </div>
+
+    <div style={B}><h3 style={H}>♾️ Endless Mode</h3>
+      <p style={P}>The campaign saves automatically — close the tab and your slots, kills, and streak are still there when you return. A <span style={{color:T.red}}>Reset Campaign</span> button on the map wipes everything and respawns a fresh batch of monsters.</p>
+      <p style={D}>The longer you play, the more level-up reincarnations you'll see.</p>
     </div>
+
     <div style={{display:"flex",gap:12,marginTop:4}}><Btn onClick={back} color={T.dim}>Back</Btn><Btn onClick={go}>Start Game</Btn></div>
   </div>);
 }
@@ -915,21 +978,29 @@ function SportDetail({spirit,stats,body,back}){
   </div>);
 }
 
-function MapScr({round,rd,results,go}){
-  const rg=REGIONS.find(r=>r.id===rd.regionId);
+function MapScr({slots,hud,onPick,onReset}){
+  const liveCount=Object.values(slots).filter(Boolean).length;
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:16,gap:12}}>
-    <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:4}}>ROUND {round} OF 5</div>
-    <USMap atk={rd.regionId} results={results}/>
-    <div style={{background:T.s1,border:`1px solid ${T.red}33`,borderRadius:12,padding:14,maxWidth:400,width:"100%",textAlign:"center"}}>
-      <div style={{display:"flex",gap:8,justifyContent:"center",marginBottom:4}}>
-        {rd.monsters.map(m=><span key={m.name} style={{fontSize:28}}>{m.emoji}</span>)}
-      </div>
-      <div style={{fontFamily:T.hd,fontSize:18,color:T.red}}>{rd.monsters.map(m=>m.name).join(" & ")}</div>
-      {rd.monsters.map(m=><div key={m.name} style={{fontFamily:T.bd,fontSize:10,color:T.dim,fontStyle:"italic",margin:"2px 0"}}>{m.emoji} {m.name} ({m.hp} HP) — {m.desc}</div>)}
-      <div style={{display:"flex",gap:3,flexWrap:"wrap",justifyContent:"center",marginTop:5}}>{rg.sports.slice(0,5).map(s=><span key={s} style={{fontSize:8,background:rg.color+"22",color:rg.color,padding:"1px 6px",borderRadius:3,fontFamily:T.bd}}>{s}</span>)}</div>
-      <div style={{fontSize:10,color:T.grn,fontFamily:T.bd,marginTop:6}}>Draft a team of 3 spirits · Matching regions deal <strong>+50% damage</strong></div>
+    <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:4}}>ENDLESS DEFENSE — TAP A REGION TO ENGAGE</div>
+    {/* HUD */}
+    <div style={{display:"flex",gap:18,background:T.s1,border:`1px solid ${T.fnt}`,borderRadius:8,padding:"6px 14px",fontFamily:T.hd,fontSize:11,color:T.txt}}>
+      <span>⚔ Kills: <span style={{color:T.gold}}>{hud.kills}</span></span>
+      <span>🔥 Streak: <span style={{color:hud.streak>=3?T.gold:T.txt}}>{hud.streak}</span></span>
+      <span>🛡 Held: <span style={{color:T.grn}}>{liveCount}/{ACTIVE_REGIONS.length}</span></span>
     </div>
-    <Btn onClick={go}>Draft Your Team</Btn>
+    <USMap slots={slots} onPick={onPick}/>
+    {/* Slot grid */}
+    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))",gap:8,width:"100%",maxWidth:640}}>
+      {ACTIVE_REGIONS.map(rg=>{const m=slots[rg.id];const live=!!m;return(<div key={rg.id} onClick={live?()=>onPick(rg.id):undefined} style={{background:T.s1,border:`1px solid ${live?rg.color+"55":T.fnt}`,borderRadius:10,padding:8,cursor:live?"pointer":"default",opacity:live?1:.55,transition:"all .2s",display:"flex",gap:8,alignItems:"center",minHeight:64}}>
+        {m?(m.imageDataUrl?<img src={m.imageDataUrl} alt={m.name} style={{width:48,height:48,borderRadius:6,objectFit:"cover",flexShrink:0,border:`1px solid ${rg.color}55`}}/>:<div style={{width:48,height:48,borderRadius:6,background:T.s2,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:24,border:`1px solid ${rg.color}33`,position:"relative"}}>{m.emoji}{m.imageStatus==="loading"&&<div style={{position:"absolute",bottom:1,right:1,fontSize:7,color:T.gold}}>✨</div>}</div>):<div style={{width:48,height:48,borderRadius:6,background:T.s2,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:14,color:T.dim,fontFamily:T.bd,fontStyle:"italic",border:`1px dashed ${T.fnt}`}}>…</div>}
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontSize:8,color:rg.color,fontFamily:T.hd,letterSpacing:1.5}}>{rg.name.toUpperCase()}</div>
+          <div style={{fontFamily:T.hd,fontSize:13,color:live?T.txt:T.dim,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m?m.name:"Summoning…"}</div>
+          {m&&<div style={{fontSize:9,color:T.dim,fontFamily:T.bd}}>{m.hp} HP{m.level>1?` · Lv ${m.level}`:""}</div>}
+        </div>
+      </div>);})}
+    </div>
+    <Btn onClick={onReset} small color={T.red}>Reset Campaign</Btn>
   </div>);
 }
 
@@ -943,7 +1014,7 @@ function Scout({opts,lockIn,round,rgn,bodyTop5=[]}){
   const team=opts.filter(s=>sel.has(s.id));
   const syn=team.length===3?detectSynergies(team,rgn):null;
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:16,gap:12}}>
-    <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:4}}>ROUND {round} — DRAFT YOUR TEAM</div>
+    <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:4}}>DEFENDING — DRAFT YOUR TEAM</div>
     <h2 style={{fontFamily:T.hd,color:T.gold,margin:0,fontSize:20}}>Pick 3 of 5 Spirits</h2>
     <p style={{fontFamily:T.bd,color:T.dim,fontSize:11}}>Defending <span style={{color:rg?.color,fontWeight:700}}>{rg?.name}</span> · Tap cards to draft · Tap Explore to study</p>
     <div style={{display:"flex",gap:10,flexWrap:"wrap",justifyContent:"center",alignItems:"flex-start"}}>
@@ -1077,8 +1148,11 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
   const [ph,setPh]=useState("player"); // player | monster | done
   const [turn,setTurn]=useState(1);
   const [chiWeakness,setChiWeakness]=useState("gold"); // for Chimera
+  const [fx,setFx]=useState(null); // {type:'gold'|'silver'|'bronze'|'miss'|'block', dmg, side:'mon'|'spirit', t}
   const lr=useRef(null);
   useEffect(()=>{lr.current&&(lr.current.scrollTop=lr.current.scrollHeight);},[log]);
+  useEffect(()=>{if(turn>1)window.dispatchEvent(new CustomEvent("arc-announce",{detail:{text:`ROUND ${turn}`,sub:"FIGHT!",color:T.gold,dur:1100}}));},[turn]);
+  useEffect(()=>{if(!fx)return;const id=setTimeout(()=>setFx(null),900);return()=>clearTimeout(id);},[fx]);
 
   // Find next living spirit with SP, or null
   const nextActive=(ns,fromIdx)=>{for(let i=fromIdx;i<ns.length;i++){if(ns[i].hp>0)return i;}return null;};
@@ -1100,6 +1174,7 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
       const anyBlock=target.special==="block_weak"&&totalRate(move)<.25;
       if(anyBlock){
         nl.push(`🚫 ${move[0]} blocked by ${target.name}! Hit rate too low.`);
+        setFx({type:"block",dmg:0,side:"mon",t:Date.now()});
       }else{
         const aff=s.regions.includes(rgn)||rgn==="la28";
         const bAff=bodyTop5.some(b=>b.sport===s.sport);
@@ -1110,12 +1185,14 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
         const emoji=result.tier==="gold"?"🥇":result.tier==="silver"?"🥈":result.tier==="bronze"?"🥉":"❌";
         if(result.tier==="miss"){
           nl.push(`${s.emoji} ${s.sport} → ${move[0]} → ${emoji} MISS!`);
+          setFx({type:"miss",dmg:0,side:"mon",t:Date.now()});
         }else{
           const totalDmg=result.total+chiBonus;
           const ti=ms.findIndex(x=>x.name===target.name);
           nm[ti]={...nm[ti],hp:Math.max(0,nm[ti].hp-totalDmg)};
           nl.push(`${s.emoji} ${s.sport} → ${move[0]} → ${emoji} ${result.tier.toUpperCase()} ${totalDmg} dmg!${result.extra}`);
           if(nm[ti].hp<=0)nl.push(`🏆 ${nm[ti].name} defeated!`);
+          setFx({type:result.tier,dmg:totalDmg,side:"mon",t:Date.now()});
         }
         if(result.heal>0){ns[activeIdx].hp=Math.min(HP,ns[activeIdx].hp+result.heal);}
       }
@@ -1166,64 +1243,128 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
 
   const active=spirits[activeIdx];
   const won=ms.every(m=>m.hp<=0);
+  const target=ms[selTarget]||ms[0];
+  const teamHp=spirits.reduce((a,s)=>a+Math.max(0,s.hp),0);
+  const teamMax=spirits.length*HP;
+  const sparkColor=fx?(fx.type==="gold"?T.gold:fx.type==="silver"?medalColors.silver:fx.type==="bronze"?medalColors.bronze:fx.type==="miss"?T.dim:T.red):null;
 
-  return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:12,gap:8,maxWidth:640,margin:"0 auto"}}>
-    <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:4}}>ROUND {round} — BATTLE · TURN {turn}</div>
-    {/* Monsters */}
-    {ms.map((m,i)=>(<div key={m.name} style={{background:T.s1,border:`1px solid ${m.hp>0?T.red+"33":T.fnt}`,borderRadius:10,padding:8,width:"100%",opacity:m.hp<=0?.4:1,display:"flex",alignItems:"center",gap:8}}>
-      <span style={{fontSize:22}}>{m.emoji}</span>
-      <div style={{flex:1}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-          <span style={{fontFamily:T.hd,fontSize:13,color:m.hp>0?T.red:T.dim}}>{m.name}</span>
-          <span style={{fontSize:9,color:T.dim,fontFamily:T.bd}}>{Math.max(0,m.hp)}/{m.maxHp}</span>
+  // Pixel HP segmented bar (matches arcade mockup)
+  const PixelBar=({hp,max,color,height=14,segments=20})=>{const filled=Math.round((Math.max(0,hp)/max)*segments);return(<div style={{display:"flex",gap:1,height,background:"#000",padding:2,border:`2px solid ${T.txt}`}}>{Array.from({length:segments}).map((_,i)=>{const lit=i<filled;const danger=lit&&filled<=4?T.red:color;return<div key={i} style={{flex:1,background:lit?danger:T.s1,boxShadow:lit?`0 0 5px ${danger}`:"none"}}/>;})}</div>);};
+
+  return(<div style={{padding:14,maxWidth:1280,margin:"0 auto"}}>
+    {/* ───── TOP HUD: TEAM HP | VS | MONSTER HP ───── */}
+    <div style={{display:"grid",gridTemplateColumns:"1fr 180px 1fr",gap:14,marginBottom:14,alignItems:"start"}}>
+      {/* TEAM HP block */}
+      <div>
+        <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
+          <span style={{fontFamily:T.hd,fontSize:11,color:T.gold,letterSpacing:2,textShadow:`0 0 6px ${T.gold}`}}>P1 · TEAM USA</span>
+          <span style={{fontFamily:T.hd,fontSize:10,color:T.txt}}>{teamHp}/{teamMax}</span>
         </div>
-        <div style={{height:6,background:T.fnt,borderRadius:3,overflow:"hidden",marginTop:3}}><div style={{height:"100%",width:`${Math.max(0,(m.hp/m.maxHp)*100)}%`,background:`linear-gradient(90deg,${T.red},#f97316)`,transition:"width .4s",borderRadius:3}}/></div>
-        <div style={{fontSize:8,color:T.dim,fontFamily:T.bd,marginTop:2}}>{m.desc}{m.special==="shift_weakness"?` (Weak to: ${chiWeakness})`:""}</div>
-      </div>
-    </div>))}
-    {/* Log */}
-    <div ref={lr} style={{background:T.s2,borderRadius:8,padding:6,width:"100%",maxHeight:100,overflowY:"auto",fontFamily:T.bd,fontSize:10,color:T.dim,lineHeight:1.7}}>
-      {log.map((l,i)=><div key={i} style={{color:l.includes("🏆")?T.gold:l.includes("💀")?T.red:l.includes("🥇")?medalColors.gold:l.includes("🥈")?medalColors.silver:l.includes("🥉")?medalColors.bronze:l.includes("🌟")||l.includes("🏟️")?T.grn:l.includes("⚡")?T.para:l.startsWith("───")?T.fnt:T.dim}}>{l}</div>)}
-    </div>
-    {/* Spirits */}
-    <div style={{fontSize:8,color:T.dim,fontFamily:T.hd,letterSpacing:3}}>
-      {ph==="done"?(won?"VICTORY":"DEFEAT"):`${active?.sport||""}'s TURN — PICK A MOVE`}
-    </div>
-    <div style={{display:"flex",gap:5,flexWrap:"wrap",justifyContent:"center"}}>
-      {spirits.map((s,i)=>(<div key={s.id} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
-        <div style={{opacity:ph!=="done"&&i!==activeIdx?.5:1,transition:"opacity .2s"}}>
-          <SpiritCard spirit={s} compact selected={i===activeIdx} disabled={s.hp<=0||ph==="done"} showHp hp={s.hp} rgn={rgn}/>
-        </div>
-        <div style={{display:"flex",gap:2}}>{Array.from({length:SP_MAX},(_, j)=><span key={j} style={{fontSize:8,color:j<s.sp?T.gold:T.fnt}}>●</span>)}</div>
-        {s.para&&!s.ac&&s.hp>0&&ph!=="done"&&<button onClick={()=>{if(!s.au)setSpirits(p=>p.map((x,j)=>j===i?{...x,au:true}:x));}} style={{fontSize:7,background:s.au?T.para+"22":T.s2,border:`1px solid ${s.au?T.para:T.fnt}`,color:s.au?T.para:T.fnt,borderRadius:4,padding:"1px 5px",cursor:"pointer",fontFamily:T.hd}}>{s.au?"ARMED":"⚡ ARM"}</button>}
-      </div>))}
-    </div>
-    {/* Target picker (multi-monster) */}
-    {ph==="player"&&liveMonsters.length>1&&(<div style={{display:"flex",gap:6,justifyContent:"center"}}>
-      {ms.map((m,i)=>m.hp>0&&<button key={m.name} onClick={()=>setSelTarget(i)} style={{fontSize:9,fontFamily:T.hd,padding:"3px 10px",borderRadius:5,cursor:"pointer",background:selTarget===i?T.red+"22":"transparent",border:`1px solid ${selTarget===i?T.red:T.fnt}`,color:selTarget===i?T.red:T.dim}}>{m.emoji} {m.name} {m.hp}/{m.maxHp}</button>)}
-    </div>)}
-    {/* Move selector */}
-    {ph==="player"&&active&&active.hp>0&&(<div style={{background:T.s1,borderRadius:10,padding:10,width:"100%",maxWidth:400}}>
-      <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:2,marginBottom:6}}>MOVES — {active.sport} (SP: {active.sp}/{SP_MAX})</div>
-      {active.sp>0?active.moves.map((mv,i)=>{const [name,g,s,b,kw]=mv;const target=ms[selTarget];const blocked=target?.special==="block_weak"&&totalRate(mv)<.25;
-        return(<div key={i} onClick={()=>!blocked&&setSelMove(i)} style={{display:"flex",alignItems:"center",gap:8,padding:"5px 8px",borderRadius:6,cursor:blocked?"not-allowed":"pointer",background:selMove===i?T.gold+"22":"transparent",border:`1px solid ${selMove===i?T.gold+"66":blocked?T.red+"33":"transparent"}`,marginBottom:3,opacity:blocked?.4:1,transition:"all .2s"}}>
-          <div style={{flex:1}}>
-            <div style={{display:"flex",justifyContent:"space-between"}}>
-              <span style={{fontSize:11,color:T.txt,fontFamily:T.bd,fontWeight:600}}>{name}{kw?` ${kw==="RELAY"?"🤝":kw==="EXPLOSIVE"?"💥":kw==="ENDURANCE"?"💚":"🎯"}`:""}</span>
-              <span style={{fontSize:10,color:T.dim,fontFamily:T.bd}}>{Math.round(totalRate(mv)*100)}% hit</span>
+        <PixelBar hp={teamHp} max={teamMax} color={T.grn} height={20}/>
+        <div style={{display:"flex",gap:6,marginTop:8}}>
+          {spirits.map((s,i)=>(<div key={s.id} onClick={()=>{if(s.hp>0&&ph==="player"&&s.sp>0)setActiveIdx(i);}} style={{flex:1,padding:6,background:i===activeIdx?T.gold+"22":"rgba(0,0,0,0.45)",border:`2px solid ${i===activeIdx?T.gold:s.hp<=0?T.fnt:T.pur}`,cursor:s.hp>0&&ph==="player"&&i!==activeIdx?"pointer":"default",opacity:s.hp<=0?.4:1,boxShadow:i===activeIdx?`0 0 10px ${T.gold}88`:"none",position:"relative"}}>
+            {i===activeIdx&&<span style={{position:"absolute",top:-10,left:4,background:T.gold,color:T.bg,fontFamily:T.hd,fontSize:7,letterSpacing:1,padding:"2px 5px",animation:"blink 1s infinite"}}>P1</span>}
+            <div style={{fontFamily:T.hd,fontSize:8,letterSpacing:1,color:i===activeIdx?T.gold:T.txt,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.emoji} {s.sport.toUpperCase().slice(0,10)}</div>
+            <PixelBar hp={s.hp} max={HP} color={i===activeIdx?T.gold:s.hp>HP*.4?T.grn:T.red} height={7} segments={12}/>
+            <div style={{display:"flex",justifyContent:"space-between",marginTop:3}}>
+              <span style={{fontFamily:T.hd,fontSize:7,color:T.dim}}>HP {s.hp}</span>
+              <span style={{display:"flex",gap:1}}>{Array.from({length:SP_MAX},(_,j)=><span key={j} style={{width:5,height:5,background:j<s.sp?T.gold:T.fnt,boxShadow:j<s.sp?`0 0 3px ${T.gold}`:"none"}}/>)}</span>
             </div>
-            <MoveBar move={mv}/>
-          </div>
-          {blocked&&<span style={{fontSize:8,color:T.red,fontFamily:T.bd}}>BLOCKED</span>}
-        </div>);
-      }):(
-        <div onClick={()=>setSelMove("rest")} style={{padding:"8px",borderRadius:6,cursor:"pointer",background:selMove==="rest"?T.grn+"22":"transparent",border:`1px solid ${selMove==="rest"?T.grn+"66":"transparent"}`,textAlign:"center"}}>
-          <span style={{fontSize:11,color:T.grn,fontFamily:T.bd}}>💤 Rest (heal 5 HP)</span>
+            {s.para&&!s.ac&&s.hp>0&&ph!=="done"&&<button onClick={(e)=>{e.stopPropagation();if(!s.au)setSpirits(p=>p.map((x,j)=>j===i?{...x,au:true}:x));}} style={{marginTop:4,width:"100%",fontSize:7,background:s.au?T.para+"33":"transparent",border:`1px solid ${s.au?T.para:T.fnt}`,color:s.au?T.para:T.dim,padding:"2px 4px",cursor:"pointer",fontFamily:T.hd,letterSpacing:1}}>{s.au?"⚡ARMED":"⚡ARM"}</button>}
+          </div>))}
         </div>
-      )}
-      <div style={{textAlign:"center",marginTop:6}}><Btn small onClick={doAttack} disabled={selMove==null}>Attack!</Btn></div>
-    </div>)}
-    {ph==="done"&&<Btn onClick={()=>finish(won,spirits)}>Continue</Btn>}
+      </div>
+
+      {/* VS center */}
+      <div style={{textAlign:"center",padding:"6px 0"}}>
+        <div style={{fontFamily:T.hd,fontSize:9,letterSpacing:3,color:T.blu,textShadow:`0 0 6px ${T.blu}`}}>ROUND {turn}</div>
+        <div style={{fontFamily:T.hd,fontSize:42,color:T.gold,textShadow:`3px 3px 0 ${T.red}, 0 0 22px ${T.gold}`,animation:"pulse 1.6s infinite",margin:"6px 0 4px"}}>VS</div>
+        <div style={{fontFamily:T.hd,fontSize:8,letterSpacing:3,color:T.pur,textShadow:`0 0 6px ${T.pur}`,animation:"blink .8s infinite"}}>{ph==="done"?(won?"WIN!":"K.O."):"FIGHT!"}</div>
+      </div>
+
+      {/* MONSTER HP block */}
+      <div>
+        <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
+          <span style={{fontFamily:T.hd,fontSize:10,color:T.txt}}>{Math.max(0,target.hp)}/{target.maxHp}</span>
+          <span style={{fontFamily:T.hd,fontSize:11,color:T.red,letterSpacing:2,textShadow:`0 0 6px ${T.red}`}}>{(target.name||"BOSS").toUpperCase()} · BOSS</span>
+        </div>
+        <PixelBar hp={target.hp} max={target.maxHp} color={T.red} height={20}/>
+        {ms.length>1&&<div style={{display:"flex",gap:6,marginTop:8}}>
+          {ms.map((m,i)=>(<div key={m.name||i} onClick={()=>m.hp>0&&ph==="player"&&setSelTarget(i)} style={{flex:1,padding:6,background:i===selTarget?T.red+"22":"rgba(0,0,0,0.45)",border:`2px solid ${i===selTarget?T.red:m.hp<=0?T.fnt:T.pur}`,cursor:m.hp>0&&ph==="player"?"pointer":"default",opacity:m.hp<=0?.35:1,boxShadow:i===selTarget?`0 0 10px ${T.red}88`:"none",position:"relative"}}>
+            {i===selTarget&&<span style={{position:"absolute",top:-10,right:4,background:T.red,color:T.bg,fontFamily:T.hd,fontSize:7,letterSpacing:1,padding:"2px 5px",animation:"blink 1s infinite"}}>LOCK</span>}
+            <div style={{fontFamily:T.hd,fontSize:8,letterSpacing:1,color:i===selTarget?T.red:T.txt,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.emoji||"👹"} {(m.name||"").toUpperCase().slice(0,12)}</div>
+            <PixelBar hp={m.hp} max={m.maxHp} color={T.red} height={7} segments={12}/>
+            <div style={{fontFamily:T.hd,fontSize:7,color:T.dim,marginTop:3}}>HP {Math.max(0,m.hp)}</div>
+          </div>))}
+        </div>}
+        {target.special&&<div style={{marginTop:8,padding:"6px 8px",background:"rgba(255,57,57,0.08)",border:`2px solid ${T.red}`,fontFamily:T.bd,fontSize:14,color:T.txt}}>
+          <span style={{color:T.red,fontFamily:T.hd,fontSize:8,letterSpacing:1.5,textShadow:`0 0 4px ${T.red}`}}>⚠ ABILITY:</span>{" "}
+          <span style={{color:T.gold}}>{target.special==="regenerate"?"REGEN":target.special==="aoe"?"ALL-STRIKE":target.special==="block_weak"?"AEGIS BLOCK":target.special==="hit_strongest"?"TARGET ALPHA":target.special==="hit_weakest"?"PICK OFF":target.special==="shift_weakness"?`SHIFT (weak: ${chiWeakness})`:target.special.toUpperCase()}</span>
+        </div>}
+      </div>
+    </div>
+
+    {/* ───── CENTER STAGE: PORTRAITS + HIT-SPARKS ───── */}
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:0,marginBottom:14,minHeight:280,position:"relative",border:`2px solid ${T.fnt}`,background:"#000",backgroundImage:`repeating-linear-gradient(0deg, ${T.blu}11 0 1px, transparent 1px 40px),repeating-linear-gradient(90deg, ${T.blu}11 0 1px, transparent 1px 40px)`}}>
+      {/* SPIRIT side */}
+      <div style={{padding:18,textAlign:"center",background:`radial-gradient(circle at 50% 60%, ${T.blu}33 0%, transparent 70%)`,borderRight:`2px dashed ${T.gold}`,position:"relative",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+        <div style={{fontSize:170,lineHeight:1,filter:`drop-shadow(0 0 22px ${T.blu}) drop-shadow(0 8px 4px rgba(0,0,0,0.6))`,animation:"pulse 1.6s infinite"}}>{active?.emoji||"⚔"}</div>
+        <div style={{fontFamily:T.hd,fontSize:14,color:T.gold,letterSpacing:2,marginTop:10,textShadow:`0 0 8px ${T.gold}`}}>{active?.sport?.toUpperCase()||"—"}</div>
+        {ph==="player"&&selMove!=null&&selMove!=="rest"&&active?.moves?.[selMove]&&<div style={{fontFamily:T.hd,fontSize:9,color:T.pur,letterSpacing:2,marginTop:4,textShadow:`0 0 6px ${T.pur}`,animation:"blink .9s infinite"}}>{active.moves[selMove][0].toUpperCase()}</div>}
+      </div>
+
+      {/* MONSTER side */}
+      <div style={{padding:18,textAlign:"center",background:`radial-gradient(circle at 50% 60%, ${T.red}33 0%, transparent 70%)`,position:"relative",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
+        {target.imageDataUrl
+          ? <img src={target.imageDataUrl} alt={target.name} style={{maxWidth:"80%",maxHeight:200,objectFit:"contain",filter:`drop-shadow(0 0 18px ${T.red})`,animation:"pulse 2s infinite"}}/>
+          : <div style={{fontSize:170,lineHeight:1,filter:`drop-shadow(0 0 22px ${T.red})`,animation:"pulse 2s infinite"}}>{target.emoji||"👹"}</div>}
+        <div style={{fontFamily:T.hd,fontSize:14,color:T.red,letterSpacing:2,marginTop:10,textShadow:`0 0 8px ${T.red}`}}>{(target.name||"BOSS").toUpperCase()}</div>
+        {target.imageStatus==="loading"&&<div style={{position:"absolute",top:8,right:8,fontFamily:T.hd,fontSize:8,color:T.gold,background:"rgba(0,0,0,0.65)",padding:"3px 8px",letterSpacing:2,animation:"blink 1s infinite"}}>✨ RENDERING</div>}
+
+        {/* Hit-spark FX */}
+        {fx&&fx.side==="mon"&&<>
+          <div key={fx.t} style={{position:"absolute",left:"50%",top:"36%",transform:"translate(-50%,-50%)",fontFamily:T.hd,fontSize:fx.type==="gold"?44:fx.type==="silver"?36:fx.type==="bronze"?30:fx.type==="miss"?22:30,color:sparkColor,textShadow:`3px 3px 0 ${T.red}, 0 0 22px ${sparkColor}`,letterSpacing:3,animation:"announceIn .35s ease-out, hitSpark .9s ease-out forwards",pointerEvents:"none",zIndex:5}}>{fx.type==="miss"?"MISS!":fx.type==="block"?"BLOCK!":`-${fx.dmg}`}</div>
+          {fx.type==="gold"&&<div style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%,-50%)",fontFamily:T.hd,fontSize:14,letterSpacing:4,color:T.gold,textShadow:`0 0 10px ${T.gold}`,marginTop:30,animation:"blink .25s 4"}}>★ SUPER! ★</div>}
+        </>}
+      </div>
+    </div>
+
+    {/* ───── BOTTOM: MOVES + LOG ───── */}
+    <div style={{display:"grid",gridTemplateColumns:"2fr 3fr",gap:12}}>
+      {/* MOVES */}
+      <div style={{background:"#000",border:`3px solid ${T.blu}`,padding:12,boxShadow:`0 0 14px ${T.blu}55`}}>
+        <div style={{fontFamily:T.hd,fontSize:9,letterSpacing:3,color:T.blu,marginBottom:10,textShadow:`0 0 6px ${T.blu}`}}>★ {ph==="done"?(won?"VICTORY":"K.O."):active?(active.sport+" — SELECT MOVE").toUpperCase():"—"} ★</div>
+        {ph==="player"&&active&&active.hp>0&&active.sp>0&&active.moves.map((mv,i)=>{const [name,g,sv,b,kw]=mv;const blocked=target?.special==="block_weak"&&totalRate(mv)<.25;return(<div key={i} onClick={()=>!blocked&&setSelMove(i)} style={{display:"grid",gridTemplateColumns:"32px 1fr",gap:10,alignItems:"center",padding:"8px 8px",marginBottom:4,background:selMove===i?T.gold+"22":"transparent",border:`2px solid ${selMove===i?T.gold:blocked?T.red+"55":"transparent"}`,cursor:blocked?"not-allowed":"pointer",opacity:blocked?.4:1,transition:"all .15s"}}>
+          <div style={{fontFamily:T.hd,fontSize:11,color:T.bg,background:selMove===i?T.gold:T.grn,width:30,height:26,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:selMove===i?`0 0 8px ${T.gold}`:"none"}}>{i+1}</div>
+          <div>
+            <div style={{display:"flex",justifyContent:"space-between"}}>
+              <span style={{fontFamily:T.hd,fontSize:9,letterSpacing:1,color:T.txt}}>{name.toUpperCase()}{kw?` ${kw==="RELAY"?"🤝":kw==="EXPLOSIVE"?"💥":kw==="ENDURANCE"?"💚":"🎯"}`:""}</span>
+              <span style={{fontFamily:T.bd,fontSize:14,color:Math.round(totalRate(mv)*100)>50?T.grn:Math.round(totalRate(mv)*100)>30?T.blu:T.dim}}>{Math.round(totalRate(mv)*100)}%</span>
+            </div>
+            <div style={{marginTop:4}}><MoveBar move={mv}/></div>
+            {blocked&&<div style={{fontFamily:T.hd,fontSize:7,color:T.red,letterSpacing:2,marginTop:2}}>BLOCKED</div>}
+          </div>
+        </div>);})}
+        {ph==="player"&&active&&active.hp>0&&active.sp<=0&&<div onClick={()=>setSelMove("rest")} style={{padding:"10px",cursor:"pointer",background:selMove==="rest"?T.grn+"22":"transparent",border:`2px solid ${selMove==="rest"?T.grn:T.fnt}`,textAlign:"center",fontFamily:T.hd,fontSize:10,color:T.grn,letterSpacing:2}}>💤 REST · HEAL 5 HP</div>}
+        {ph==="player"&&active&&active.hp>0&&<button onClick={doAttack} disabled={selMove==null} style={{width:"100%",marginTop:8,fontFamily:T.hd,fontSize:11,letterSpacing:3,padding:"12px",background:selMove==null?"transparent":T.gold,color:selMove==null?T.dim:T.bg,border:`3px solid ${selMove==null?T.fnt:T.gold}`,cursor:selMove==null?"default":"pointer",boxShadow:selMove==null?"none":`0 0 16px ${T.gold}, 4px 4px 0 ${T.red}`,fontWeight:700}}>{selMove==null?"PICK A MOVE":"★ STRIKE! ★"}</button>}
+        {ph==="done"&&<button onClick={()=>finish(won,spirits)} style={{width:"100%",marginTop:8,fontFamily:T.hd,fontSize:11,letterSpacing:3,padding:"12px",background:won?T.grn:T.pur,color:T.bg,border:`3px solid ${won?T.grn:T.pur}`,cursor:"pointer",boxShadow:`0 0 14px ${won?T.grn:T.pur}, 4px 4px 0 ${T.red}`,fontWeight:700}}>{won?"★ CONTINUE ★":"INSERT COIN →"}</button>}
+      </div>
+
+      {/* BATTLE LOG */}
+      <div style={{background:"#000",border:`3px solid ${T.pur}`,padding:12,boxShadow:`0 0 14px ${T.pur}55`,display:"flex",flexDirection:"column"}}>
+        <div style={{fontFamily:T.hd,fontSize:9,letterSpacing:3,color:T.pur,marginBottom:10,textShadow:`0 0 6px ${T.pur}`}}>★ BATTLE LOG ★</div>
+        <div ref={lr} style={{flex:1,maxHeight:300,overflowY:"auto",fontFamily:T.bd,fontSize:15,color:T.txt,lineHeight:1.45}}>
+          {log.map((l,i)=><div key={i} style={{padding:"2px 0",color:l.includes("🏆")?T.gold:l.includes("💀")?T.red:l.includes("🥇")?medalColors.gold:l.includes("🥈")?medalColors.silver:l.includes("🥉")?medalColors.bronze:l.includes("🌟")||l.includes("🏟️")?T.grn:l.includes("⚡")?T.para:l.startsWith("───")?T.pur:T.txt}}>{l.startsWith("───")?<span style={{fontFamily:T.hd,fontSize:9,letterSpacing:3,color:T.pur}}>━━━ MONSTER PHASE ━━━</span>:l}</div>)}
+        </div>
+      </div>
+    </div>
+
+    {/* Score footer */}
+    <div style={{marginTop:14,display:"flex",justifyContent:"space-between",fontFamily:T.hd,fontSize:9,letterSpacing:3,color:T.txt,opacity:.85}}>
+      <span style={{color:T.gold,textShadow:`0 0 5px ${T.gold}`}}>SCORE {String((round-1)*1000+turn*100+(teamMax-teamHp+(target.maxHp-target.hp))*5).padStart(8,"0")}</span>
+      <span style={{color:T.pur,textShadow:`0 0 5px ${T.pur}`}}>STAGE {round}</span>
+      <span style={{color:T.blu,textShadow:`0 0 5px ${T.blu}`}}>TURN {turn}</span>
+    </div>
   </div>);
 }
 
@@ -1284,26 +1425,12 @@ function Debrief({monsters,won,cards,rgn,round,next}){
       <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:3,marginBottom:6}}>DEBRIEF</div>
       <div style={{fontFamily:T.bd,fontSize:12,color:T.txt,lineHeight:1.8,whiteSpace:"pre-line"}}>{txt||<span style={{color:T.dim}}>Coach reflecting...</span>}</div>
     </div>
-    <Btn onClick={next}>{round<5?"Next Region":"See Results"}</Btn>
-  </div>);
-}
-
-function End({results,restart}){
-  const w=Object.values(results).filter(v=>v==="won").length;
-  const rk=["Spirit Endures","Keeper in Training","Local Hero","Regional Champion","Coast to Coast","Guardian of All States"][w];
-  const cl=[T.red,T.red,"#f97316",T.blu,T.pur,T.gold][w];
-  return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100vh",gap:16,padding:20,textAlign:"center"}}>
-    <div style={{fontSize:10,color:T.gd,fontFamily:T.hd,letterSpacing:6}}>CAMPAIGN COMPLETE</div>
-    <div style={{fontSize:40,fontFamily:T.hd,color:cl,textShadow:`0 0 30px ${cl}44`}}>{rk}</div>
-    <div style={{fontFamily:T.bd,fontSize:14,color:T.txt}}>{w}/5 regions defended</div>
-    <USMap results={results}/>
-    <p style={{fontFamily:T.bd,fontSize:12,color:T.dim,maxWidth:360,lineHeight:1.6,fontStyle:"italic"}}>{w>=4?"America's spirit burns bright. LA28 will be legendary.":w>=2?"Key regions held. Explore more moves next time.":"Return to the Oracle. Study the medal rates and try again."}</p>
-    <Btn onClick={restart}>Defend Again</Btn>
+    <Btn onClick={next}>Back to Map</Btn>
   </div>);
 }
 
 // ═══════════════════════════════════════════════════════════════
-// GAME ENGINE
+// GAME ENGINE (endless mode)
 // ═══════════════════════════════════════════════════════════════
 
 class ErrBound extends React.Component {
@@ -1321,33 +1448,189 @@ class ErrBound extends React.Component {
   }
 }
 
+function KeyMissingScreen(){
+  return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100vh",gap:16,padding:30,textAlign:"center"}}>
+    <div style={{fontSize:36}}>🔑</div>
+    <h2 style={{fontFamily:T.hd,color:T.gold,margin:0}}>Gemini API Key Required</h2>
+    <p style={{fontFamily:T.bd,color:T.dim,maxWidth:480,lineHeight:1.6}}>
+      This game generates monsters with the Gemini API. Add a key to <code style={{color:T.gold,background:T.s2,padding:"1px 5px",borderRadius:3}}>.env.local</code> at the project root and restart the dev server:
+    </p>
+    <pre style={{background:T.s1,border:`1px solid ${T.fnt}`,borderRadius:6,padding:14,fontFamily:"monospace",fontSize:12,color:T.txt,textAlign:"left"}}>{`# .env.local
+VITE_GEMINI_API_KEY=your-key-here`}</pre>
+    <p style={{fontFamily:T.bd,color:T.dim,fontSize:11}}>Get a key at <span style={{color:T.blu}}>aistudio.google.com/apikey</span></p>
+  </div>);
+}
+
 function Game(){
-  const [ph,setPh]=useState("start");const [rnd,setRnd]=useState(1);const [team,setTeam]=useState([]);const [opts,setOpts]=useState([]);const [res,setRes]=useState({});const [lw,setLw]=useState(false);const [lc,setLc]=useState([]);const [bodyTop5,setBodyTop5]=useState([]);const [triviaSpirit,setTriviaSpirit]=useState(null);const used=useRef(new Set());
-  const go=()=>{setRnd(1);setTeam([]);setRes({});setBodyTop5([]);used.current=new Set();setPh("quiz");};
-  const startGame=(top5)=>{setBodyTop5(top5||[]);setPh("map");};
-  const genScout=()=>{const rid=ROUNDS[rnd-1].regionId;const av=SPIRITS.filter(s=>!used.current.has(s.id));const wa=av.filter(s=>s.regions.includes(rid)||rid==="la28");const wo=av.filter(s=>!wa.includes(s));
-    // Show 5 options: 3 with affinity (or as many as available) + fill with non-affinity
-    const aff=shuffle(wa).slice(0,3);const wild=shuffle(wo).slice(0,5-aff.length);setOpts([...aff,...wild]);};
+  const [ph,setPh]=useState("start");
+  const [team,setTeam]=useState([]);
+  const [opts,setOpts]=useState([]);
+  const [bodyTop5,setBodyTop5]=useState([]);
+  const [triviaSpirit,setTriviaSpirit]=useState(null);
+  const [slots,setSlots]=useState(()=>Object.fromEntries(ACTIVE_REGIONS.map(r=>[r.id,null])));
+  const [defeated,setDefeated]=useState([]);
+  const [hud,setHud]=useState({kills:0,streak:0});
+  const [currentRegion,setCurrentRegion]=useState(null);
+  const [lastWon,setLastWon]=useState(false);
+  const [lastCards,setLastCards]=useState([]);
+  const used=useRef(new Set());
+  const initialized=useRef(false);
+  const [announce,setAnnounce]=useState(null);
+  const [audioOn,setAudioOn]=useState(false);
+  const audioRef=useRef(null);
+  useEffect(()=>{
+    const h=(e)=>{const d=e.detail||{};const stamp=Date.now()+Math.random();setAnnounce({text:d.text||"",sub:d.sub||"",color:d.color||T.gold,t:stamp});setTimeout(()=>setAnnounce(a=>(a&&a.t===stamp)?null:a),(d.dur||1600));};
+    window.addEventListener("arc-announce",h);return()=>window.removeEventListener("arc-announce",h);
+  },[]);
+  useEffect(()=>{
+    if(ph==="battle")window.dispatchEvent(new CustomEvent("arc-announce",{detail:{text:"FIGHT!",sub:"ROUND 1",color:T.pur,dur:1500}}));
+    if(ph==="debrief"&&lastWon)window.dispatchEvent(new CustomEvent("arc-announce",{detail:{text:"VICTORY!",sub:"YOU WIN",color:T.gold,dur:1800}}));
+    if(ph==="debrief"&&!lastWon)window.dispatchEvent(new CustomEvent("arc-announce",{detail:{text:"GAME OVER",sub:"INSERT COIN",color:T.red,dur:1800}}));
+  },[ph,lastWon]);
+  useEffect(()=>{
+    if(audioOn){
+      const ctx=new(window.AudioContext||window.webkitAudioContext)();
+      const masterGain=ctx.createGain();masterGain.gain.value=.06;masterGain.connect(ctx.destination);
+      const note=(f,t,d,wave="square",vol=1)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.type=wave;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.005);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(masterGain);o.start(t);o.stop(t+d+.02);};
+      // Greek/myth flavored minor-key arcade loop, A minor
+      const A=440,Bb=466.16,C5=523.25,D5=587.33,E5=659.25,F5=698.46,G5=783.99,A5=880,E4=329.63,A3=220,C4=261.63,D4=293.66,F4=349.23,G4=392;
+      const lead=[E5,A5,G5,E5, F5,E5,D5,C5, D5,F5,E5,D5, C5,A,Bb,C5];
+      const bass=[A3,A3,E4,E4, F4,F4,C4,C4, D4,D4,A3,A3, E4,E4,A3,A3];
+      const stepDur=.22;let step=0;let nextTime=ctx.currentTime+.05;
+      const tick=()=>{if(!audioRef.current)return;const t=nextTime;note(lead[step%lead.length],t,stepDur*.85,"square",.7);note(bass[step%bass.length],t,stepDur*.95,"triangle",1.2);if(step%4===2)note(110,t,.05,"square",.4);step++;nextTime+=stepDur;const lookahead=Math.max(0,(nextTime-ctx.currentTime-.05)*1000);audioRef.current.id=setTimeout(tick,lookahead);};
+      audioRef.current={ctx,id:0};tick();
+      return ()=>{if(audioRef.current){clearTimeout(audioRef.current.id);try{audioRef.current.ctx.close();}catch(e){}audioRef.current=null;}};
+    }
+  },[audioOn]);
+
+  // Hydrate from localStorage on first mount
+  useEffect(()=>{
+    if(initialized.current)return;initialized.current=true;
+    const saved=loadCampaign();
+    if(saved){
+      const safeSlots=Object.fromEntries(ACTIVE_REGIONS.map(r=>[r.id,saved.slots?.[r.id]||null]));
+      setSlots(safeSlots);
+      setDefeated(saved.defeated||[]);
+      setHud(saved.hud||{kills:0,streak:0});
+    }
+  },[]);
+
+  // Persist whenever campaign-relevant state changes
+  useEffect(()=>{
+    saveCampaign({slots,defeated,hud});
+  },[slots,defeated,hud]);
+
+  const regenSlot=useCallback((regionId,basis=null)=>{
+    const region=ACTIVE_REGIONS.find(r=>r.id===regionId);
+    if(!region)return;
+    generateMonster(region,{
+      basis,
+      onTextReady:(partial)=>{setSlots(p=>({...p,[regionId]:partial}));},
+    }).then(monster=>{
+      setSlots(p=>({...p,[regionId]:monster}));
+    }).catch(e=>{
+      console.error("[regenSlot]",e);
+      setSlots(p=>({...p,[regionId]:null}));
+    });
+  },[]);
+
+  // Retry just the image for a slot whose monster exists but lost/never got an image.
+  // Cheaper than a full regen — keeps name/lore/stats stable.
+  const retrySlotImage=useCallback((regionId,monster)=>{
+    setSlots(p=>p[regionId]?.id===monster.id?{...p,[regionId]:{...p[regionId],imageStatus:"loading"}}:p);
+    geminiImage(buildImagePrompt(monster)).then(url=>{
+      setSlots(p=>p[regionId]?.id===monster.id?{...p,[regionId]:{...p[regionId],imageDataUrl:url,imageStatus:"ready"}}:p);
+    }).catch(e=>{
+      console.error("[retry image]",e);
+      setSlots(p=>p[regionId]?.id===monster.id?{...p,[regionId]:{...p[regionId],imageStatus:"failed"}}:p);
+    });
+  },[]);
+
+  const ensureAllSlots=useCallback(()=>{
+    setSlots(prev=>{
+      const next={...prev};
+      ACTIVE_REGIONS.forEach(r=>{
+        const cur=next[r.id];
+        if(!cur){
+          regenSlot(r.id,pickSpawnBasis(defeated));
+        }else if(!cur.imageDataUrl){
+          retrySlotImage(r.id,cur);
+        }
+      });
+      return next;
+    });
+  },[defeated,regenSlot,retrySlotImage]);
+
+  const go=()=>{setTeam([]);setBodyTop5([]);used.current=new Set();setPh("quiz");};
+  const startGame=(top5)=>{setBodyTop5(top5||[]);ensureAllSlots();setPh("map");};
+
+  const pickRegion=(regionId)=>{
+    if(!slots[regionId])return;
+    setCurrentRegion(regionId);
+    const av=SPIRITS.filter(s=>!used.current.has(s.id));
+    const wa=av.filter(s=>s.regions.includes(regionId));
+    const wo=av.filter(s=>!wa.includes(s));
+    const aff=shuffle(wa).slice(0,3);
+    const wild=shuffle(wo).slice(0,5-aff.length);
+    setOpts([...aff,...wild]);
+    setPh("scout");
+  };
+
   const lockIn=(picked)=>{picked.forEach(s=>used.current.add(s.id));setTeam(picked);setTriviaSpirit(picked[0]);setPh("trivia");};
-  const fin=(won,cards)=>{setRes(p=>({...p,[ROUNDS[rnd-1].regionId]:won?"won":"lost"}));setLw(won);setLc(cards);setPh("debrief");};
-  const nxt=()=>{if(rnd>=5){setPh("end");return;}setRnd(r=>r+1);setTeam([]);setPh("map");};
-  const rd=ROUNDS[rnd-1]||ROUNDS[0];
-  return(<div style={{minHeight:"100vh",background:T.bg,color:T.txt,backgroundImage:`radial-gradient(ellipse 80% 40% at 50% 0%,#0d0a06 0%,transparent 50%)`}}>
-    <style>{`@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap');*{box-sizing:border-box;margin:0;padding:0}body{background:${T.bg}}::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:${T.fnt};border-radius:3px}`}</style>
+
+  const fin=(won,cards)=>{
+    const regionId=currentRegion;
+    const monster=slots[regionId];
+    setLastWon(won);setLastCards(cards);
+    if(won&&monster){
+      const trimmedMonster={...monster,imageDataUrl:null};
+      const newDefeated=[...defeated,trimmedMonster].slice(-20);
+      setDefeated(newDefeated);
+      setSlots(p=>({...p,[regionId]:null}));
+      setHud(h=>({kills:h.kills+1,streak:h.streak+1}));
+      regenSlot(regionId,pickSpawnBasis(newDefeated));
+    }else{
+      setHud(h=>({...h,streak:0}));
+    }
+    setPh("debrief");
+  };
+
+  const nxt=()=>{setTeam([]);setCurrentRegion(null);setPh("map");};
+
+  const reset=()=>{
+    clearCampaign();
+    setDefeated([]);
+    setHud({kills:0,streak:0});
+    used.current=new Set();
+    const cleared=Object.fromEntries(ACTIVE_REGIONS.map(r=>[r.id,null]));
+    setSlots(cleared);
+    ACTIVE_REGIONS.forEach(r=>regenSlot(r.id,null));
+  };
+
+  const battleMonsters=currentRegion&&slots[currentRegion]?[slots[currentRegion]]:[];
+
+  return(<div style={{minHeight:"100vh",background:T.bg,color:T.txt,backgroundImage:`radial-gradient(ellipse 80% 40% at 50% 0%,#2a004f 0%,transparent 55%),radial-gradient(ellipse 60% 30% at 50% 100%,#1a0033 0%,transparent 60%)`,position:"relative"}}>
+    <style>{`@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');*{box-sizing:border-box;margin:0;padding:0}body{background:${T.bg};color:${T.txt};font-family:${T.bd}}::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:${T.pur};border-radius:0}::-webkit-scrollbar-track{background:${T.s1}}*{border-radius:0 !important}@keyframes flicker{0%,99%{opacity:1}50%{opacity:.96}}@keyframes blink{50%{opacity:.35}}@keyframes scrollx{from{transform:translateX(0)}to{transform:translateX(-50%)}}@keyframes pulse{50%{transform:scale(1.06)}}@keyframes shake{0%,100%{transform:translate(0,0)}25%{transform:translate(-4px,2px)}50%{transform:translate(4px,-2px)}75%{transform:translate(-2px,-3px)}}@keyframes announceIn{0%{opacity:0;transform:scale(.4) translateY(-30px)}30%{opacity:1;transform:scale(1.1)}55%{transform:scale(1)}100%{opacity:1;transform:scale(1)}}@keyframes announceOut{0%{opacity:1}100%{opacity:0;transform:scale(1.6)}}@keyframes hitSpark{0%{opacity:1;transform:scale(.4) rotate(0deg)}100%{opacity:0;transform:scale(2.4) rotate(180deg)}}body::after{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,0.28) 2px 3px);z-index:9998;mix-blend-mode:multiply}body::before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(0,0,0,0.45) 100%);z-index:9999}h1,h2,h3{font-family:${T.hd};letter-spacing:2px}button{font-family:${T.hd}}`}</style>
+    <div style={{position:"fixed",top:0,left:0,right:0,zIndex:50,background:"#000",borderTop:`2px solid ${T.blu}`,borderBottom:`2px solid ${T.pur}`,padding:"6px 0",fontFamily:T.hd,fontSize:9,letterSpacing:3,color:T.pur,overflow:"hidden",whiteSpace:"nowrap",pointerEvents:"none"}}><div style={{display:"inline-block",animation:"scrollx 28s linear infinite",color:T.pur,textShadow:`0 0 6px ${T.pur}`}}>★ INSERT COIN ★ OLYMPUS RISING ★ POWERED BY 128 YEARS OF REAL OLYMPIC DATA ★ DEFEND AMERICA ★ GO FOR GOLD ★ NO CONTINUES ★ INSERT COIN ★ OLYMPUS RISING ★ POWERED BY 128 YEARS OF REAL OLYMPIC DATA ★ DEFEND AMERICA ★ GO FOR GOLD ★ NO CONTINUES ★ </div></div>
+    <div style={{height:28}}/>
+    <button onClick={()=>setAudioOn(v=>!v)} style={{position:"fixed",top:36,right:14,zIndex:60,fontFamily:T.hd,fontSize:9,letterSpacing:2,padding:"6px 10px",background:audioOn?T.grn+"22":"transparent",border:`2px solid ${audioOn?T.grn:T.pur}`,color:audioOn?T.grn:T.pur,cursor:"pointer",boxShadow:audioOn?`0 0 12px ${T.grn}88`:`0 0 8px ${T.pur}66`,textShadow:audioOn?`0 0 6px ${T.grn}`:`0 0 4px ${T.pur}`}}>{audioOn?"♪ MUSIC ON":"♪ MUSIC OFF"}</button>
+    {announce&&<div style={{position:"fixed",inset:0,zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",pointerEvents:"none",background:"radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.55) 0%, transparent 60%)",animation:"announceIn .35s ease-out"}}><div style={{textAlign:"center"}}><div style={{fontFamily:T.hd,fontSize:14,letterSpacing:6,color:T.cyan||T.blu,marginBottom:14,textShadow:`0 0 10px ${T.blu}`}}>{announce.sub}</div><div style={{fontFamily:T.hd,fontSize:88,letterSpacing:6,color:announce.color,textShadow:`4px 4px 0 ${T.red}, 8px 8px 0 ${T.s1}, 0 0 40px ${announce.color}`,animation:"pulse .8s ease-in-out infinite"}}>{announce.text}</div></div></div>}
     {ph==="start"&&<Start go={go} howto={()=>setPh("howto")} explore={()=>setPh("explore")}/>}
     {ph==="explore"&&<Explorer back={()=>setPh("start")}/>}
     {ph==="quiz"&&<BodyQuiz done={startGame}/>}
     {ph==="howto"&&<HowTo back={()=>setPh("start")} go={go}/>}
-    {ph==="map"&&<MapScr round={rnd} rd={rd} results={res} go={()=>{genScout();setPh("scout");}}/>}
-    {ph==="scout"&&<Scout opts={opts} lockIn={lockIn} round={rnd} rgn={rd.regionId} bodyTop5={bodyTop5}/>}
+    {ph==="map"&&<MapScr slots={slots} hud={hud} onPick={pickRegion} onReset={reset}/>}
+    {ph==="scout"&&currentRegion&&<Scout opts={opts} lockIn={lockIn} rgn={currentRegion} bodyTop5={bodyTop5}/>}
     {ph==="trivia"&&<Trivia spirit={triviaSpirit} onComplete={()=>setPh("simulate")}/>}
-    {ph==="simulate"&&<SimScreen team={team} monsters={rd.monsters} regionId={rd.regionId} bodyTop5={bodyTop5} onContinue={()=>setPh("battle")}/>}
-    {ph==="battle"&&<Battle monsters={rd.monsters} team={team} rgn={rd.regionId} finish={fin} round={rnd} bodyTop5={bodyTop5}/>}
-    {ph==="debrief"&&<Debrief monsters={rd.monsters} won={lw} cards={lc} rgn={rd.regionId} round={rnd} next={nxt}/>}
-    {ph==="end"&&<End results={res} restart={()=>setPh("start")}/>}
+    {ph==="simulate"&&currentRegion&&<SimScreen team={team} monsters={battleMonsters} regionId={currentRegion} bodyTop5={bodyTop5} onContinue={()=>setPh("battle")}/>}
+    {ph==="battle"&&currentRegion&&<Battle monsters={battleMonsters} team={team} rgn={currentRegion} finish={fin} round={Math.max(1,Math.floor(hud.kills/3)+1)} bodyTop5={bodyTop5}/>}
+    {ph==="debrief"&&currentRegion&&<Debrief monsters={[lastWon?defeated[defeated.length-1]:slots[currentRegion]].filter(Boolean)} won={lastWon} cards={lastCards} rgn={currentRegion} next={nxt}/>}
   </div>);
 }
 
 export default function App(){
+  if(!hasApiKey()){
+    return <ErrBound><div style={{minHeight:"100vh",background:T.bg,color:T.txt}}><KeyMissingScreen/></div></ErrBound>;
+  }
   return <ErrBound><Game/></ErrBound>;
 }
