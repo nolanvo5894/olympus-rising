@@ -2,9 +2,12 @@
   "name": "team_usa_hackathon",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "vite --port 5173",
     "build": "vite build",
+    "gen:avatars": "node --env-file=.env.local scripts/generate-sport-avatars.js",
+    "gen:monsters": "node --env-file=.env.local scripts/generate-region-monsters.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,6 +19,7 @@
     "vite": "^8.0.8"
   },
   "dependencies": {
+    "@google/genai": "^1.50.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "recharts": "^3.8.1"

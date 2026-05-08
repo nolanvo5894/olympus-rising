@@ -1,0 +1,16 @@
+{
+  "id": "m_baked_ngfzwjje",
+  "name": "The Gilded Tremor",
+  "emoji": "💥",
+  "hp": 180,
+  "maxHp": 180,
+  "special": "aoe",
+  "desc": "Unleashes shockwaves, damaging all spirits each turn.",
+  "backstory": "Born from the restless earth beneath the Olympic coliseum, The Gilded Tremor rose, its very presence a quaking omen. It feeds on the nervous energy of champions, threatening to collapse the grand stage of LA28 into a chasm of shattered dreams.",
+  "regionId": "pacific",
+  "level": 1,
+  "basisId": null,
+  "imageDataUrl": "/monsters/pacific.jpg",
+  "imageStatus": "ready",
+  "baked": true
+}

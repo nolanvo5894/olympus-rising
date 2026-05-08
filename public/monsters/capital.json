@@ -1,0 +1,16 @@
+{
+  "id": "m_baked_p59nlw6l",
+  "name": "Oathbreaker Geist",
+  "emoji": "⛓️",
+  "hp": 220,
+  "maxHp": 220,
+  "special": "block_weak",
+  "desc": "It blocks moves from your spirits with a low total hit rate.",
+  "backstory": "Born from the echoes of forgotten oaths and the shattered ambitions of a nation's past, this spectral entity coalesced in the very heart of the Capital. Now, as the LA28 Games approach, it seeks to unravel the spirit of competition itself, ensnaring all who strive for glory in its chains of doubt.",
+  "regionId": "capital",
+  "level": 1,
+  "basisId": null,
+  "imageDataUrl": "/monsters/capital.jpg",
+  "imageStatus": "ready",
+  "baked": true
+}

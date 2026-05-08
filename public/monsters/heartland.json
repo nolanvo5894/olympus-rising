@@ -1,0 +1,16 @@
+{
+  "id": "m_baked_sicokhq6",
+  "name": "The Aetherial Snare",
+  "emoji": "🕸️",
+  "hp": 180,
+  "maxHp": 180,
+  "special": "hit_strongest",
+  "desc": "Charges your strongest spirit first.",
+  "backstory": "Born from the collective anxieties of a region yearning for Olympic glory, the Aetherial Snare materializes as a web of despair, clinging to the brightest athletic aspirations. It feeds on the very essence of triumph, aiming to unravel the dreams of champions before the torch even reaches the shores of Los Angeles.",
+  "regionId": "heartland",
+  "level": 1,
+  "basisId": null,
+  "imageDataUrl": "/monsters/heartland.jpg",
+  "imageStatus": "ready",
+  "baked": true
+}

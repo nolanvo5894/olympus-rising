@@ -1,0 +1,16 @@
+{
+  "id": "m_baked_jqi8podg",
+  "name": "The Agonizer",
+  "emoji": "😵",
+  "hp": 180,
+  "maxHp": 180,
+  "special": "shift_weakness",
+  "desc": "Its weakness shifts each turn, demanding a perfect match to land bonus damage.",
+  "backstory": "It manifests from the unbearable weight of expectation, born in the hallowed halls where records are broken and dreams are crushed. The Agonizer thrives on the collective anxiety of a region desperate for Olympic glory, twisting courage into crippling doubt.",
+  "regionId": "northeast",
+  "level": 1,
+  "basisId": null,
+  "imageDataUrl": "/monsters/northeast.jpg",
+  "imageStatus": "ready",
+  "baked": true
+}

@@ -4,8 +4,11 @@ import medalRatesData from "./datasets/medal_rates.json";
 import sportStatsData from "./datasets/sport_stats.json";
 import { geminiText, geminiImage, hasApiKey, GeminiKeyMissingError } from "./lib/gemini.js";
 import { generateMonster, pickSpawnBasis, buildImagePrompt } from "./lib/monsterGen.js";
+import { generateMonsterQueued } from "./lib/genQueue.js";
 import { loadCampaign, saveCampaign, clearCampaign } from "./lib/storage.js";
 import { matchSports, PERSONALITY_QUESTIONS, SPORT_BODY_TYPES } from "./lib/sportMatch.js";
+import { SportAvatar } from "./lib/sportAvatar.jsx";
+import { loadBakedMonster } from "./lib/bakedMonsters.js";
 
 /* ═══════════════════════════════════════════════════════════════
    OLYMPUS RISING v3 — Moves Edition
@@ -516,31 +519,58 @@ function MoveBar({move}){
 function SpiritCard({spirit:s,compact,selected,onClick,disabled,showHp,hp:curHp,rgn,bodyMatch:bm}){
   const t=tier(s);const bc=s.para?T.para:t.c;const aff=rgn&&(s.regions.includes(rgn)||rgn==="la28");
   return(<div onClick={disabled?undefined:onClick} style={{width:compact?120:200,minHeight:compact?undefined:280,background:`linear-gradient(150deg,${T.s1},${T.s2})`,border:`2px solid ${selected?bc:bc+"44"}`,borderRadius:12,padding:compact?7:12,cursor:disabled?"default":"pointer",opacity:disabled?.3:1,transition:"all .25s",boxShadow:selected?`0 0 18px ${bc}55`:"none",position:"relative",display:"flex",flexDirection:"column",gap:compact?2:5}}>
-    {s.para&&<div style={{position:"absolute",top:3,right:6,fontSize:7,color:T.para,fontFamily:T.hd,letterSpacing:2,fontWeight:700}}>MECH</div>}
-    {aff&&!compact&&<div style={{position:"absolute",top:3,left:6,fontSize:7,background:T.grn+"22",color:T.grn,padding:"1px 5px",borderRadius:3,fontFamily:T.hd}}>+50%</div>}
-    {bm&&!compact&&<div style={{position:"absolute",top:aff?18:3,left:6,fontSize:7,background:T.blu+"22",color:T.blu,padding:"1px 5px",borderRadius:3,fontFamily:T.hd}}>💪+15%</div>}
+    {s.para&&<div style={{position:"absolute",top:3,right:6,fontSize:16,color:T.para,fontFamily:T.hd,letterSpacing:2,fontWeight:700}}>MECH</div>}
+    {aff&&!compact&&<div style={{position:"absolute",top:3,left:6,fontSize:16,background:T.grn+"22",color:T.grn,padding:"1px 5px",borderRadius:3,fontFamily:T.hd}}>+50%</div>}
+    {bm&&!compact&&<div style={{position:"absolute",top:aff?18:3,left:6,fontSize:16,background:T.blu+"22",color:T.blu,padding:"1px 5px",borderRadius:3,fontFamily:T.hd}}>💪+15%</div>}
     <div style={{fontSize:compact?7:8,color:t.c,fontFamily:T.hd,letterSpacing:1.5,marginTop:(s.para||aff)?10:0}}>{t.n}</div>
-    <div style={{fontSize:compact?12:16,marginTop:compact?0:2}}>{s.emoji} <span style={{fontFamily:T.hd,fontWeight:700,color:T.txt}}>{s.sport}</span></div>
-    {!compact&&<div style={{display:"flex",gap:2,flexWrap:"wrap"}}>{s.regions.map(r=>{const rg=REGIONS.find(x=>x.id===r);return rg?<span key={r} style={{fontSize:6,background:rg.color+"22",color:rg.color,padding:"1px 4px",borderRadius:3,fontFamily:T.bd}}>{rg.name}</span>:null;})}</div>}
-    {!compact&&<div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:2,marginTop:3}}>MOVES</div>}
+    <div style={{display:"flex",justifyContent:"center"}}>
+      <SportAvatar sport={s.sport} emoji={s.emoji} size={compact?60:96} radius={6}/>
+    </div>
+    <div style={{fontSize:compact?12:16,marginTop:compact?0:2,textAlign:"center"}}><span style={{fontFamily:T.hd,fontWeight:700,color:T.txt}}>{s.sport}</span></div>
+    {!compact&&<div style={{display:"flex",gap:2,flexWrap:"wrap"}}>{s.regions.map(r=>{const rg=REGIONS.find(x=>x.id===r);return rg?<span key={r} style={{fontSize:13,background:rg.color+"22",color:rg.color,padding:"1px 4px",borderRadius:3,fontFamily:T.bd}}>{rg.name}</span>:null;})}</div>}
+    {!compact&&<div style={{fontSize:17,color:T.gd,fontFamily:T.hd,letterSpacing:2,marginTop:3}}>MOVES</div>}
     {!compact&&s.moves.map((m,i)=>{const [name,g,sv,b,kw]=m;return(<div key={i} style={{marginBottom:3}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-        <span style={{fontSize:10,color:T.txt,fontFamily:T.bd}}>{name}</span>
-        <span style={{fontSize:9,color:T.dim,fontFamily:T.bd}}>{Math.round(totalRate(m)*100)}%{kw?` ${kw==="RELAY"?"🤝":kw==="EXPLOSIVE"?"💥":kw==="ENDURANCE"?"💚":kw==="PRECISION"?"🎯":""}`:""}</span>
+        <span style={{fontSize:18,color:T.txt,fontFamily:T.bd}}>{name}</span>
+        <span style={{fontSize:17,color:T.dim,fontFamily:T.bd}}>{Math.round(totalRate(m)*100)}%{kw?` ${kw==="RELAY"?"🤝":kw==="EXPLOSIVE"?"💥":kw==="ENDURANCE"?"💚":kw==="PRECISION"?"🎯":""}`:""}</span>
       </div>
       <MoveBar move={m}/>
     </div>);})}
-    {compact&&<div style={{fontSize:9,color:T.dim,fontFamily:T.bd}}>{s.moves.length} moves · best: {Math.round(bestGold(s)*100)}%🥇</div>}
-    {s.para&&!compact&&<div style={{fontSize:8,color:T.para,background:T.para+"12",borderRadius:4,padding:"2px 5px",textAlign:"center",fontFamily:T.bd,marginTop:2}}>⚡ ADAPT — Cancel 1 attack</div>}
-    {showHp&&<div style={{marginTop:"auto",paddingTop:3}}><div style={{height:4,background:T.fnt,borderRadius:2,overflow:"hidden"}}><div style={{height:"100%",width:`${Math.max(0,(curHp/HP)*100)}%`,background:curHp>HP*.3?T.grn:T.red,borderRadius:2,transition:"width .4s"}}/></div><div style={{fontSize:7,color:T.dim,textAlign:"center"}}>{curHp}/{HP}</div></div>}
+    {compact&&<div style={{fontSize:17,color:T.dim,fontFamily:T.bd}}>{s.moves.length} moves · best: {Math.round(bestGold(s)*100)}%🥇</div>}
+    {s.para&&!compact&&<div style={{fontSize:16,color:T.para,background:T.para+"12",borderRadius:4,padding:"2px 5px",textAlign:"center",fontFamily:T.bd,marginTop:2}}>⚡ ADAPT — Cancel 1 attack</div>}
+    {showHp&&<div style={{marginTop:"auto",paddingTop:3}}><div style={{height:4,background:T.fnt,borderRadius:2,overflow:"hidden"}}><div style={{height:"100%",width:`${Math.max(0,(curHp/HP)*100)}%`,background:curHp>HP*.3?T.grn:T.red,borderRadius:2,transition:"width .4s"}}/></div><div style={{fontSize:16,color:T.dim,textAlign:"center"}}>{curHp}/{HP}</div></div>}
   </div>);
 }
 
 const Btn=({children,onClick,color=T.gold,disabled:d,small:s})=><button disabled={d} onClick={onClick} style={{background:"transparent",border:`2px solid ${d?T.fnt:color}`,color:d?T.fnt:color,fontFamily:T.hd,fontSize:s?10:12,padding:s?"4px 10px":"8px 20px",borderRadius:7,cursor:d?"default":"pointer",letterSpacing:2,textTransform:"uppercase"}}>{children}</button>;
 
+// Card anchor table for the map overlay. lx/ly are in USMap viewBox coords;
+// hAnch/vAnch describe which corner of the card sits at (lx, ly).
+const MAP_VB={x:-78,y:-50,w:758,h:420};
+const MAP_LP={
+  pacific:  {lx:-70, ly:130, hAnch:"start",  vAnch:"middle"},
+  mountain: {lx:115, ly:-22, hAnch:"middle", vAnch:"end"},
+  southwest:{lx:185, ly:325, hAnch:"middle", vAnch:"start"},
+  heartland:{lx:380, ly:-22, hAnch:"middle", vAnch:"end"},
+  south:    {lx:445, ly:325, hAnch:"middle", vAnch:"start"},
+  northeast:{lx:680, ly:35,  hAnch:"end",    vAnch:"middle"},
+  capital:  {lx:680, ly:170, hAnch:"end",    vAnch:"middle"},
+};
+function mapLpStyle(lp){
+  const tx=lp.hAnch==="end"?-100:lp.hAnch==="middle"?-50:0;
+  const ty=lp.vAnch==="end"?-100:lp.vAnch==="middle"?-50:0;
+  return{
+    position:"absolute",
+    left:`${(lp.lx-MAP_VB.x)/MAP_VB.w*100}%`,
+    top:`${(lp.ly-MAP_VB.y)/MAP_VB.h*100}%`,
+    transform:`translate(${tx}%,${ty}%)`,
+  };
+}
+
 function USMap({atk,results={},slots={},compact,onPick}){
   const rc={pacific:"#3b82f6",mountain:"#94a3b8",southwest:"#ef4444",heartland:"#eab308",south:"#22c55e",northeast:"#a855f7",capital:"#6366f1"};
-  return(<svg viewBox="-5 0 600 320" style={{width:"100%",maxWidth:compact?420:540,filter:"drop-shadow(0 8px 24px rgba(0,0,0,0.6))"}}>
+  const LP=MAP_LP;
+  return(<svg viewBox="-78 -50 758 420" preserveAspectRatio="xMidYMid meet" style={{maxWidth:compact?"min(540px,90vw)":"min(820px,82vw)",maxHeight:"100%",width:"100%",height:"auto",aspectRatio:"758 / 420",filter:"drop-shadow(0 8px 24px rgba(0,0,0,0.6))",display:"block"}}>
     <defs>
       <filter id="ag" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       <filter id="wg" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
@@ -564,14 +594,16 @@ function USMap({atk,results={},slots={},compact,onPick}){
       return <path key={"s-"+ab} d={d} fill={fill} stroke={stroke} strokeWidth={sw} strokeLinejoin="round" filter={ia?"url(#ag)":rs==="won"?"url(#wg)":"none"} style={{paintOrder:"stroke",transition:"all .5s",cursor:onPick&&slots[rg]?"pointer":"default",pointerEvents:"none"}}/>;
     })}
     {REGIONS.filter(r=>r.id!=="la28").map(r=>{
-      const rs=results[r.id],ia=atk===r.id,mon=slots[r.id];
-      const labelColor=ia?"#fff":rs==="won"?T.grn:rs==="lost"?T.red+"cc":mon?"#fff":T.dim;
-      return <g key={r.id} style={{cursor:onPick&&mon?"pointer":"default"}} onClick={onPick&&mon?()=>onPick(r.id):undefined}>
-        <text x={r.cx} y={r.cy} textAnchor="middle" fill={labelColor} fontSize={compact?9:11} fontFamily="Cinzel" fontWeight={900} letterSpacing="1.5" style={{textShadow:`0 0 8px ${rc[r.id]||"#000"}, 0 2px 4px #000`}}>{r.name.toUpperCase()}</text>
-        {mon&&<g filter="url(#liveGlow)"><text x={r.cx} y={r.cy+(compact?18:22)} textAnchor="middle" fontSize={compact?18:24} style={{filter:"drop-shadow(0 2px 6px #000)"}}>{mon.emoji}</text></g>}
-        {!mon&&!ia&&rs!=="won"&&rs!=="lost"&&<text x={r.cx} y={r.cy+15} textAnchor="middle" fontSize={9} fill={T.gold+"aa"} fontFamily={T.bd} fontStyle="italic">summoning…</text>}
-        {rs==="won"&&!ia&&<text x={r.cx} y={r.cy+15} textAnchor="middle" fontSize={14}>🛡️</text>}
-        {rs==="lost"&&!ia&&<text x={r.cx} y={r.cy+15} textAnchor="middle" fontSize={14}>💀</text>}
+      const lp=LP[r.id];if(!lp)return null;
+      const rcCol=rc[r.id]||"#aaa";
+      // Leader line from card anchor (lp) to region centroid (cx, cy).
+      // The HTML overlay (rendered by MapScr) sits at (lp.lx, lp.ly).
+      const ta=lp.hAnch==="end"?"end":lp.hAnch==="start"?"start":"middle";
+      const db=lp.vAnch==="end"?"text-after-edge":lp.vAnch==="start"?"text-before-edge":"central";
+      return <g key={r.id} style={{pointerEvents:"none"}}>
+        <line x1={lp.lx} y1={lp.ly} x2={r.cx} y2={r.cy} stroke={rcCol} strokeWidth={1.5} strokeDasharray="3 3" opacity={0.65}/>
+        <circle cx={r.cx} cy={r.cy} r={3.5} fill={rcCol} opacity={0.9}/>
+        <text x={lp.lx} y={lp.ly} textAnchor={ta} dominantBaseline={db} fill={rcCol} fontFamily="Cinzel" fontWeight={900} fontSize={compact?13:16} letterSpacing="2" style={{textShadow:`0 0 8px ${rcCol}, 0 2px 4px #000`,paintOrder:"stroke",stroke:"#000",strokeWidth:0.6}}>{r.name.toUpperCase()}</text>
       </g>;
     })}
   </svg>);
@@ -593,16 +625,18 @@ function StartMap(){
       .catch(()=>{if(!cancelled) setHasPng(false);});
     return()=>{cancelled=true;};
   },[]);
-  if(hasPng) return <img src="/usa-map.png" alt="USA regions" style={{width:"100%",maxWidth:540,borderRadius:14,filter:"drop-shadow(0 8px 24px rgba(0,0,0,0.6))",display:"block"}}/>;
+  if(hasPng) return <img src="/usa-map.png" alt="USA regions" style={{maxWidth:"min(960px,95vw)",maxHeight:"100%",objectFit:"contain",filter:"drop-shadow(0 8px 24px rgba(0,0,0,0.6))",display:"block"}}/>;
   return <USMap results={{}}/>;
 }
 
-function Start({go,howto,explore}){return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100vh",gap:20,padding:20,textAlign:"center"}}>
-  <div style={{fontSize:11,letterSpacing:8,color:T.gd,fontFamily:T.hd}}>TEAM USA × DATA SCIENCE</div>
-  <h1 style={{fontSize:44,fontFamily:T.hd,color:T.gold,margin:0,textShadow:`0 0 40px ${T.gold}33`}}>OLYMPUS RISING</h1>
-  <p style={{fontSize:14,color:T.dim,fontFamily:T.bd,maxWidth:440,lineHeight:1.7,fontStyle:"italic"}}>Monsters attack America before LA28. Summon sport spirits — each with real event moves powered by 120 years of medal data. Study the stats. Pick the right move. Defend every region.</p>
-  <StartMap/>
-  <div style={{display:"flex",gap:12,flexWrap:"wrap",justifyContent:"center"}}><Btn onClick={howto} color={T.blu}>How to Play</Btn><Btn onClick={explore} color={T.pur}>Explore Sports</Btn><Btn onClick={go}>Defend America</Btn></div>
+function Start({go,howto,explore}){return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"calc(100vh - 28px)",gap:10,padding:"10px 20px 14px",textAlign:"center",overflow:"hidden",boxSizing:"border-box"}}>
+  <div style={{fontSize:13,letterSpacing:6,color:T.gd,fontFamily:T.hd,textShadow:`0 0 8px ${T.blu}`,marginTop:18}}>TEAM USA × RPG</div>
+  <h1 style={{fontSize:42,fontFamily:T.hd,color:T.gold,margin:0,textShadow:`3px 3px 0 ${T.red}, 0 0 30px ${T.gold}66`,letterSpacing:3,lineHeight:1}}>OLYMPUS RISING</h1>
+  <p style={{fontSize:"clamp(18px, 1.7vw, 28px)",color:T.txt,fontFamily:T.bd,lineHeight:1.3,fontStyle:"italic",margin:0,whiteSpace:"nowrap"}}>Monsters attack America before LA28. Summon the spirits of <span style={{color:T.gold,fontWeight:700,fontStyle:"normal"}}>Team USA sports</span> to <span style={{color:T.pur,fontWeight:700,fontStyle:"normal"}}>defend every region</span>.</p>
+  <div style={{flex:"1 1 0",minHeight:0,width:"100%",display:"flex",alignItems:"center",justifyContent:"center"}}><StartMap/></div>
+  <div style={{display:"flex",gap:12,flexWrap:"wrap",justifyContent:"center"}}>
+    {[{l:"How to Play",fn:howto,c:T.blu},{l:"Explore Sports",fn:explore,c:T.pur},{l:"Defend America",fn:go,c:T.gold}].map(b=>(<button key={b.l} onClick={b.fn} style={{background:"transparent",border:`2px solid ${b.c}`,color:b.c,fontFamily:T.hd,fontSize:11,padding:"10px 0",cursor:"pointer",letterSpacing:2,textTransform:"uppercase",width:240,boxShadow:`0 0 10px ${b.c}55`}}>{b.l}</button>))}
+  </div>
 </div>);}
 
 async function compressImageFile(file, maxEdge = 1024, quality = 0.85){
@@ -668,14 +702,14 @@ function BodyQuiz({done}){
     finally{setLoading(false);}
   };
 
-  const IS={background:T.s2,border:`1px solid ${T.fnt}`,borderRadius:6,color:T.txt,fontFamily:T.bd,fontSize:16,padding:"8px 10px",width:70,textAlign:"center",outline:"none"};
-  const sectionLabel={fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:3};
+  const IS={background:T.s2,border:`1px solid ${T.fnt}`,borderRadius:6,color:T.txt,fontFamily:T.bd,fontSize:21,padding:"8px 10px",width:70,textAlign:"center",outline:"none"};
+  const sectionLabel={fontSize:17,color:T.gd,fontFamily:T.hd,letterSpacing:3};
   const sectionBox={background:T.s1,border:`1px solid ${T.fnt}`,borderRadius:10,padding:14,width:"100%",maxWidth:520};
 
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:20,gap:16}}>
-    <div style={{fontSize:11,letterSpacing:8,color:T.gd,fontFamily:T.hd}}>BODY TYPE SCANNER</div>
-    <h2 style={{fontSize:30,fontFamily:T.hd,color:T.gold,margin:0,textAlign:"center"}}>Find Your Sport Match</h2>
-    <p style={{fontSize:13,color:T.dim,fontFamily:T.bd,maxWidth:480,lineHeight:1.6,fontStyle:"italic",textAlign:"center"}}>
+    <div style={{fontSize:19,letterSpacing:8,color:T.gd,fontFamily:T.hd}}>THE DELPHIC LENS</div>
+    <h2 style={{fontSize:30,fontFamily:T.hd,color:T.gold,margin:0,textAlign:"center"}}>Sport Affinity Scanner</h2>
+    <p style={{fontSize:22,color:T.dim,fontFamily:T.bd,maxWidth:480,lineHeight:1.6,fontStyle:"italic",textAlign:"center"}}>
       Enter your height + weight, optionally upload a photo, and answer 5 quick scenarios. Gemini ranks the 5 sports that fit you best out of 39 Team USA Olympic sports.
     </p>
 
@@ -684,28 +718,28 @@ function BodyQuiz({done}){
       <div style={{...sectionLabel,marginBottom:10,textAlign:"center"}}>1. BODY</div>
       <div style={{display:"flex",justifyContent:"center",marginBottom:10}}>
         <div style={{display:"flex",gap:4,background:T.s2,borderRadius:8,padding:3}}>
-          {["imperial","metric"].map(u=>(<button key={u} onClick={()=>setUnit(u)} style={{background:unit===u?T.gold+"22":"transparent",border:unit===u?`1px solid ${T.gold}`:"1px solid transparent",color:unit===u?T.gold:T.dim,fontFamily:T.hd,fontSize:11,letterSpacing:2,borderRadius:6,padding:"6px 16px",cursor:"pointer",textTransform:"uppercase"}}>{u==="imperial"?"FT / LB":"CM / KG"}</button>))}
+          {["imperial","metric"].map(u=>(<button key={u} onClick={()=>setUnit(u)} style={{background:unit===u?T.gold+"22":"transparent",border:unit===u?`1px solid ${T.gold}`:"1px solid transparent",color:unit===u?T.gold:T.dim,fontFamily:T.hd,fontSize:19,letterSpacing:2,borderRadius:6,padding:"6px 16px",cursor:"pointer",textTransform:"uppercase"}}>{u==="imperial"?"FT / LB":"CM / KG"}</button>))}
         </div>
       </div>
       <div style={{display:"flex",gap:16,alignItems:"flex-end",flexWrap:"wrap",justifyContent:"center"}}>
         {unit==="imperial"?(<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
-          <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:2}}>HEIGHT</div>
+          <div style={{fontSize:17,color:T.gd,fontFamily:T.hd,letterSpacing:2}}>HEIGHT</div>
           <div style={{display:"flex",gap:4,alignItems:"center"}}>
-            <input value={ft} onChange={e=>setFt(e.target.value)} placeholder="5" style={IS} type="number" min="3" max="8"/><span style={{color:T.dim,fontSize:13}}>ft</span>
-            <input value={inch} onChange={e=>setInch(e.target.value)} placeholder="10" style={IS} type="number" min="0" max="11"/><span style={{color:T.dim,fontSize:13}}>in</span>
+            <input value={ft} onChange={e=>setFt(e.target.value)} placeholder="5" style={IS} type="number" min="3" max="8"/><span style={{color:T.dim,fontSize:22}}>ft</span>
+            <input value={inch} onChange={e=>setInch(e.target.value)} placeholder="10" style={IS} type="number" min="0" max="11"/><span style={{color:T.dim,fontSize:22}}>in</span>
           </div>
         </div>):(<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
-          <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:2}}>HEIGHT</div>
+          <div style={{fontSize:17,color:T.gd,fontFamily:T.hd,letterSpacing:2}}>HEIGHT</div>
           <div style={{display:"flex",gap:4,alignItems:"center"}}>
-            <input value={cm} onChange={e=>setCm(e.target.value)} placeholder="178" style={{...IS,width:90}} type="number" min="100" max="250"/><span style={{color:T.dim,fontSize:13}}>cm</span>
+            <input value={cm} onChange={e=>setCm(e.target.value)} placeholder="178" style={{...IS,width:90}} type="number" min="100" max="250"/><span style={{color:T.dim,fontSize:22}}>cm</span>
           </div>
         </div>)}
         {unit==="imperial"?(<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
-          <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:2}}>WEIGHT</div>
-          <div style={{display:"flex",gap:4,alignItems:"center"}}><input value={lbs} onChange={e=>setLbs(e.target.value)} placeholder="160" style={{...IS,width:90}} type="number" min="50" max="500"/><span style={{color:T.dim,fontSize:13}}>lbs</span></div>
+          <div style={{fontSize:17,color:T.gd,fontFamily:T.hd,letterSpacing:2}}>WEIGHT</div>
+          <div style={{display:"flex",gap:4,alignItems:"center"}}><input value={lbs} onChange={e=>setLbs(e.target.value)} placeholder="160" style={{...IS,width:90}} type="number" min="50" max="500"/><span style={{color:T.dim,fontSize:22}}>lbs</span></div>
         </div>):(<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
-          <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:2}}>WEIGHT</div>
-          <div style={{display:"flex",gap:4,alignItems:"center"}}><input value={kg} onChange={e=>setKg(e.target.value)} placeholder="73" style={{...IS,width:90}} type="number" min="20" max="250"/><span style={{color:T.dim,fontSize:13}}>kg</span></div>
+          <div style={{fontSize:17,color:T.gd,fontFamily:T.hd,letterSpacing:2}}>WEIGHT</div>
+          <div style={{display:"flex",gap:4,alignItems:"center"}}><input value={kg} onChange={e=>setKg(e.target.value)} placeholder="73" style={{...IS,width:90}} type="number" min="20" max="250"/><span style={{color:T.dim,fontSize:22}}>kg</span></div>
         </div>)}
       </div>
     </div>
@@ -716,14 +750,14 @@ function BodyQuiz({done}){
       <div style={{display:"flex",gap:14,alignItems:"center",justifyContent:"center",flexWrap:"wrap"}}>
         {photo?(<>
           <img src={photo.dataUrl} alt="you" style={{width:80,height:80,objectFit:"cover",borderRadius:8,border:`1px solid ${T.gold}55`}}/>
-          <button onClick={()=>setPhoto(null)} style={{background:"transparent",border:`1px solid ${T.dim}`,color:T.dim,fontFamily:T.hd,fontSize:10,padding:"5px 10px",borderRadius:5,cursor:"pointer",letterSpacing:2,textTransform:"uppercase"}}>Remove</button>
-        </>):(<label style={{cursor:"pointer",border:`1px dashed ${T.fnt}`,borderRadius:8,padding:"14px 22px",color:T.dim,fontFamily:T.bd,fontSize:12}}>
+          <button onClick={()=>setPhoto(null)} style={{background:"transparent",border:`1px solid ${T.dim}`,color:T.dim,fontFamily:T.hd,fontSize:18,padding:"5px 10px",borderRadius:5,cursor:"pointer",letterSpacing:2,textTransform:"uppercase"}}>Remove</button>
+        </>):(<label style={{cursor:"pointer",border:`1px dashed ${T.fnt}`,borderRadius:8,padding:"14px 22px",color:T.dim,fontFamily:T.bd,fontSize:20}}>
           <input type="file" accept="image/*" onChange={onPickPhoto} style={{display:"none"}}/>
           + Upload a photo of yourself
         </label>)}
       </div>
-      {photoErr&&<div style={{color:T.red,fontSize:11,fontFamily:T.bd,textAlign:"center",marginTop:6}}>{photoErr}</div>}
-      <p style={{fontSize:10,color:T.dim,fontFamily:T.bd,fontStyle:"italic",textAlign:"center",lineHeight:1.5,marginTop:8}}>Photo is sent to Gemini for analysis and not stored anywhere.</p>
+      {photoErr&&<div style={{color:T.red,fontSize:19,fontFamily:T.bd,textAlign:"center",marginTop:6}}>{photoErr}</div>}
+      <p style={{fontSize:18,color:T.dim,fontFamily:T.bd,fontStyle:"italic",textAlign:"center",lineHeight:1.5,marginTop:8}}>Photo is sent to Gemini for analysis and not stored anywhere.</p>
     </div>
 
     {/* ── Section 3: personality ── */}
@@ -731,9 +765,9 @@ function BodyQuiz({done}){
       <div style={{...sectionLabel,marginBottom:10,textAlign:"center"}}>3. QUICK VIBE CHECK</div>
       <div style={{display:"flex",flexDirection:"column",gap:14}}>
         {PERSONALITY_QUESTIONS.map((q)=>(<div key={q.id}>
-          <div style={{fontFamily:T.hd,fontSize:13,color:T.txt,marginBottom:6}}>{q.q}</div>
+          <div style={{fontFamily:T.hd,fontSize:22,color:T.txt,marginBottom:6}}>{q.q}</div>
           <div style={{display:"flex",flexDirection:"column",gap:5}}>
-            {q.choices.map((c)=>{const sel=personality[q.id]===c;return(<button key={c} onClick={()=>setPersonality(p=>({...p,[q.id]:c}))} style={{textAlign:"left",background:sel?T.gold+"18":T.s2,border:`1px solid ${sel?T.gold:T.fnt}`,color:sel?T.gold:T.txt,fontFamily:T.bd,fontSize:12,padding:"8px 12px",borderRadius:6,cursor:"pointer",lineHeight:1.4}}>{c}</button>);})}
+            {q.choices.map((c)=>{const sel=personality[q.id]===c;return(<button key={c} onClick={()=>setPersonality(p=>({...p,[q.id]:c}))} style={{textAlign:"left",background:sel?T.gold+"18":T.s2,border:`1px solid ${sel?T.gold:T.fnt}`,color:sel?T.gold:T.txt,fontFamily:T.bd,fontSize:20,padding:"8px 12px",borderRadius:6,cursor:"pointer",lineHeight:1.4}}>{c}</button>);})}
           </div>
         </div>))}
       </div>
@@ -742,23 +776,23 @@ function BodyQuiz({done}){
     {/* ── Submit ── */}
     {!results&&(<>
       <Btn onClick={run} disabled={!canSubmit} color={T.gold}>{loading?"Reading the auras…":"Find My Sports"}</Btn>
-      {error&&<div style={{color:T.red,fontFamily:T.bd,fontSize:12,maxWidth:480,textAlign:"center"}}>{error}</div>}
-      <button onClick={()=>done(null)} style={{background:"none",border:"none",color:T.dim,fontFamily:T.bd,fontSize:12,cursor:"pointer",textDecoration:"underline"}}>Skip →</button>
+      {error&&<div style={{color:T.red,fontFamily:T.bd,fontSize:20,maxWidth:480,textAlign:"center"}}>{error}</div>}
+      <button onClick={()=>done(null)} style={{background:"none",border:"none",color:T.dim,fontFamily:T.bd,fontSize:20,cursor:"pointer",textDecoration:"underline"}}>Skip →</button>
     </>)}
 
     {/* ── Results ── */}
     {results&&(
       <div style={{display:"flex",flexDirection:"column",gap:10,width:"100%",maxWidth:520}}>
-        <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:3,textAlign:"center"}}>YOUR TOP 5 SPORT MATCHES</div>
+        <div style={{fontSize:17,color:T.gd,fontFamily:T.hd,letterSpacing:3,textAlign:"center"}}>YOUR TOP 5 SPORT MATCHES</div>
         {results.map((r,i)=>{const isFirst=i===0;return(
           <div key={r.sport} style={{background:T.s1,borderRadius:10,padding:"12px 16px",display:"flex",alignItems:"center",gap:12,border:`1px solid ${isFirst?T.gold+"66":T.fnt}`,boxShadow:isFirst?`0 0 18px ${T.gold}22`:"none"}}>
             <div style={{minWidth:48,textAlign:"center"}}>
-              <div style={{fontFamily:T.hd,fontSize:18,color:isFirst?T.gold:T.txt}}>{RANK_LABELS[i]||`${i+1}th`}</div>
+              <div style={{fontFamily:T.hd,fontSize:24,color:isFirst?T.gold:T.txt}}>{RANK_LABELS[i]||`${i+1}th`}</div>
             </div>
-            <div style={{fontSize:28,minWidth:36,textAlign:"center"}}>{r.emoji}</div>
+            <SportAvatar sport={r.sport} emoji={r.emoji} size={isFirst?72:56} radius={8}/>
             <div style={{flex:1,textAlign:"left"}}>
-              <div style={{fontFamily:T.hd,color:isFirst?T.gold:T.txt,fontSize:14}}>{isFirst?"🏆 ":""}{r.sport}</div>
-              <div style={{fontFamily:T.bd,color:T.dim,fontSize:11,marginTop:2}}>Avg: {Math.round(r.avgH)}cm / {Math.round(r.avgW)}kg · {r.n.toLocaleString()} athletes</div>
+              <div style={{fontFamily:T.hd,color:isFirst?T.gold:T.txt,fontSize:24}}>{isFirst?"🏆 ":""}{r.sport}</div>
+              <div style={{fontFamily:T.bd,color:T.dim,fontSize:19,marginTop:2}}>Avg: {Math.round(r.avgH)}cm / {Math.round(r.avgW)}kg · {r.n.toLocaleString()} athletes</div>
             </div>
           </div>
         );})}
@@ -769,53 +803,104 @@ function BodyQuiz({done}){
 }
 
 function HowTo({back,go}){
-  const B={background:T.s1,borderRadius:10,padding:14,width:"100%"};
-  const H={fontFamily:T.hd,fontSize:14,color:T.gold,margin:"0 0 8px",letterSpacing:2};
-  const P={fontFamily:T.bd,fontSize:12,color:T.txt,lineHeight:1.7,margin:0};
-  const D={fontFamily:T.bd,fontSize:11,color:T.dim,lineHeight:1.6,margin:"4px 0 0"};
-  return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:20,gap:12,maxWidth:520,margin:"0 auto"}}>
-    <div style={{fontSize:10,letterSpacing:6,color:T.gd,fontFamily:T.hd}}>HOW TO PLAY</div>
-    <h2 style={{fontFamily:T.hd,color:T.gold,margin:0,fontSize:22}}>Endless Defense Across America</h2>
-
-    <div style={B}><h3 style={H}>🗺️ The Story</h3><p style={P}>Mythological monsters are draining America's Olympic spirit before LA28. You summon <span style={{color:T.gold}}>sport spirits</span> — each with real event moves — to fight back across the US map. Defeat one monster and a new one rises in its place. There is no last round.</p></div>
-
-    <div style={B}><h3 style={H}>🧬 Body Type Scanner</h3>
-      <p style={P}>Before you fight, the scanner takes <span style={{color:T.gold}}>your height + weight</span>, an <span style={{color:T.gold}}>optional photo</span>, and a quick <span style={{color:T.gold}}>5-question vibe check</span>. A formula ranks all 39 Olympic sports by body match, then Gemini reweights the top 10 with your photo and personality to pick your final Top 5.</p>
-      <p style={D}>Spirits matching your Top 5 sports deal <span style={{color:T.blu}}>+15% damage</span>.</p>
+  const Card={background:"rgba(0,0,0,0.45)",border:`2px solid ${T.fnt}`,padding:18,width:"100%",boxSizing:"border-box"};
+  const H={fontFamily:T.hd,fontSize:18,color:T.gold,margin:"0 0 10px",letterSpacing:2,textShadow:`0 0 8px ${T.gold}55`};
+  const P={fontFamily:T.bd,fontSize:20,color:T.txt,lineHeight:1.55,margin:"0 0 8px"};
+  const Strong=({c=T.gold,children})=><span style={{color:c,fontWeight:700}}>{children}</span>;
+  return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"22px 28px 60px",gap:18,maxWidth:1180,margin:"0 auto"}}>
+    {/* Header */}
+    <div style={{textAlign:"center"}}>
+      <div style={{fontSize:14,letterSpacing:6,color:T.blu,fontFamily:T.hd,textShadow:`0 0 8px ${T.blu}`}}>★ HOW TO PLAY ★</div>
+      <h1 style={{fontFamily:T.hd,color:T.gold,margin:"8px 0 0",fontSize:38,letterSpacing:3,textShadow:`3px 3px 0 ${T.red}, 0 0 24px ${T.gold}66`,lineHeight:1.1}}>OLYMPUS RISING</h1>
     </div>
 
-    <div style={B}><h3 style={H}>👹 The Monsters</h3>
-      <p style={P}>Seven regions, seven slots. Each monster is generated fresh by Gemini — its name, lore, stats, and portrait are unique to your run. When you defeat one, a new monster takes its slot in the background; sometimes it's a brand-new threat, sometimes a <span style={{color:T.gold}}>stronger reincarnation</span> of a foe you already beat (with a "Reborn" or "Elder" suffix and tougher stats).</p>
-      <p style={D}>Monsters carry one of six abilities: charge the strongest spirit, target the weakest, hit all spirits, regenerate, block low-percentage moves, or shift their weakness each turn.</p>
+    {/* General Overview */}
+    <div style={{...Card,borderColor:T.gold+"66"}}>
+      <h2 style={{...H,fontSize:22,color:T.gold,marginBottom:14}}>📖 GENERAL OVERVIEW</h2>
+      <p style={P}>Olympus Rising is designed as an exciting and educational experience where players defend America while learning about the <Strong>athletes, regions, sports, and shared milestones</Strong> that shaped Olympic and Paralympic history.</p>
+      <p style={P}>Monsters are attacking <Strong c={T.red}>7 regions across the USA map</Strong>, draining America's Olympic and Paralympic spirit before LA28. To fight back, you summon <Strong>sport spirits</Strong>, each based on a real Olympic or Paralympic sport.</p>
+      <p style={P}>Each spirit has combat moves inspired by real events. A <Strong c={T.blu}>Swimming Spirit</Strong> might use 100m Freestyle, 200m Backstroke, or 4×100m Relay. A <Strong c={T.pur}>Track & Field Spirit</Strong> might use 100m Sprint, 400m Hurdles, or Long Jump.</p>
+      <p style={P}>Before the campaign begins, you take a short <Strong c={T.grn}>Sport Affinity Test</Strong>. The game finds your Top 5 sports, and spirits from those sports gain a <Strong c={T.blu}>+15% stat boost</Strong>.</p>
+      <p style={{...P,margin:0}}>Spirits also grow stronger in regions where their sport has deep history, based on athlete origins, medals, and hometown support. The right spirit in the right region can hit much harder.</p>
     </div>
 
-    <div style={B}><h3 style={H}>🔄 Each Engagement</h3>
-      <p style={P}><span style={{color:T.gold}}>1. Map</span> — Tap any region with a live monster. Your kill count, win streak, and held regions live at the top.</p>
-      <p style={P}><span style={{color:T.gold}}>2. Scout</span> — Choose 3 spirits from 5. Each has unique moves drawn from real Olympic events.</p>
-      <p style={P}><span style={{color:T.gold}}>3. Trivia & Sim</span> — Answer a quick trivia question, then watch a Monte Carlo simulation predict your odds.</p>
-      <p style={P}><span style={{color:T.gold}}>4. Battle</span> — Pick a spirit and a move. The attack <span style={{color:T.blu}}>rolls against real medal rates</span> — 🥇 Gold = 30 dmg, 🥈 Silver = 20, 🥉 Bronze = 10, ❌ Miss = 0.</p>
-      <p style={P}><span style={{color:T.gold}}>5. Debrief</span> — AI explains what worked and teaches a data concept. A new monster spawns in the slot you just cleared.</p>
+    {/* Gameplay header */}
+    <div style={{textAlign:"center",marginTop:6}}>
+      <div style={{fontSize:13,letterSpacing:6,color:T.pur,fontFamily:T.hd,textShadow:`0 0 8px ${T.pur}`}}>★ GAMEPLAY ★</div>
+      <h2 style={{fontFamily:T.hd,color:T.txt,margin:"8px 0 0",fontSize:24,letterSpacing:2}}>Eight Steps to Defend America</h2>
     </div>
 
-    <div style={B}><h3 style={H}>🎲 The Medal Roll</h3><p style={P}>Each move has its own gold/silver/bronze probability from real data. A <span style={{color:medalColors.gold}}>4×100m Relay</span> might have 35% gold but 0% silver — huge hit or total miss. A <span style={{color:medalColors.silver}}>200m Backstroke</span> has 12% each — consistent but rarely spectacular.</p><p style={D}>You're learning probability by choosing which move to use.</p></div>
+    {/* 8-step grid, 2 columns on desktop */}
+    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(440px, 1fr))",gap:16,width:"100%"}}>
 
-    <div style={B}><h3 style={H}>✨ Move Keywords</h3>
-      <p style={P}>🤝 <span style={{color:T.gold}}>RELAY</span> — On 🥇 gold, damage doubles (team power)</p>
-      <p style={P}>💥 <span style={{color:T.gold}}>EXPLOSIVE</span> — On 🥇 gold, deals 60 instead of 30</p>
-      <p style={P}>🎯 <span style={{color:T.gold}}>PRECISION</span> — On 🥇 or 🥈, +10 bonus damage</p>
-      <p style={P}>💚 <span style={{color:T.gold}}>ENDURANCE</span> — On any hit, heals your spirit 8 HP</p>
+      <div style={Card}>
+        <h3 style={H}><span style={{color:T.pur}}>1.</span> 🗺️ CHOOSE A REGION</h3>
+        <p style={{...P,margin:0}}>Pick one of the <Strong c={T.red}>7 regions</Strong> under attack. Each region has one monster slot, and when a monster falls, another eventually rises.</p>
+      </div>
+
+      <div style={Card}>
+        <h3 style={H}><span style={{color:T.pur}}>2.</span> 🎯 SCOUT YOUR TEAM</h3>
+        <p style={{...P,margin:0}}>Choose <Strong>3 sport spirits from 5</Strong>. Balance personal affinity, regional bonuses, sport moves, and monster weaknesses.</p>
+      </div>
+
+      <div style={Card}>
+        <h3 style={H}><span style={{color:T.pur}}>3.</span> 🔮 MEET THE ORACLE</h3>
+        <p style={P}>Before each battle, the Oracle asks a trivia question about Olympic or Paralympic <Strong>history, athletes, medals, hometowns, or regional connections</Strong>.</p>
+        <p style={{...P,margin:0}}>Answer correctly to earn a <Strong c={T.grn}>battle boost</Strong> and learn more about the real history behind the game.</p>
+      </div>
+
+      <div style={Card}>
+        <h3 style={H}><span style={{color:T.pur}}>4.</span> 👹 READ THE MONSTER</h3>
+        <p style={{...P,margin:0}}>Each monster is AI-generated with a unique name, portrait, lore, stats, and ability. Some target your strongest spirit, some hit the whole team, some regenerate, and others <Strong c={T.red}>shift weakness each turn</Strong>.</p>
+      </div>
+
+      <div style={Card}>
+        <h3 style={H}><span style={{color:T.pur}}>5.</span> 📊 CHECK THE SIMULATION</h3>
+        <p style={{...P,margin:0}}>A <Strong c={T.blu}>Monte Carlo simulation</Strong> estimates your win odds before combat begins, helping you understand the risk behind your choices.</p>
+      </div>
+
+      <div style={Card}>
+        <h3 style={H}><span style={{color:T.pur}}>6.</span> ⚔️ BATTLE WITH SPORT MOVES</h3>
+        <p style={P}>Choose a spirit, then pick one of their moves. Each move rolls against medal-style probabilities:</p>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,margin:"8px 0",fontFamily:T.bd,fontSize:18}}>
+          <div><span style={{color:medalColors.gold}}>🥇 Gold</span> = <Strong c={medalColors.gold}>30 damage</Strong></div>
+          <div><span style={{color:medalColors.silver}}>🥈 Silver</span> = <Strong c={medalColors.silver}>20 damage</Strong></div>
+          <div><span style={{color:medalColors.bronze}}>🥉 Bronze</span> = <Strong c={medalColors.bronze}>10 damage</Strong></div>
+          <div><span style={{color:T.dim}}>❌ Miss</span> = <Strong c={T.dim}>0 damage</Strong></div>
+        </div>
+        <p style={{...P,margin:0}}>Some moves are steady. Others are risky but explosive. A <Strong>4×100m Relay</Strong>, for example, might have a big gold chance but no silver chance.</p>
+      </div>
+
+      <div style={Card}>
+        <h3 style={H}><span style={{color:T.pur}}>7.</span> ✨ USE SPECIAL KEYWORDS</h3>
+        <p style={P}>🤝 <Strong>RELAY</Strong> — Gold damage doubles</p>
+        <p style={P}>💥 <Strong>EXPLOSIVE</Strong> — Gold deals 60 damage</p>
+        <p style={P}>🎯 <Strong>PRECISION</Strong> — Gold or Silver adds +10 damage</p>
+        <p style={{...P,margin:0}}>💚 <Strong c={T.grn}>ENDURANCE</Strong> — Any hit heals 8 HP</p>
+      </div>
+
+      <div style={{...Card,borderColor:T.para+"66"}}>
+        <h3 style={{...H,color:T.para,textShadow:`0 0 8px ${T.para}55`}}><span style={{color:T.pur}}>8.</span> ⚡ PARALYMPIC POWERS</h3>
+        <p style={P}>Paralympic spirits have <Strong c={T.para}>ADAPT</Strong>, a once-per-game ability that <Strong c={T.para}>cancels a monster attack</Strong>.</p>
+        <p style={{...P,margin:0}}>Many Para moves also have strong medal odds, making them powerful attackers <em>and</em> clutch defenders.</p>
+      </div>
+
     </div>
 
-    <div style={B}><h3 style={H}>🌟 Regional Affinity</h3><p style={P}>Spirits whose home regions match the slot you're defending deal <span style={{color:T.grn}}>+50% damage</span>. Swimming dominates the Pacific, wrestling owns the Heartland — check the region tags on each card.</p></div>
-
-    <div style={{...B,borderColor:T.para+"33"}}><h3 style={{...H,color:T.para}}>⚡ Paralympic Mech Warriors</h3><p style={P}>Paralympic spirits have <span style={{color:T.para}}>ADAPT</span> — activate once per game to cancel a monster's attack entirely. Many Para moves have high gold rates, making them elite strikers <em>and</em> clutch defenders.</p></div>
-
-    <div style={B}><h3 style={H}>♾️ Endless Mode</h3>
-      <p style={P}>The campaign saves automatically — close the tab and your slots, kills, and streak are still there when you return. A <span style={{color:T.red}}>Reset Campaign</span> button on the map wipes everything and respawns a fresh batch of monsters.</p>
-      <p style={D}>The longer you play, the more level-up reincarnations you'll see.</p>
+    {/* Closing line */}
+    <div style={{...Card,borderColor:T.gold+"55",textAlign:"center",marginTop:8}}>
+      <p style={{...P,margin:0,fontSize:20}}>There is <Strong c={T.red}>no final round</Strong>. As your campaign continues, your kill count and win streak grow, monsters return stronger, and each battle reveals more about the <Strong>athletes, regions, rivalries, and milestones</Strong> that shaped America's Olympic and Paralympic story.</p>
     </div>
 
-    <div style={{display:"flex",gap:12,marginTop:4}}><Btn onClick={back} color={T.dim}>Back</Btn><Btn onClick={go}>Start Game</Btn></div>
+    {/* Buttons — match the 2-col card grid above (same minmax, same gap, centered in each column) */}
+    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(440px, 1fr))",gap:16,marginTop:12,width:"100%"}}>
+      <div style={{display:"flex",justifyContent:"center"}}>
+        <button onClick={back} style={{background:"transparent",border:`2px solid ${T.dim}`,color:T.dim,fontFamily:T.hd,fontSize:12,padding:"12px 0",cursor:"pointer",letterSpacing:2,textTransform:"uppercase",width:280}}>← Back</button>
+      </div>
+      <div style={{display:"flex",justifyContent:"center"}}>
+        <button onClick={go} style={{background:"transparent",border:`2px solid ${T.gold}`,color:T.gold,fontFamily:T.hd,fontSize:12,padding:"12px 0",cursor:"pointer",letterSpacing:2,textTransform:"uppercase",width:280,boxShadow:`0 0 12px ${T.gold}66`}}>★ Start Game ★</button>
+      </div>
+    </div>
   </div>);
 }
 
@@ -839,13 +924,16 @@ function Explorer({back}){
   if(spirit&&stats) return <SportDetail spirit={spirit} stats={stats} body={body} back={()=>setSel(null)}/>;
 
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:20,gap:14,maxWidth:600,margin:"0 auto"}}>
-    <div style={{fontSize:11,letterSpacing:8,color:T.gd,fontFamily:T.hd}}>SPORT EXPLORER</div>
+    <div style={{width:"100%",display:"flex",justifyContent:"flex-start"}}>
+      <button onClick={back} style={{background:"transparent",border:`2px solid ${T.dim}`,color:T.dim,fontFamily:T.hd,fontSize:11,padding:"8px 14px",cursor:"pointer",letterSpacing:2,textTransform:"uppercase"}}>← Back to Menu</button>
+    </div>
+    <div style={{fontSize:19,letterSpacing:8,color:T.gd,fontFamily:T.hd}}>SPORT EXPLORER</div>
     <h2 style={{fontSize:24,fontFamily:T.hd,color:T.gold,margin:0}}>Browse All Spirits</h2>
-    <p style={{fontSize:12,color:T.dim,fontFamily:T.bd,fontStyle:"italic"}}>Study the stats. Know your sports. Win the trivia.</p>
+    <p style={{fontSize:20,color:T.dim,fontFamily:T.bd,fontStyle:"italic"}}>Study the stats. Know your sports. Win the trivia.</p>
     {/* Filter tabs */}
     <div style={{display:"flex",gap:4,background:T.s1,borderRadius:8,padding:3}}>
       {[["all","All ("+SPIRITS.length+")"],["summer","Summer"],["winter","Winter"],["para","Paralympic"]].map(([k,label])=>(
-        <button key={k} onClick={()=>setFilter(k)} style={{background:filter===k?T.gold+"22":"transparent",border:filter===k?`1px solid ${T.gold}`:"1px solid transparent",color:filter===k?T.gold:T.dim,fontFamily:T.hd,fontSize:9,letterSpacing:1,borderRadius:5,padding:"5px 12px",cursor:"pointer"}}>{label}</button>
+        <button key={k} onClick={()=>setFilter(k)} style={{background:filter===k?T.gold+"22":"transparent",border:filter===k?`1px solid ${T.gold}`:"1px solid transparent",color:filter===k?T.gold:T.dim,fontFamily:T.hd,fontSize:17,letterSpacing:1,borderRadius:5,padding:"5px 12px",cursor:"pointer"}}>{label}</button>
       ))}
     </div>
     {/* Sport grid */}
@@ -853,18 +941,17 @@ function Explorer({back}){
       {filtered.map(s=>{
         const st=sportStatsData[s.sport];
         const medals=st?(st.totalMedals.gold+st.totalMedals.silver+st.totalMedals.bronze):0;
-        return(<div key={s.id} onClick={()=>setSel(s.id)} style={{width:140,background:`linear-gradient(150deg,${T.s1},${T.s2})`,border:`1px solid ${T.fnt}`,borderRadius:10,padding:10,cursor:"pointer",transition:"all .2s",display:"flex",flexDirection:"column",gap:4}}>
-          <div style={{fontSize:24,textAlign:"center"}}>{s.emoji}</div>
-          <div style={{fontFamily:T.hd,fontSize:11,color:T.txt,textAlign:"center"}}>{s.sport}</div>
-          <div style={{display:"flex",justifyContent:"center",gap:6,fontSize:9,fontFamily:T.bd}}>
+        return(<div key={s.id} onClick={()=>setSel(s.id)} style={{width:150,background:`linear-gradient(150deg,${T.s1},${T.s2})`,border:`1px solid ${T.fnt}`,borderRadius:10,padding:10,cursor:"pointer",transition:"all .2s",display:"flex",flexDirection:"column",gap:6,alignItems:"center"}}>
+          <SportAvatar sport={s.sport} emoji={s.emoji} size={120} radius={8}/>
+          <div style={{fontFamily:T.hd,fontSize:11,color:T.txt,textAlign:"center",lineHeight:1.4,overflowWrap:"break-word",width:"100%",minHeight:32,display:"flex",alignItems:"center",justifyContent:"center"}}>{s.sport}</div>
+          <div style={{display:"flex",justifyContent:"center",gap:6,fontSize:17,fontFamily:T.bd}}>
             {medals>0&&<span style={{color:T.gold}}>🏅{medals}</span>}
             {st?.la28&&<span style={{color:T.grn}}>LA28</span>}
           </div>
-          {s.para&&<div style={{fontSize:7,color:T.para,textAlign:"center",fontFamily:T.hd}}>PARALYMPIC</div>}
+          {s.para&&<div style={{fontSize:14,color:T.para,textAlign:"center",fontFamily:T.hd,letterSpacing:1}}>PARALYMPIC</div>}
         </div>);
       })}
     </div>
-    <Btn onClick={back} color={T.dim}>Back to Menu</Btn>
   </div>);
 }
 
@@ -875,34 +962,37 @@ function SportDetail({spirit,stats,body,back}){
   const genderTotal=(stats.gender.Male||0)+(stats.gender.Female||0);
   const femalePct=genderTotal>0?Math.round((stats.gender.Female||0)/genderTotal*100):null;
   const B={background:T.s1,borderRadius:10,padding:14,width:"100%"};
-  const H={fontFamily:T.hd,fontSize:13,color:T.gold,margin:"0 0 8px",letterSpacing:2};
+  const H={fontFamily:T.hd,fontSize:22,color:T.gold,margin:"0 0 8px",letterSpacing:2};
 
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:20,gap:12,maxWidth:540,margin:"0 auto"}}>
+    <div style={{width:"100%",display:"flex",justifyContent:"flex-start"}}>
+      <button onClick={back} style={{background:"transparent",border:`2px solid ${T.dim}`,color:T.dim,fontFamily:T.hd,fontSize:11,padding:"8px 14px",cursor:"pointer",letterSpacing:2,textTransform:"uppercase"}}>← Back to All Sports</button>
+    </div>
     {/* Header */}
     <div style={{textAlign:"center"}}>
-      <div style={{fontSize:48}}>{spirit.emoji}</div>
-      <h2 style={{fontFamily:T.hd,fontSize:26,color:T.gold,margin:"4px 0"}}>{spirit.sport}</h2>
+      <SportAvatar sport={spirit.sport} emoji={spirit.emoji} size={160} radius={14} style={{margin:"0 auto",boxShadow:`0 0 20px ${T.gold}55`,border:`2px solid ${T.gold}66`}}/>
+      <h2 style={{fontFamily:T.hd,fontSize:26,color:T.gold,margin:"10px 0 4px"}}>{spirit.sport}</h2>
       <div style={{display:"flex",gap:6,justifyContent:"center",flexWrap:"wrap"}}>
-        <span style={{fontSize:9,background:t.c+"22",color:t.c,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>{t.n}</span>
-        <span style={{fontSize:9,background:T.blu+"22",color:T.blu,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>{stats.season}</span>
-        {stats.la28&&<span style={{fontSize:9,background:T.grn+"22",color:T.grn,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>{stats.isNew?"NEW AT LA28":"IN LA28"}</span>}
-        {spirit.para&&<span style={{fontSize:9,background:T.para+"22",color:T.para,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>PARALYMPIC</span>}
+        <span style={{fontSize:17,background:t.c+"22",color:t.c,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>{t.n}</span>
+        <span style={{fontSize:17,background:T.blu+"22",color:T.blu,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>{stats.season}</span>
+        {stats.la28&&<span style={{fontSize:17,background:T.grn+"22",color:T.grn,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>{stats.isNew?"NEW AT LA28":"IN LA28"}</span>}
+        {spirit.para&&<span style={{fontSize:17,background:T.para+"22",color:T.para,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>PARALYMPIC</span>}
       </div>
     </div>
 
     {/* Fun fact */}
     <div style={{...B,borderColor:T.gold+"33",border:`1px solid ${T.gold}33`}}>
-      <p style={{fontFamily:T.bd,fontSize:13,color:T.txt,lineHeight:1.7,margin:0,fontStyle:"italic"}}>💡 {stats.funFact}</p>
+      <p style={{fontFamily:T.bd,fontSize:22,color:T.txt,lineHeight:1.7,margin:0,fontStyle:"italic"}}>💡 {stats.funFact}</p>
     </div>
 
     {/* Medal summary */}
     <div style={B}>
       <div style={H}>🏅 MEDAL COUNT</div>
       <div style={{display:"flex",justifyContent:"space-around",textAlign:"center"}}>
-        <div><div style={{fontSize:24,fontFamily:T.hd,color:medalColors.gold}}>{stats.totalMedals.gold}</div><div style={{fontSize:9,color:T.dim,fontFamily:T.bd}}>🥇 Gold</div></div>
-        <div><div style={{fontSize:24,fontFamily:T.hd,color:medalColors.silver}}>{stats.totalMedals.silver}</div><div style={{fontSize:9,color:T.dim,fontFamily:T.bd}}>🥈 Silver</div></div>
-        <div><div style={{fontSize:24,fontFamily:T.hd,color:medalColors.bronze}}>{stats.totalMedals.bronze}</div><div style={{fontSize:9,color:T.dim,fontFamily:T.bd}}>🥉 Bronze</div></div>
-        <div><div style={{fontSize:24,fontFamily:T.hd,color:T.txt}}>{totalMedals}</div><div style={{fontSize:9,color:T.dim,fontFamily:T.bd}}>Total</div></div>
+        <div><div style={{fontSize:24,fontFamily:T.hd,color:medalColors.gold}}>{stats.totalMedals.gold}</div><div style={{fontSize:17,color:T.dim,fontFamily:T.bd}}>🥇 Gold</div></div>
+        <div><div style={{fontSize:24,fontFamily:T.hd,color:medalColors.silver}}>{stats.totalMedals.silver}</div><div style={{fontSize:17,color:T.dim,fontFamily:T.bd}}>🥈 Silver</div></div>
+        <div><div style={{fontSize:24,fontFamily:T.hd,color:medalColors.bronze}}>{stats.totalMedals.bronze}</div><div style={{fontSize:17,color:T.dim,fontFamily:T.bd}}>🥉 Bronze</div></div>
+        <div><div style={{fontSize:24,fontFamily:T.hd,color:T.txt}}>{totalMedals}</div><div style={{fontSize:17,color:T.dim,fontFamily:T.bd}}>Total</div></div>
       </div>
     </div>
 
@@ -911,9 +1001,9 @@ function SportDetail({spirit,stats,body,back}){
       <div style={H}>📈 MEDALS BY DECADE</div>
       <ResponsiveContainer width="100%" height={160}>
         <BarChart data={decadeData} margin={{top:5,right:5,bottom:5,left:-20}}>
-          <XAxis dataKey="decade" tick={{fontSize:9,fill:T.dim,fontFamily:"Crimson Pro"}} axisLine={{stroke:T.fnt}} tickLine={false}/>
-          <YAxis tick={{fontSize:9,fill:T.dim}} axisLine={false} tickLine={false}/>
-          <Tooltip contentStyle={{background:T.s2,border:`1px solid ${T.fnt}`,borderRadius:6,fontFamily:"Crimson Pro",fontSize:11}} labelStyle={{color:T.gold,fontFamily:"Cinzel"}}/>
+          <XAxis dataKey="decade" tick={{fontSize:17,fill:T.dim,fontFamily:"Crimson Pro"}} axisLine={{stroke:T.fnt}} tickLine={false}/>
+          <YAxis tick={{fontSize:17,fill:T.dim}} axisLine={false} tickLine={false}/>
+          <Tooltip contentStyle={{background:T.s2,border:`1px solid ${T.fnt}`,borderRadius:6,fontFamily:"Crimson Pro",fontSize:19}} labelStyle={{color:T.gold,fontFamily:"Cinzel"}}/>
           <Bar dataKey="gold" stackId="a" fill={medalColors.gold} radius={[0,0,0,0]}/>
           <Bar dataKey="silver" stackId="a" fill={medalColors.silver}/>
           <Bar dataKey="bronze" stackId="a" fill={medalColors.bronze} radius={[2,2,0,0]}/>
@@ -927,8 +1017,8 @@ function SportDetail({spirit,stats,body,back}){
       {stats.topEvents.map((ev,i)=>(
         <div key={ev.name} style={{marginBottom:6}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-            <span style={{fontSize:11,color:T.txt,fontFamily:T.bd}}>{i===0?"🏆 ":""}{ev.name}</span>
-            <span style={{fontSize:10,color:T.dim,fontFamily:T.bd}}>{Math.min(100,Math.round((ev.gold+ev.silver+ev.bronze)*100))}% hit</span>
+            <span style={{fontSize:19,color:T.txt,fontFamily:T.bd}}>{i===0?"🏆 ":""}{ev.name}</span>
+            <span style={{fontSize:18,color:T.dim,fontFamily:T.bd}}>{Math.min(100,Math.round((ev.gold+ev.silver+ev.bronze)*100))}% hit</span>
           </div>
           <MoveBar move={[ev.name,ev.gold,ev.silver,ev.bronze,null]}/>
         </div>
@@ -939,9 +1029,9 @@ function SportDetail({spirit,stats,body,back}){
     {body&&<div style={B}>
       <div style={H}>📏 ATHLETE BODY PROFILE</div>
       <div style={{display:"flex",justifyContent:"space-around",textAlign:"center"}}>
-        <div><div style={{fontSize:20,fontFamily:T.hd,color:T.txt}}>{body.avgH}<span style={{fontSize:11,color:T.dim}}>cm</span></div><div style={{fontSize:9,color:T.dim,fontFamily:T.bd}}>Avg Height</div></div>
-        <div><div style={{fontSize:20,fontFamily:T.hd,color:T.txt}}>{body.avgW}<span style={{fontSize:11,color:T.dim}}>kg</span></div><div style={{fontSize:9,color:T.dim,fontFamily:T.bd}}>Avg Weight</div></div>
-        <div><div style={{fontSize:20,fontFamily:T.hd,color:T.txt}}>{body.n.toLocaleString()}</div><div style={{fontSize:9,color:T.dim,fontFamily:T.bd}}>Athletes</div></div>
+        <div><div style={{fontSize:20,fontFamily:T.hd,color:T.txt}}>{body.avgH}<span style={{fontSize:19,color:T.dim}}>cm</span></div><div style={{fontSize:17,color:T.dim,fontFamily:T.bd}}>Avg Height</div></div>
+        <div><div style={{fontSize:20,fontFamily:T.hd,color:T.txt}}>{body.avgW}<span style={{fontSize:19,color:T.dim}}>kg</span></div><div style={{fontSize:17,color:T.dim,fontFamily:T.bd}}>Avg Weight</div></div>
+        <div><div style={{fontSize:20,fontFamily:T.hd,color:T.txt}}>{body.n.toLocaleString()}</div><div style={{fontSize:17,color:T.dim,fontFamily:T.bd}}>Athletes</div></div>
       </div>
     </div>}
 
@@ -949,7 +1039,7 @@ function SportDetail({spirit,stats,body,back}){
     <div style={B}>
       <div style={H}>🗺️ REGIONAL STRONGHOLDS</div>
       <div style={{display:"flex",gap:4,flexWrap:"wrap",justifyContent:"center"}}>
-        {spirit.regions.map(r=>{const rg=REGIONS.find(x=>x.id===r);return rg?<span key={r} style={{fontSize:10,background:rg.color+"22",color:rg.color,padding:"3px 10px",borderRadius:5,fontFamily:T.bd}}>{rg.name}</span>:null;})}
+        {spirit.regions.map(r=>{const rg=REGIONS.find(x=>x.id===r);return rg?<span key={r} style={{fontSize:18,background:rg.color+"22",color:rg.color,padding:"3px 10px",borderRadius:5,fontFamily:T.bd}}>{rg.name}</span>:null;})}
       </div>
     </div>
 
@@ -960,7 +1050,7 @@ function SportDetail({spirit,stats,body,back}){
         <div style={{width:`${100-femalePct}%`,background:T.blu,transition:"width .3s"}}/>
         <div style={{width:`${femalePct}%`,background:T.pur,transition:"width .3s"}}/>
       </div>
-      <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:T.dim,fontFamily:T.bd,marginTop:4}}>
+      <div style={{display:"flex",justifyContent:"space-between",fontSize:18,color:T.dim,fontFamily:T.bd,marginTop:4}}>
         <span style={{color:T.blu}}>♂ {100-femalePct}% Male</span>
         <span style={{color:T.pur}}>♀ {femalePct}% Female</span>
       </div>
@@ -968,39 +1058,46 @@ function SportDetail({spirit,stats,body,back}){
 
     {/* Quick stats */}
     <div style={{display:"flex",gap:10,flexWrap:"wrap",justifyContent:"center"}}>
-      {stats.firstYear&&<div style={{background:T.s2,borderRadius:6,padding:"6px 12px",textAlign:"center"}}><div style={{fontSize:14,fontFamily:T.hd,color:T.txt}}>{stats.firstYear}</div><div style={{fontSize:8,color:T.dim,fontFamily:T.bd}}>First Olympics</div></div>}
-      <div style={{background:T.s2,borderRadius:6,padding:"6px 12px",textAlign:"center"}}><div style={{fontSize:14,fontFamily:T.hd,color:T.txt}}>{stats.gamesCount}</div><div style={{fontSize:8,color:T.dim,fontFamily:T.bd}}>Games</div></div>
-      <div style={{background:T.s2,borderRadius:6,padding:"6px 12px",textAlign:"center"}}><div style={{fontSize:14,fontFamily:T.hd,color:T.txt}}>{stats.eventCount}</div><div style={{fontSize:8,color:T.dim,fontFamily:T.bd}}>Events</div></div>
-      <div style={{background:T.s2,borderRadius:6,padding:"6px 12px",textAlign:"center"}}><div style={{fontSize:14,fontFamily:T.hd,color:T.txt}}>{stats.totalAthletes.toLocaleString()}</div><div style={{fontSize:8,color:T.dim,fontFamily:T.bd}}>Athletes</div></div>
+      {stats.firstYear&&<div style={{background:T.s2,borderRadius:6,padding:"6px 12px",textAlign:"center"}}><div style={{fontSize:24,fontFamily:T.hd,color:T.txt}}>{stats.firstYear}</div><div style={{fontSize:16,color:T.dim,fontFamily:T.bd}}>First Olympics</div></div>}
+      <div style={{background:T.s2,borderRadius:6,padding:"6px 12px",textAlign:"center"}}><div style={{fontSize:24,fontFamily:T.hd,color:T.txt}}>{stats.gamesCount}</div><div style={{fontSize:16,color:T.dim,fontFamily:T.bd}}>Games</div></div>
+      <div style={{background:T.s2,borderRadius:6,padding:"6px 12px",textAlign:"center"}}><div style={{fontSize:24,fontFamily:T.hd,color:T.txt}}>{stats.eventCount}</div><div style={{fontSize:16,color:T.dim,fontFamily:T.bd}}>Events</div></div>
+      <div style={{background:T.s2,borderRadius:6,padding:"6px 12px",textAlign:"center"}}><div style={{fontSize:24,fontFamily:T.hd,color:T.txt}}>{stats.totalAthletes.toLocaleString()}</div><div style={{fontSize:16,color:T.dim,fontFamily:T.bd}}>Athletes</div></div>
     </div>
-
-    <Btn onClick={back} color={T.dim}>Back to All Sports</Btn>
   </div>);
 }
 
 function MapScr({slots,hud,onPick,onReset}){
   const liveCount=Object.values(slots).filter(Boolean).length;
-  return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:16,gap:12}}>
-    <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:4}}>ENDLESS DEFENSE — TAP A REGION TO ENGAGE</div>
+  return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"40px 20px",gap:18}}>
+    <div style={{fontSize:22,color:T.blu,fontFamily:T.hd,letterSpacing:5,textShadow:`0 0 8px ${T.blu}`}}>★ ENDLESS DEFENSE — TAP A REGION TO ENGAGE ★</div>
     {/* HUD */}
-    <div style={{display:"flex",gap:18,background:T.s1,border:`1px solid ${T.fnt}`,borderRadius:8,padding:"6px 14px",fontFamily:T.hd,fontSize:11,color:T.txt}}>
-      <span>⚔ Kills: <span style={{color:T.gold}}>{hud.kills}</span></span>
-      <span>🔥 Streak: <span style={{color:hud.streak>=3?T.gold:T.txt}}>{hud.streak}</span></span>
-      <span>🛡 Held: <span style={{color:T.grn}}>{liveCount}/{ACTIVE_REGIONS.length}</span></span>
+    <div style={{display:"flex",gap:24,background:"rgba(0,0,0,0.55)",border:`2px solid ${T.pur}`,padding:"10px 22px",fontFamily:T.bd,fontSize:22,color:T.txt,boxShadow:`0 0 14px ${T.pur}66`}}>
+      <span>⚔ Kills <span style={{color:T.gold,fontWeight:700,fontFamily:T.hd,fontSize:21,marginLeft:6,textShadow:`0 0 6px ${T.gold}`}}>{hud.kills}</span></span>
+      <span>🔥 Streak <span style={{color:hud.streak>=3?T.gold:T.txt,fontWeight:700,fontFamily:T.hd,fontSize:21,marginLeft:6,textShadow:hud.streak>=3?`0 0 6px ${T.gold}`:"none"}}>{hud.streak}</span></span>
+      <span>🛡 Held <span style={{color:T.grn,fontWeight:700,fontFamily:T.hd,fontSize:21,marginLeft:6,textShadow:`0 0 6px ${T.grn}`}}>{liveCount}/{ACTIVE_REGIONS.length}</span></span>
     </div>
-    <USMap slots={slots} onPick={onPick}/>
-    {/* Slot grid */}
-    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(150px,1fr))",gap:8,width:"100%",maxWidth:640}}>
-      {ACTIVE_REGIONS.map(rg=>{const m=slots[rg.id];const live=!!m;return(<div key={rg.id} onClick={live?()=>onPick(rg.id):undefined} style={{background:T.s1,border:`1px solid ${live?rg.color+"55":T.fnt}`,borderRadius:10,padding:8,cursor:live?"pointer":"default",opacity:live?1:.55,transition:"all .2s",display:"flex",gap:8,alignItems:"center",minHeight:64}}>
-        {m?(m.imageDataUrl?<img src={m.imageDataUrl} alt={m.name} style={{width:48,height:48,borderRadius:6,objectFit:"cover",flexShrink:0,border:`1px solid ${rg.color}55`}}/>:<div style={{width:48,height:48,borderRadius:6,background:T.s2,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:24,border:`1px solid ${rg.color}33`,position:"relative"}}>{m.emoji}{m.imageStatus==="loading"&&<div style={{position:"absolute",bottom:1,right:1,fontSize:7,color:T.gold}}>✨</div>}</div>):<div style={{width:48,height:48,borderRadius:6,background:T.s2,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:14,color:T.dim,fontFamily:T.bd,fontStyle:"italic",border:`1px dashed ${T.fnt}`}}>…</div>}
-        <div style={{flex:1,minWidth:0}}>
-          <div style={{fontSize:8,color:rg.color,fontFamily:T.hd,letterSpacing:1.5}}>{rg.name.toUpperCase()}</div>
-          <div style={{fontFamily:T.hd,fontSize:13,color:live?T.txt:T.dim,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m?m.name:"Summoning…"}</div>
-          {m&&<div style={{fontSize:9,color:T.dim,fontFamily:T.bd}}>{m.hp} HP{m.level>1?` · Lv ${m.level}`:""}</div>}
-        </div>
-      </div>);})}
+    {/* Map + slot card overlay. Outer container has padding so cards anchored
+        at the top/bottom edges of the SVG can extend into that space. Inner
+        container locks the same aspect-ratio as the SVG viewBox so the
+        percentage anchors line up exactly with what USMap renders. */}
+    <div style={{position:"relative",width:"100%",maxWidth:980,padding:"70px 8px",boxSizing:"border-box"}}>
+      <div style={{position:"relative",width:"100%",maxWidth:820,aspectRatio:"758 / 420",margin:"0 auto"}}>
+        <USMap slots={slots} onPick={onPick}/>
+        {ACTIVE_REGIONS.map(rg=>{
+          const lp=MAP_LP[rg.id];if(!lp)return null;
+          const m=slots[rg.id];const live=!!m;
+          return(<div key={rg.id} onClick={live?()=>onPick(rg.id):undefined} style={{...mapLpStyle(lp),width:150,background:"rgba(0,0,0,0.82)",border:`2px solid ${live?rg.color:T.fnt}`,padding:5,cursor:live?"pointer":"default",opacity:live?1:.6,display:"flex",gap:6,alignItems:"center",boxShadow:live?`0 0 10px ${rg.color}66`:"none",pointerEvents:live?"auto":"none"}}>
+            {m?(m.imageDataUrl?<img src={m.imageDataUrl} alt={m.name} style={{width:48,height:48,objectFit:"cover",flexShrink:0,border:`2px solid ${rg.color}88`}}/>:<div style={{width:48,height:48,background:T.s2,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:26,border:`2px solid ${rg.color}66`,position:"relative"}}>{m.emoji}{m.imageStatus==="loading"&&<div style={{position:"absolute",bottom:0,right:1,fontSize:13,color:T.gold,animation:"blink 1s infinite"}}>✨</div>}</div>):<div style={{width:48,height:48,background:T.s2,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:18,color:T.dim,fontFamily:T.bd,fontStyle:"italic",border:`2px dashed ${T.fnt}`}}>…</div>}
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontSize:10,color:rg.color,fontFamily:T.hd,letterSpacing:1.5,textShadow:`0 0 4px ${rg.color}`}}>{rg.name.toUpperCase()}</div>
+              <div style={{fontFamily:T.bd,fontSize:15,color:live?T.txt:T.dim,overflowWrap:"break-word",lineHeight:1.15,marginTop:2}}>{m?m.name:"Summoning…"}</div>
+              {m&&<div style={{fontSize:13,color:T.dim,fontFamily:T.bd,marginTop:1}}>{m.hp} HP{m.level>1?` · Lv ${m.level}`:""}</div>}
+            </div>
+          </div>);
+        })}
+      </div>
     </div>
-    <Btn onClick={onReset} small color={T.red}>Reset Campaign</Btn>
+    <Btn onClick={onReset} color={T.red}>Reset Campaign</Btn>
   </div>);
 }
 
@@ -1014,9 +1111,9 @@ function Scout({opts,lockIn,round,rgn,bodyTop5=[]}){
   const team=opts.filter(s=>sel.has(s.id));
   const syn=team.length===3?detectSynergies(team,rgn):null;
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:16,gap:12}}>
-    <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:4}}>DEFENDING — DRAFT YOUR TEAM</div>
+    <div style={{fontSize:17,color:T.gd,fontFamily:T.hd,letterSpacing:4}}>DEFENDING — DRAFT YOUR TEAM</div>
     <h2 style={{fontFamily:T.hd,color:T.gold,margin:0,fontSize:20}}>Pick 3 of 5 Spirits</h2>
-    <p style={{fontFamily:T.bd,color:T.dim,fontSize:11}}>Defending <span style={{color:rg?.color,fontWeight:700}}>{rg?.name}</span> · Tap cards to draft · Tap Explore to study</p>
+    <p style={{fontFamily:T.bd,color:T.dim,fontSize:19}}>Defending <span style={{color:rg?.color,fontWeight:700}}>{rg?.name}</span> · Tap cards to draft · Tap Explore to study</p>
     <div style={{display:"flex",gap:10,flexWrap:"wrap",justifyContent:"center",alignItems:"flex-start"}}>
       {opts.map(s=>{const picked=sel.has(s.id);return(<div key={s.id} style={{display:"flex",flexDirection:"column",gap:5,alignItems:"center"}}>
         <div onClick={()=>toggle(s)} style={{cursor:"pointer",opacity:!picked&&sel.size>=3?.4:1,transition:"all .2s"}}>
@@ -1024,18 +1121,18 @@ function Scout({opts,lockIn,round,rgn,bodyTop5=[]}){
         </div>
         <Btn small onClick={()=>explore(s)} color={exp===s.id?T.grn:T.blu}>{exp===s.id?"Close":"🔍 Explore"}</Btn>
         {exp===s.id&&<div style={{background:T.s1,border:`1px solid ${T.blu}22`,borderRadius:8,padding:10,width:200}}>
-          <div style={{fontFamily:T.bd,fontSize:11,color:T.txt,lineHeight:1.6}}>{ld[s.id]?<span style={{color:T.dim}}>Oracle speaks...</span>:ins[s.id]}</div>
+          <div style={{fontFamily:T.bd,fontSize:19,color:T.txt,lineHeight:1.6}}>{ld[s.id]?<span style={{color:T.dim}}>Oracle speaks...</span>:ins[s.id]}</div>
         </div>}
       </div>);})}
     </div>
     {/* Synergy preview */}
     {syn&&<div style={{display:"flex",gap:6,flexWrap:"wrap",justifyContent:"center"}}>
-      {syn.rally&&<span style={{fontSize:9,background:T.grn+"22",color:T.grn,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>🏟️ REGIONAL RALLY +10%</span>}
-      {syn.relayChain&&<span style={{fontSize:9,background:T.gold+"22",color:T.gold,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>🤝 RELAY CHAIN</span>}
-      {syn.explosiveChain&&<span style={{fontSize:9,background:T.red+"22",color:T.red,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>💥 EXPLOSIVE CHAIN</span>}
-      {syn.precisionChain&&<span style={{fontSize:9,background:T.blu+"22",color:T.blu,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>🎯 PRECISION CHAIN</span>}
-      {syn.enduranceChain&&<span style={{fontSize:9,background:T.grn+"22",color:T.grn,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>💚 ENDURANCE CHAIN</span>}
-      {syn.paraAlliance&&<span style={{fontSize:9,background:T.para+"22",color:T.para,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>⚡ PARA ALLIANCE</span>}
+      {syn.rally&&<span style={{fontSize:17,background:T.grn+"22",color:T.grn,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>🏟️ REGIONAL RALLY +10%</span>}
+      {syn.relayChain&&<span style={{fontSize:17,background:T.gold+"22",color:T.gold,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>🤝 RELAY CHAIN</span>}
+      {syn.explosiveChain&&<span style={{fontSize:17,background:T.red+"22",color:T.red,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>💥 EXPLOSIVE CHAIN</span>}
+      {syn.precisionChain&&<span style={{fontSize:17,background:T.blu+"22",color:T.blu,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>🎯 PRECISION CHAIN</span>}
+      {syn.enduranceChain&&<span style={{fontSize:17,background:T.grn+"22",color:T.grn,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>💚 ENDURANCE CHAIN</span>}
+      {syn.paraAlliance&&<span style={{fontSize:17,background:T.para+"22",color:T.para,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>⚡ PARA ALLIANCE</span>}
     </div>}
     <Btn onClick={()=>lockIn(team)} disabled={sel.size!==3} color={T.gold}>Lock In Team ({sel.size}/3)</Btn>
   </div>);
@@ -1102,21 +1199,21 @@ where "a" is the 0-based index of the correct answer.`);
   const wrong=sel!==null&&sel!==qData?.a;
 
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"100vh",gap:16,padding:20,textAlign:"center"}}>
-    <div style={{fontSize:11,letterSpacing:8,color:T.gd,fontFamily:T.hd}}>ORACLE'S TRIAL</div>
-    <div style={{fontSize:28}}>{spirit.emoji}</div>
+    <div style={{fontSize:19,letterSpacing:8,color:T.gd,fontFamily:T.hd}}>THE ORACLE RITE</div>
+    <SportAvatar sport={spirit.sport} emoji={spirit.emoji} size={120} radius={10} style={{boxShadow:`0 0 16px ${T.gold}55`,border:`2px solid ${T.gold}66`}}/>
     <h2 style={{fontSize:22,fontFamily:T.hd,color:T.gold,margin:0}}>{spirit.sport}</h2>
 
     {loading?(
-      <div style={{fontFamily:T.bd,color:T.dim,fontStyle:"italic",fontSize:14,marginTop:20}}>The Oracle prepares a trial...</div>
+      <div style={{fontFamily:T.bd,color:T.dim,fontStyle:"italic",fontSize:24,marginTop:20}}>The Oracle prepares a trial...</div>
     ):(
       <div style={{display:"flex",flexDirection:"column",gap:12,width:"100%",maxWidth:440,marginTop:8}}>
-        <p style={{fontFamily:T.bd,color:T.txt,fontSize:15,lineHeight:1.6}}>{qData.q}</p>
+        <p style={{fontFamily:T.bd,color:T.txt,fontSize:20,lineHeight:1.6}}>{qData.q}</p>
         <div style={{display:"flex",flexDirection:"column",gap:8}}>
           {qData.c.map((choice,i)=>{
             const isCorrect=i===qData.a;const isSel=sel===i;
             const bg=sel===null?T.s1:isCorrect?T.grn+"22":isSel?T.red+"22":T.s1;
             const border=sel===null?T.fnt:isCorrect?T.grn:isSel?T.red:T.fnt;
-            return(<button key={i} onClick={()=>{if(sel===null)setSel(i);}} style={{background:bg,border:`1px solid ${border}`,borderRadius:8,padding:"10px 14px",cursor:sel===null?"pointer":"default",textAlign:"left",fontFamily:T.bd,fontSize:13,color:isCorrect&&sel!==null?T.grn:isSel&&wrong?T.red:T.txt,transition:"all .2s"}}>
+            return(<button key={i} onClick={()=>{if(sel===null)setSel(i);}} style={{background:bg,border:`1px solid ${border}`,borderRadius:8,padding:"10px 14px",cursor:sel===null?"pointer":"default",textAlign:"left",fontFamily:T.bd,fontSize:22,color:isCorrect&&sel!==null?T.grn:isSel&&wrong?T.red:T.txt,transition:"all .2s"}}>
               <span style={{fontFamily:T.hd,color:T.gd,marginRight:8}}>{String.fromCharCode(65+i)}.</span>{choice}
               {sel!==null&&isCorrect&&" ✓"}
             </button>);
@@ -1124,7 +1221,7 @@ where "a" is the 0-based index of the correct answer.`);
         </div>
 
         {sel!==null&&(
-          <div style={{fontFamily:T.bd,fontSize:13,color:correct?T.grn:T.red,fontStyle:"italic",marginTop:4}}>
+          <div style={{fontFamily:T.bd,fontSize:22,color:correct?T.grn:T.red,fontStyle:"italic",marginTop:4}}>
             {correct?"The Oracle approves! Knowledge is power.":"The Oracle shakes its head... but now you know!"}
           </div>
         )}
@@ -1133,7 +1230,7 @@ where "a" is the 0-based index of the correct answer.`);
       </div>
     )}
 
-    <button onClick={onComplete} style={{background:"none",border:"none",color:T.dim,fontFamily:T.bd,fontSize:11,cursor:"pointer",textDecoration:"underline",marginTop:8}}>Skip trivia →</button>
+    <button onClick={onComplete} style={{background:"none",border:"none",color:T.dim,fontFamily:T.bd,fontSize:19,cursor:"pointer",textDecoration:"underline",marginTop:8}}>Skip trivia →</button>
   </div>);
 }
 
@@ -1257,48 +1354,51 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
       {/* TEAM HP block */}
       <div>
         <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
-          <span style={{fontFamily:T.hd,fontSize:11,color:T.gold,letterSpacing:2,textShadow:`0 0 6px ${T.gold}`}}>P1 · TEAM USA</span>
-          <span style={{fontFamily:T.hd,fontSize:10,color:T.txt}}>{teamHp}/{teamMax}</span>
+          <span style={{fontFamily:T.hd,fontSize:19,color:T.gold,letterSpacing:2,textShadow:`0 0 6px ${T.gold}`}}>P1 · TEAM USA</span>
+          <span style={{fontFamily:T.hd,fontSize:18,color:T.txt}}>{teamHp}/{teamMax}</span>
         </div>
         <PixelBar hp={teamHp} max={teamMax} color={T.grn} height={20}/>
         <div style={{display:"flex",gap:6,marginTop:8}}>
           {spirits.map((s,i)=>(<div key={s.id} onClick={()=>{if(s.hp>0&&ph==="player"&&s.sp>0)setActiveIdx(i);}} style={{flex:1,padding:6,background:i===activeIdx?T.gold+"22":"rgba(0,0,0,0.45)",border:`2px solid ${i===activeIdx?T.gold:s.hp<=0?T.fnt:T.pur}`,cursor:s.hp>0&&ph==="player"&&i!==activeIdx?"pointer":"default",opacity:s.hp<=0?.4:1,boxShadow:i===activeIdx?`0 0 10px ${T.gold}88`:"none",position:"relative"}}>
-            {i===activeIdx&&<span style={{position:"absolute",top:-10,left:4,background:T.gold,color:T.bg,fontFamily:T.hd,fontSize:7,letterSpacing:1,padding:"2px 5px",animation:"blink 1s infinite"}}>P1</span>}
-            <div style={{fontFamily:T.hd,fontSize:8,letterSpacing:1,color:i===activeIdx?T.gold:T.txt,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.emoji} {s.sport.toUpperCase().slice(0,10)}</div>
+            {i===activeIdx&&<span style={{position:"absolute",top:-10,left:4,background:T.gold,color:T.bg,fontFamily:T.hd,fontSize:16,letterSpacing:1,padding:"2px 5px",animation:"blink 1s infinite"}}>P1</span>}
+            <div style={{display:"flex",alignItems:"center",gap:5,fontFamily:T.hd,fontSize:16,letterSpacing:1,color:i===activeIdx?T.gold:T.txt,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>
+              <SportAvatar sport={s.sport} emoji={s.emoji} size={22} radius={4}/>
+              <span style={{overflow:"hidden",textOverflow:"ellipsis"}}>{s.sport.toUpperCase().slice(0,10)}</span>
+            </div>
             <PixelBar hp={s.hp} max={HP} color={i===activeIdx?T.gold:s.hp>HP*.4?T.grn:T.red} height={7} segments={12}/>
             <div style={{display:"flex",justifyContent:"space-between",marginTop:3}}>
-              <span style={{fontFamily:T.hd,fontSize:7,color:T.dim}}>HP {s.hp}</span>
+              <span style={{fontFamily:T.hd,fontSize:16,color:T.dim}}>HP {s.hp}</span>
               <span style={{display:"flex",gap:1}}>{Array.from({length:SP_MAX},(_,j)=><span key={j} style={{width:5,height:5,background:j<s.sp?T.gold:T.fnt,boxShadow:j<s.sp?`0 0 3px ${T.gold}`:"none"}}/>)}</span>
             </div>
-            {s.para&&!s.ac&&s.hp>0&&ph!=="done"&&<button onClick={(e)=>{e.stopPropagation();if(!s.au)setSpirits(p=>p.map((x,j)=>j===i?{...x,au:true}:x));}} style={{marginTop:4,width:"100%",fontSize:7,background:s.au?T.para+"33":"transparent",border:`1px solid ${s.au?T.para:T.fnt}`,color:s.au?T.para:T.dim,padding:"2px 4px",cursor:"pointer",fontFamily:T.hd,letterSpacing:1}}>{s.au?"⚡ARMED":"⚡ARM"}</button>}
+            {s.para&&!s.ac&&s.hp>0&&ph!=="done"&&<button onClick={(e)=>{e.stopPropagation();if(!s.au)setSpirits(p=>p.map((x,j)=>j===i?{...x,au:true}:x));}} style={{marginTop:4,width:"100%",fontSize:16,background:s.au?T.para+"33":"transparent",border:`1px solid ${s.au?T.para:T.fnt}`,color:s.au?T.para:T.dim,padding:"2px 4px",cursor:"pointer",fontFamily:T.hd,letterSpacing:1}}>{s.au?"⚡ARMED":"⚡ARM"}</button>}
           </div>))}
         </div>
       </div>
 
       {/* VS center */}
       <div style={{textAlign:"center",padding:"6px 0"}}>
-        <div style={{fontFamily:T.hd,fontSize:9,letterSpacing:3,color:T.blu,textShadow:`0 0 6px ${T.blu}`}}>ROUND {turn}</div>
+        <div style={{fontFamily:T.hd,fontSize:17,letterSpacing:3,color:T.blu,textShadow:`0 0 6px ${T.blu}`}}>ROUND {turn}</div>
         <div style={{fontFamily:T.hd,fontSize:42,color:T.gold,textShadow:`3px 3px 0 ${T.red}, 0 0 22px ${T.gold}`,animation:"pulse 1.6s infinite",margin:"6px 0 4px"}}>VS</div>
-        <div style={{fontFamily:T.hd,fontSize:8,letterSpacing:3,color:T.pur,textShadow:`0 0 6px ${T.pur}`,animation:"blink .8s infinite"}}>{ph==="done"?(won?"WIN!":"K.O."):"FIGHT!"}</div>
+        <div style={{fontFamily:T.hd,fontSize:16,letterSpacing:3,color:T.pur,textShadow:`0 0 6px ${T.pur}`,animation:"blink .8s infinite"}}>{ph==="done"?(won?"WIN!":"K.O."):"FIGHT!"}</div>
       </div>
 
       {/* MONSTER HP block */}
       <div>
         <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
-          <span style={{fontFamily:T.hd,fontSize:10,color:T.txt}}>{Math.max(0,target.hp)}/{target.maxHp}</span>
-          <span style={{fontFamily:T.hd,fontSize:11,color:T.red,letterSpacing:2,textShadow:`0 0 6px ${T.red}`}}>{(target.name||"BOSS").toUpperCase()} · BOSS</span>
+          <span style={{fontFamily:T.hd,fontSize:18,color:T.txt}}>{Math.max(0,target.hp)}/{target.maxHp}</span>
+          <span style={{fontFamily:T.hd,fontSize:19,color:T.red,letterSpacing:2,textShadow:`0 0 6px ${T.red}`}}>{(target.name||"BOSS").toUpperCase()} · BOSS</span>
         </div>
         <PixelBar hp={target.hp} max={target.maxHp} color={T.red} height={20}/>
         {ms.length>1&&<div style={{display:"flex",gap:6,marginTop:8}}>
           {ms.map((m,i)=>(<div key={m.name||i} onClick={()=>m.hp>0&&ph==="player"&&setSelTarget(i)} style={{flex:1,padding:6,background:i===selTarget?T.red+"22":"rgba(0,0,0,0.45)",border:`2px solid ${i===selTarget?T.red:m.hp<=0?T.fnt:T.pur}`,cursor:m.hp>0&&ph==="player"?"pointer":"default",opacity:m.hp<=0?.35:1,boxShadow:i===selTarget?`0 0 10px ${T.red}88`:"none",position:"relative"}}>
-            {i===selTarget&&<span style={{position:"absolute",top:-10,right:4,background:T.red,color:T.bg,fontFamily:T.hd,fontSize:7,letterSpacing:1,padding:"2px 5px",animation:"blink 1s infinite"}}>LOCK</span>}
-            <div style={{fontFamily:T.hd,fontSize:8,letterSpacing:1,color:i===selTarget?T.red:T.txt,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.emoji||"👹"} {(m.name||"").toUpperCase().slice(0,12)}</div>
+            {i===selTarget&&<span style={{position:"absolute",top:-10,right:4,background:T.red,color:T.bg,fontFamily:T.hd,fontSize:16,letterSpacing:1,padding:"2px 5px",animation:"blink 1s infinite"}}>LOCK</span>}
+            <div style={{fontFamily:T.hd,fontSize:16,letterSpacing:1,color:i===selTarget?T.red:T.txt,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.emoji||"👹"} {(m.name||"").toUpperCase().slice(0,12)}</div>
             <PixelBar hp={m.hp} max={m.maxHp} color={T.red} height={7} segments={12}/>
-            <div style={{fontFamily:T.hd,fontSize:7,color:T.dim,marginTop:3}}>HP {Math.max(0,m.hp)}</div>
+            <div style={{fontFamily:T.hd,fontSize:16,color:T.dim,marginTop:3}}>HP {Math.max(0,m.hp)}</div>
           </div>))}
         </div>}
-        {target.special&&<div style={{marginTop:8,padding:"6px 8px",background:"rgba(255,57,57,0.08)",border:`2px solid ${T.red}`,fontFamily:T.bd,fontSize:14,color:T.txt}}>
-          <span style={{color:T.red,fontFamily:T.hd,fontSize:8,letterSpacing:1.5,textShadow:`0 0 4px ${T.red}`}}>⚠ ABILITY:</span>{" "}
+        {target.special&&<div style={{marginTop:8,padding:"6px 8px",background:"rgba(255,57,57,0.08)",border:`2px solid ${T.red}`,fontFamily:T.bd,fontSize:24,color:T.txt}}>
+          <span style={{color:T.red,fontFamily:T.hd,fontSize:16,letterSpacing:1.5,textShadow:`0 0 4px ${T.red}`}}>⚠ ABILITY:</span>{" "}
           <span style={{color:T.gold}}>{target.special==="regenerate"?"REGEN":target.special==="aoe"?"ALL-STRIKE":target.special==="block_weak"?"AEGIS BLOCK":target.special==="hit_strongest"?"TARGET ALPHA":target.special==="hit_weakest"?"PICK OFF":target.special==="shift_weakness"?`SHIFT (weak: ${chiWeakness})`:target.special.toUpperCase()}</span>
         </div>}
       </div>
@@ -1308,9 +1408,9 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:0,marginBottom:14,minHeight:280,position:"relative",border:`2px solid ${T.fnt}`,background:"#000",backgroundImage:`repeating-linear-gradient(0deg, ${T.blu}11 0 1px, transparent 1px 40px),repeating-linear-gradient(90deg, ${T.blu}11 0 1px, transparent 1px 40px)`}}>
       {/* SPIRIT side */}
       <div style={{padding:18,textAlign:"center",background:`radial-gradient(circle at 50% 60%, ${T.blu}33 0%, transparent 70%)`,borderRight:`2px dashed ${T.gold}`,position:"relative",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
-        <div style={{fontSize:170,lineHeight:1,filter:`drop-shadow(0 0 22px ${T.blu}) drop-shadow(0 8px 4px rgba(0,0,0,0.6))`,animation:"pulse 1.6s infinite"}}>{active?.emoji||"⚔"}</div>
-        <div style={{fontFamily:T.hd,fontSize:14,color:T.gold,letterSpacing:2,marginTop:10,textShadow:`0 0 8px ${T.gold}`}}>{active?.sport?.toUpperCase()||"—"}</div>
-        {ph==="player"&&selMove!=null&&selMove!=="rest"&&active?.moves?.[selMove]&&<div style={{fontFamily:T.hd,fontSize:9,color:T.pur,letterSpacing:2,marginTop:4,textShadow:`0 0 6px ${T.pur}`,animation:"blink .9s infinite"}}>{active.moves[selMove][0].toUpperCase()}</div>}
+        {active?<SportAvatar sport={active.sport} emoji={active.emoji} size={200} radius={12} style={{filter:`drop-shadow(0 0 22px ${T.blu}) drop-shadow(0 8px 4px rgba(0,0,0,0.6))`,animation:"pulse 1.6s infinite",border:`3px solid ${T.blu}66`}}/>:<div style={{fontSize:170,lineHeight:1,filter:`drop-shadow(0 0 22px ${T.blu})`}}>⚔</div>}
+        <div style={{fontFamily:T.hd,fontSize:24,color:T.gold,letterSpacing:2,marginTop:10,textShadow:`0 0 8px ${T.gold}`}}>{active?.sport?.toUpperCase()||"—"}</div>
+        {ph==="player"&&selMove!=null&&selMove!=="rest"&&active?.moves?.[selMove]&&<div style={{fontFamily:T.hd,fontSize:17,color:T.pur,letterSpacing:2,marginTop:4,textShadow:`0 0 6px ${T.pur}`,animation:"blink .9s infinite"}}>{active.moves[selMove][0].toUpperCase()}</div>}
       </div>
 
       {/* MONSTER side */}
@@ -1318,13 +1418,13 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
         {target.imageDataUrl
           ? <img src={target.imageDataUrl} alt={target.name} style={{maxWidth:"80%",maxHeight:200,objectFit:"contain",filter:`drop-shadow(0 0 18px ${T.red})`,animation:"pulse 2s infinite"}}/>
           : <div style={{fontSize:170,lineHeight:1,filter:`drop-shadow(0 0 22px ${T.red})`,animation:"pulse 2s infinite"}}>{target.emoji||"👹"}</div>}
-        <div style={{fontFamily:T.hd,fontSize:14,color:T.red,letterSpacing:2,marginTop:10,textShadow:`0 0 8px ${T.red}`}}>{(target.name||"BOSS").toUpperCase()}</div>
-        {target.imageStatus==="loading"&&<div style={{position:"absolute",top:8,right:8,fontFamily:T.hd,fontSize:8,color:T.gold,background:"rgba(0,0,0,0.65)",padding:"3px 8px",letterSpacing:2,animation:"blink 1s infinite"}}>✨ RENDERING</div>}
+        <div style={{fontFamily:T.hd,fontSize:24,color:T.red,letterSpacing:2,marginTop:10,textShadow:`0 0 8px ${T.red}`}}>{(target.name||"BOSS").toUpperCase()}</div>
+        {target.imageStatus==="loading"&&<div style={{position:"absolute",top:8,right:8,fontFamily:T.hd,fontSize:16,color:T.gold,background:"rgba(0,0,0,0.65)",padding:"3px 8px",letterSpacing:2,animation:"blink 1s infinite"}}>✨ RENDERING</div>}
 
         {/* Hit-spark FX */}
         {fx&&fx.side==="mon"&&<>
           <div key={fx.t} style={{position:"absolute",left:"50%",top:"36%",transform:"translate(-50%,-50%)",fontFamily:T.hd,fontSize:fx.type==="gold"?44:fx.type==="silver"?36:fx.type==="bronze"?30:fx.type==="miss"?22:30,color:sparkColor,textShadow:`3px 3px 0 ${T.red}, 0 0 22px ${sparkColor}`,letterSpacing:3,animation:"announceIn .35s ease-out, hitSpark .9s ease-out forwards",pointerEvents:"none",zIndex:5}}>{fx.type==="miss"?"MISS!":fx.type==="block"?"BLOCK!":`-${fx.dmg}`}</div>
-          {fx.type==="gold"&&<div style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%,-50%)",fontFamily:T.hd,fontSize:14,letterSpacing:4,color:T.gold,textShadow:`0 0 10px ${T.gold}`,marginTop:30,animation:"blink .25s 4"}}>★ SUPER! ★</div>}
+          {fx.type==="gold"&&<div style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%,-50%)",fontFamily:T.hd,fontSize:24,letterSpacing:4,color:T.gold,textShadow:`0 0 10px ${T.gold}`,marginTop:30,animation:"blink .25s 4"}}>★ SUPER! ★</div>}
         </>}
       </div>
     </div>
@@ -1333,34 +1433,34 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
     <div style={{display:"grid",gridTemplateColumns:"2fr 3fr",gap:12}}>
       {/* MOVES */}
       <div style={{background:"#000",border:`3px solid ${T.blu}`,padding:12,boxShadow:`0 0 14px ${T.blu}55`}}>
-        <div style={{fontFamily:T.hd,fontSize:9,letterSpacing:3,color:T.blu,marginBottom:10,textShadow:`0 0 6px ${T.blu}`}}>★ {ph==="done"?(won?"VICTORY":"K.O."):active?(active.sport+" — SELECT MOVE").toUpperCase():"—"} ★</div>
+        <div style={{fontFamily:T.hd,fontSize:17,letterSpacing:3,color:T.blu,marginBottom:10,textShadow:`0 0 6px ${T.blu}`}}>★ {ph==="done"?(won?"VICTORY":"K.O."):active?(active.sport+" — SELECT MOVE").toUpperCase():"—"} ★</div>
         {ph==="player"&&active&&active.hp>0&&active.sp>0&&active.moves.map((mv,i)=>{const [name,g,sv,b,kw]=mv;const blocked=target?.special==="block_weak"&&totalRate(mv)<.25;return(<div key={i} onClick={()=>!blocked&&setSelMove(i)} style={{display:"grid",gridTemplateColumns:"32px 1fr",gap:10,alignItems:"center",padding:"8px 8px",marginBottom:4,background:selMove===i?T.gold+"22":"transparent",border:`2px solid ${selMove===i?T.gold:blocked?T.red+"55":"transparent"}`,cursor:blocked?"not-allowed":"pointer",opacity:blocked?.4:1,transition:"all .15s"}}>
-          <div style={{fontFamily:T.hd,fontSize:11,color:T.bg,background:selMove===i?T.gold:T.grn,width:30,height:26,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:selMove===i?`0 0 8px ${T.gold}`:"none"}}>{i+1}</div>
+          <div style={{fontFamily:T.hd,fontSize:19,color:T.bg,background:selMove===i?T.gold:T.grn,width:30,height:26,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:selMove===i?`0 0 8px ${T.gold}`:"none"}}>{i+1}</div>
           <div>
             <div style={{display:"flex",justifyContent:"space-between"}}>
-              <span style={{fontFamily:T.hd,fontSize:9,letterSpacing:1,color:T.txt}}>{name.toUpperCase()}{kw?` ${kw==="RELAY"?"🤝":kw==="EXPLOSIVE"?"💥":kw==="ENDURANCE"?"💚":"🎯"}`:""}</span>
-              <span style={{fontFamily:T.bd,fontSize:14,color:Math.round(totalRate(mv)*100)>50?T.grn:Math.round(totalRate(mv)*100)>30?T.blu:T.dim}}>{Math.round(totalRate(mv)*100)}%</span>
+              <span style={{fontFamily:T.hd,fontSize:17,letterSpacing:1,color:T.txt}}>{name.toUpperCase()}{kw?` ${kw==="RELAY"?"🤝":kw==="EXPLOSIVE"?"💥":kw==="ENDURANCE"?"💚":"🎯"}`:""}</span>
+              <span style={{fontFamily:T.bd,fontSize:24,color:Math.round(totalRate(mv)*100)>50?T.grn:Math.round(totalRate(mv)*100)>30?T.blu:T.dim}}>{Math.round(totalRate(mv)*100)}%</span>
             </div>
             <div style={{marginTop:4}}><MoveBar move={mv}/></div>
-            {blocked&&<div style={{fontFamily:T.hd,fontSize:7,color:T.red,letterSpacing:2,marginTop:2}}>BLOCKED</div>}
+            {blocked&&<div style={{fontFamily:T.hd,fontSize:16,color:T.red,letterSpacing:2,marginTop:2}}>BLOCKED</div>}
           </div>
         </div>);})}
-        {ph==="player"&&active&&active.hp>0&&active.sp<=0&&<div onClick={()=>setSelMove("rest")} style={{padding:"10px",cursor:"pointer",background:selMove==="rest"?T.grn+"22":"transparent",border:`2px solid ${selMove==="rest"?T.grn:T.fnt}`,textAlign:"center",fontFamily:T.hd,fontSize:10,color:T.grn,letterSpacing:2}}>💤 REST · HEAL 5 HP</div>}
-        {ph==="player"&&active&&active.hp>0&&<button onClick={doAttack} disabled={selMove==null} style={{width:"100%",marginTop:8,fontFamily:T.hd,fontSize:11,letterSpacing:3,padding:"12px",background:selMove==null?"transparent":T.gold,color:selMove==null?T.dim:T.bg,border:`3px solid ${selMove==null?T.fnt:T.gold}`,cursor:selMove==null?"default":"pointer",boxShadow:selMove==null?"none":`0 0 16px ${T.gold}, 4px 4px 0 ${T.red}`,fontWeight:700}}>{selMove==null?"PICK A MOVE":"★ STRIKE! ★"}</button>}
-        {ph==="done"&&<button onClick={()=>finish(won,spirits)} style={{width:"100%",marginTop:8,fontFamily:T.hd,fontSize:11,letterSpacing:3,padding:"12px",background:won?T.grn:T.pur,color:T.bg,border:`3px solid ${won?T.grn:T.pur}`,cursor:"pointer",boxShadow:`0 0 14px ${won?T.grn:T.pur}, 4px 4px 0 ${T.red}`,fontWeight:700}}>{won?"★ CONTINUE ★":"INSERT COIN →"}</button>}
+        {ph==="player"&&active&&active.hp>0&&active.sp<=0&&<div onClick={()=>setSelMove("rest")} style={{padding:"10px",cursor:"pointer",background:selMove==="rest"?T.grn+"22":"transparent",border:`2px solid ${selMove==="rest"?T.grn:T.fnt}`,textAlign:"center",fontFamily:T.hd,fontSize:18,color:T.grn,letterSpacing:2}}>💤 REST · HEAL 5 HP</div>}
+        {ph==="player"&&active&&active.hp>0&&<button onClick={doAttack} disabled={selMove==null} style={{width:"100%",marginTop:8,fontFamily:T.hd,fontSize:19,letterSpacing:3,padding:"12px",background:selMove==null?"transparent":T.gold,color:selMove==null?T.dim:T.bg,border:`3px solid ${selMove==null?T.fnt:T.gold}`,cursor:selMove==null?"default":"pointer",boxShadow:selMove==null?"none":`0 0 16px ${T.gold}, 4px 4px 0 ${T.red}`,fontWeight:700}}>{selMove==null?"PICK A MOVE":"★ STRIKE! ★"}</button>}
+        {ph==="done"&&<button onClick={()=>finish(won,spirits)} style={{width:"100%",marginTop:8,fontFamily:T.hd,fontSize:19,letterSpacing:3,padding:"12px",background:won?T.grn:T.pur,color:T.bg,border:`3px solid ${won?T.grn:T.pur}`,cursor:"pointer",boxShadow:`0 0 14px ${won?T.grn:T.pur}, 4px 4px 0 ${T.red}`,fontWeight:700}}>{won?"★ CONTINUE ★":"INSERT COIN →"}</button>}
       </div>
 
       {/* BATTLE LOG */}
       <div style={{background:"#000",border:`3px solid ${T.pur}`,padding:12,boxShadow:`0 0 14px ${T.pur}55`,display:"flex",flexDirection:"column"}}>
-        <div style={{fontFamily:T.hd,fontSize:9,letterSpacing:3,color:T.pur,marginBottom:10,textShadow:`0 0 6px ${T.pur}`}}>★ BATTLE LOG ★</div>
-        <div ref={lr} style={{flex:1,maxHeight:300,overflowY:"auto",fontFamily:T.bd,fontSize:15,color:T.txt,lineHeight:1.45}}>
-          {log.map((l,i)=><div key={i} style={{padding:"2px 0",color:l.includes("🏆")?T.gold:l.includes("💀")?T.red:l.includes("🥇")?medalColors.gold:l.includes("🥈")?medalColors.silver:l.includes("🥉")?medalColors.bronze:l.includes("🌟")||l.includes("🏟️")?T.grn:l.includes("⚡")?T.para:l.startsWith("───")?T.pur:T.txt}}>{l.startsWith("───")?<span style={{fontFamily:T.hd,fontSize:9,letterSpacing:3,color:T.pur}}>━━━ MONSTER PHASE ━━━</span>:l}</div>)}
+        <div style={{fontFamily:T.hd,fontSize:17,letterSpacing:3,color:T.pur,marginBottom:10,textShadow:`0 0 6px ${T.pur}`}}>★ BATTLE LOG ★</div>
+        <div ref={lr} style={{flex:1,maxHeight:300,overflowY:"auto",fontFamily:T.bd,fontSize:20,color:T.txt,lineHeight:1.45}}>
+          {log.map((l,i)=><div key={i} style={{padding:"2px 0",color:l.includes("🏆")?T.gold:l.includes("💀")?T.red:l.includes("🥇")?medalColors.gold:l.includes("🥈")?medalColors.silver:l.includes("🥉")?medalColors.bronze:l.includes("🌟")||l.includes("🏟️")?T.grn:l.includes("⚡")?T.para:l.startsWith("───")?T.pur:T.txt}}>{l.startsWith("───")?<span style={{fontFamily:T.hd,fontSize:17,letterSpacing:3,color:T.pur}}>━━━ MONSTER PHASE ━━━</span>:l}</div>)}
         </div>
       </div>
     </div>
 
     {/* Score footer */}
-    <div style={{marginTop:14,display:"flex",justifyContent:"space-between",fontFamily:T.hd,fontSize:9,letterSpacing:3,color:T.txt,opacity:.85}}>
+    <div style={{marginTop:14,display:"flex",justifyContent:"space-between",fontFamily:T.hd,fontSize:17,letterSpacing:3,color:T.txt,opacity:.85}}>
       <span style={{color:T.gold,textShadow:`0 0 5px ${T.gold}`}}>SCORE {String((round-1)*1000+turn*100+(teamMax-teamHp+(target.maxHp-target.hp))*5).padStart(8,"0")}</span>
       <span style={{color:T.pur,textShadow:`0 0 5px ${T.pur}`}}>STAGE {round}</span>
       <span style={{color:T.blu,textShadow:`0 0 5px ${T.blu}`}}>TURN {turn}</span>
@@ -1375,28 +1475,28 @@ function SimScreen({team,monsters,regionId,bodyTop5,onContinue}){
   const tips=["Monte Carlo simulations run 1,000 virtual battles to estimate your odds!","Expected value = probability × outcome, summed across all possibilities.","Real sports analysts use the same technique to predict medal counts.","The more simulations, the more accurate the prediction becomes."];
   const tip=tips[Math.floor(Math.random()*tips.length)];
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:20,gap:14,maxWidth:500,margin:"0 auto",textAlign:"center"}}>
-    <div style={{fontSize:11,letterSpacing:8,color:T.gd,fontFamily:T.hd}}>ORACLE'S FORECAST</div>
+    <div style={{fontSize:19,letterSpacing:8,color:T.gd,fontFamily:T.hd}}>THE ORACLE FORECAST</div>
     <h2 style={{fontSize:22,fontFamily:T.hd,color:T.gold,margin:0}}>Battle Simulation</h2>
     <div style={{display:"flex",gap:6,justifyContent:"center"}}>{team.map(s=><SpiritCard key={s.id} spirit={s} compact rgn={regionId}/>)}</div>
-    <div style={{fontSize:11,color:T.dim,fontFamily:T.bd}}>vs {monsters.map(m=>m.emoji+" "+m.name).join(" & ")}</div>
+    <div style={{fontSize:19,color:T.dim,fontFamily:T.bd}}>vs {monsters.map(m=>m.emoji+" "+m.name).join(" & ")}</div>
     {/* Synergy badges */}
     <div style={{display:"flex",gap:4,flexWrap:"wrap",justifyContent:"center"}}>
-      {syn.rally&&<span style={{fontSize:8,background:T.grn+"22",color:T.grn,padding:"2px 6px",borderRadius:3,fontFamily:T.hd}}>🏟️ RALLY</span>}
-      {syn.paraAlliance&&<span style={{fontSize:8,background:T.para+"22",color:T.para,padding:"2px 6px",borderRadius:3,fontFamily:T.hd}}>⚡ ALLIANCE</span>}
-      {syn.relayChain&&<span style={{fontSize:8,background:T.gold+"22",color:T.gold,padding:"2px 6px",borderRadius:3,fontFamily:T.hd}}>🤝 RELAY</span>}
+      {syn.rally&&<span style={{fontSize:16,background:T.grn+"22",color:T.grn,padding:"2px 6px",borderRadius:3,fontFamily:T.hd}}>🏟️ RALLY</span>}
+      {syn.paraAlliance&&<span style={{fontSize:16,background:T.para+"22",color:T.para,padding:"2px 6px",borderRadius:3,fontFamily:T.hd}}>⚡ ALLIANCE</span>}
+      {syn.relayChain&&<span style={{fontSize:16,background:T.gold+"22",color:T.gold,padding:"2px 6px",borderRadius:3,fontFamily:T.hd}}>🤝 RELAY</span>}
     </div>
     {!result&&<Btn onClick={run} color={T.gold}>Simulate 1,000 Battles</Btn>}
     {result&&(<div style={{width:"100%",display:"flex",flexDirection:"column",gap:10}}>
       <div style={{fontSize:42,fontFamily:T.hd,color:result.winRate>=70?T.grn:result.winRate>=40?T.gold:T.red}}>{result.winRate}%</div>
-      <div style={{fontSize:11,color:T.dim,fontFamily:T.bd}}>Win rate across {result.numSims} simulated battles</div>
+      <div style={{fontSize:19,color:T.dim,fontFamily:T.bd}}>Win rate across {result.numSims} simulated battles</div>
       <div style={{display:"flex",justifyContent:"center",gap:16}}>
-        <div style={{textAlign:"center"}}><div style={{fontSize:16,fontFamily:T.hd,color:T.txt}}>{result.avgDmg}</div><div style={{fontSize:9,color:T.dim,fontFamily:T.bd}}>Avg damage</div></div>
-        <div style={{textAlign:"center"}}><div style={{fontSize:16,fontFamily:T.hd,color:T.grn}}>{result.wins}</div><div style={{fontSize:9,color:T.dim,fontFamily:T.bd}}>Wins</div></div>
-        <div style={{textAlign:"center"}}><div style={{fontSize:16,fontFamily:T.hd,color:T.red}}>{result.numSims-result.wins}</div><div style={{fontSize:9,color:T.dim,fontFamily:T.bd}}>Losses</div></div>
+        <div style={{textAlign:"center"}}><div style={{fontSize:21,fontFamily:T.hd,color:T.txt}}>{result.avgDmg}</div><div style={{fontSize:17,color:T.dim,fontFamily:T.bd}}>Avg damage</div></div>
+        <div style={{textAlign:"center"}}><div style={{fontSize:21,fontFamily:T.hd,color:T.grn}}>{result.wins}</div><div style={{fontSize:17,color:T.dim,fontFamily:T.bd}}>Wins</div></div>
+        <div style={{textAlign:"center"}}><div style={{fontSize:21,fontFamily:T.hd,color:T.red}}>{result.numSims-result.wins}</div><div style={{fontSize:17,color:T.dim,fontFamily:T.bd}}>Losses</div></div>
       </div>
       {/* Simple damage histogram */}
       <div style={{background:T.s1,borderRadius:8,padding:10}}>
-        <div style={{fontSize:8,color:T.gd,fontFamily:T.hd,letterSpacing:2,marginBottom:6}}>DAMAGE DISTRIBUTION</div>
+        <div style={{fontSize:16,color:T.gd,fontFamily:T.hd,letterSpacing:2,marginBottom:6}}>DAMAGE DISTRIBUTION</div>
         <div style={{display:"flex",alignItems:"flex-end",gap:1,height:60}}>
           {(()=>{const buckets=Array(20).fill(0);const mn=Math.min(...result.damages),mx=Math.max(...result.damages),rng=mx-mn||1;
             result.damages.forEach(d=>{const bi=Math.min(19,Math.floor((d-mn)/rng*20));buckets[bi]++;});
@@ -1404,11 +1504,11 @@ function SimScreen({team,monsters,regionId,bodyTop5,onContinue}){
             return buckets.map((c,i)=><div key={i} style={{flex:1,background:T.gold,borderRadius:"2px 2px 0 0",height:`${(c/peak)*100}%`,minHeight:c>0?2:0,opacity:.6+.4*(c/peak)}}/>);
           })()}
         </div>
-        <div style={{display:"flex",justifyContent:"space-between",fontSize:7,color:T.dim,fontFamily:T.bd,marginTop:2}}>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:16,color:T.dim,fontFamily:T.bd,marginTop:2}}>
           <span>{Math.min(...result.damages)}</span><span>{Math.max(...result.damages)}</span>
         </div>
       </div>
-      <p style={{fontSize:10,color:T.dim,fontFamily:T.bd,fontStyle:"italic",lineHeight:1.5}}>💡 {tip}</p>
+      <p style={{fontSize:18,color:T.dim,fontFamily:T.bd,fontStyle:"italic",lineHeight:1.5}}>💡 {tip}</p>
     </div>)}
     <Btn onClick={onContinue}>{result?"Continue to Battle":"Skip Simulation"}</Btn>
   </div>);
@@ -1416,14 +1516,13 @@ function SimScreen({team,monsters,regionId,bodyTop5,onContinue}){
 
 function Debrief({monsters,won,cards,rgn,round,next}){
   const [txt,setTxt]=useState(null);const rg=REGIONS.find(r=>r.id===rgn);
-  const mNames=monsters.map(m=>m.name).join(" & ");
-  useEffect(()=>{const b=cards.reduce((a,c)=>bestGold(c)>bestGold(a)?c:a);gemini(`Coach in Team USA card game. Player's team of 3 spirits ${won?"beat":"lost to"} ${mNames} defending ${rg?.name} (${rg?.states}). Team: ${cards.map(c=>c.sport).join(", ")}. Best spirit: "${b?.sport}" (${b?.para?"Paralympic":"Olympic"}) with best gold: ${Math.round(bestGold(b)*100)}%. Write 3 bullet points for a kid: 1) ⚔️ How the team worked together 2) 🗺️ One real fact about Team USA in ${rg?.name} 3) 📊 One probability/data concept (expected value, Monte Carlo, sample size). Emoji. Brief.`).then(t=>setTxt(t||`⚔️ ${b?.sport} led the team.\n🗺️ ${rg?.name} produces many champions.\n📊 Higher gold rate = bigger hits but rarer!`));},[]);
-  return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:20,gap:14,maxWidth:460,margin:"0 auto",textAlign:"center"}}>
-    <div style={{fontSize:36}}>{won?"🛡️":"💀"}</div>
-    <h2 style={{fontFamily:T.hd,color:won?T.grn:T.red,margin:0,fontSize:20}}>{won?`${rg?.name} Defended!`:`${rg?.name} Falls`}</h2>
-    <div style={{background:T.s1,borderRadius:10,padding:14,width:"100%",textAlign:"left"}}>
-      <div style={{fontSize:9,color:T.gd,fontFamily:T.hd,letterSpacing:3,marginBottom:6}}>DEBRIEF</div>
-      <div style={{fontFamily:T.bd,fontSize:12,color:T.txt,lineHeight:1.8,whiteSpace:"pre-line"}}>{txt||<span style={{color:T.dim}}>Coach reflecting...</span>}</div>
+  useEffect(()=>{gemini(`In one or two short sentences, share a real, interesting historical fact about Team USA Olympic or Paralympic athletes from the ${rg?.name} region (${rg?.states}). Mention a specific athlete, medal, hometown, or milestone if you can. No introductions or framing — just the fact.`).then(t=>setTxt(t||`${rg?.name} has produced champions across many decades of Olympic and Paralympic competition.`));},[]);
+  return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:24,gap:18,maxWidth:680,margin:"0 auto",textAlign:"center"}}>
+    <div style={{fontSize:48}}>{won?"🛡️":"💀"}</div>
+    <h2 style={{fontFamily:T.hd,color:won?T.grn:T.red,margin:0,fontSize:24,letterSpacing:3,textShadow:`0 0 12px ${won?T.grn:T.red}66`}}>{won?`${rg?.name} Defended!`:`${rg?.name} Falls`}</h2>
+    <div style={{background:"rgba(0,0,0,0.45)",border:`2px solid ${T.gold}66`,padding:20,width:"100%",textAlign:"left",boxShadow:`0 0 16px ${T.gold}22`}}>
+      <div style={{fontSize:13,color:T.gold,fontFamily:T.hd,letterSpacing:3,marginBottom:10,textShadow:`0 0 8px ${T.gold}55`}}>🗺️ DID YOU KNOW</div>
+      <div style={{fontFamily:T.bd,fontSize:21,color:T.txt,lineHeight:1.55}}>{txt||<span style={{color:T.dim,fontStyle:"italic"}}>Consulting the archives…</span>}</div>
     </div>
     <Btn onClick={next}>Back to Map</Btn>
   </div>);
@@ -1440,8 +1539,8 @@ class ErrBound extends React.Component {
     if(this.state.err) return(
       <div style={{padding:40,color:"#ef4444",fontFamily:"monospace",background:"#06080c",minHeight:"100vh"}}>
         <h2>Error caught:</h2>
-        <pre style={{whiteSpace:"pre-wrap",fontSize:12}}>{this.state.err.toString()}</pre>
-        <pre style={{whiteSpace:"pre-wrap",fontSize:10,color:"#888",marginTop:10}}>{this.state.err.stack}</pre>
+        <pre style={{whiteSpace:"pre-wrap",fontSize:20}}>{this.state.err.toString()}</pre>
+        <pre style={{whiteSpace:"pre-wrap",fontSize:18,color:"#888",marginTop:10}}>{this.state.err.stack}</pre>
       </div>
     );
     return this.props.children;
@@ -1455,9 +1554,9 @@ function KeyMissingScreen(){
     <p style={{fontFamily:T.bd,color:T.dim,maxWidth:480,lineHeight:1.6}}>
       This game generates monsters with the Gemini API. Add a key to <code style={{color:T.gold,background:T.s2,padding:"1px 5px",borderRadius:3}}>.env.local</code> at the project root and restart the dev server:
     </p>
-    <pre style={{background:T.s1,border:`1px solid ${T.fnt}`,borderRadius:6,padding:14,fontFamily:"monospace",fontSize:12,color:T.txt,textAlign:"left"}}>{`# .env.local
+    <pre style={{background:T.s1,border:`1px solid ${T.fnt}`,borderRadius:6,padding:14,fontFamily:"monospace",fontSize:20,color:T.txt,textAlign:"left"}}>{`# .env.local
 VITE_GEMINI_API_KEY=your-key-here`}</pre>
-    <p style={{fontFamily:T.bd,color:T.dim,fontSize:11}}>Get a key at <span style={{color:T.blu}}>aistudio.google.com/apikey</span></p>
+    <p style={{fontFamily:T.bd,color:T.dim,fontSize:19}}>Get a key at <span style={{color:T.blu}}>aistudio.google.com/apikey</span></p>
   </div>);
 }
 
@@ -1468,6 +1567,8 @@ function Game(){
   const [bodyTop5,setBodyTop5]=useState([]);
   const [triviaSpirit,setTriviaSpirit]=useState(null);
   const [slots,setSlots]=useState(()=>Object.fromEntries(ACTIVE_REGIONS.map(r=>[r.id,null])));
+  const [nextSlots,setNextSlots]=useState(()=>Object.fromEntries(ACTIVE_REGIONS.map(r=>[r.id,null])));
+  const generatingNext=useRef(new Set());
   const [defeated,setDefeated]=useState([]);
   const [hud,setHud]=useState({kills:0,streak:0});
   const [currentRegion,setCurrentRegion]=useState(null);
@@ -1503,13 +1604,20 @@ function Game(){
     }
   },[audioOn]);
 
-  // Hydrate from localStorage on first mount
+  // Hydrate from localStorage on first mount.
+  // Drop any slot whose monster never finished its image — those are orphans
+  // from a session where Gemini was still generating when the tab closed.
+  // Leaving them in would force a slow retrySlotImage on the next load
+  // instead of letting the baked asset path take over.
   useEffect(()=>{
     if(initialized.current)return;initialized.current=true;
     const saved=loadCampaign();
     if(saved){
-      const safeSlots=Object.fromEntries(ACTIVE_REGIONS.map(r=>[r.id,saved.slots?.[r.id]||null]));
+      const usable=m=>m&&m.imageDataUrl&&m.imageStatus==="ready"?m:null;
+      const safeSlots=Object.fromEntries(ACTIVE_REGIONS.map(r=>[r.id,usable(saved.slots?.[r.id])]));
+      const safeNext=Object.fromEntries(ACTIVE_REGIONS.map(r=>[r.id,usable(saved.nextSlots?.[r.id])]));
       setSlots(safeSlots);
+      setNextSlots(safeNext);
       setDefeated(saved.defeated||[]);
       setHud(saved.hud||{kills:0,streak:0});
     }
@@ -1517,20 +1625,39 @@ function Game(){
 
   // Persist whenever campaign-relevant state changes
   useEffect(()=>{
-    saveCampaign({slots,defeated,hud});
-  },[slots,defeated,hud]);
+    saveCampaign({slots,nextSlots,defeated,hud});
+  },[slots,nextSlots,defeated,hud]);
+
+  // Debug exposure (verification)
+  useEffect(()=>{window.__debug_nextSlots=nextSlots;window.__debug_slots=slots;},[slots,nextSlots]);
 
   const regenSlot=useCallback((regionId,basis=null)=>{
     const region=ACTIVE_REGIONS.find(r=>r.id===regionId);
     if(!region)return;
-    generateMonster(region,{
+    generateMonsterQueued(region,{
       basis,
       onTextReady:(partial)=>{setSlots(p=>({...p,[regionId]:partial}));},
-    }).then(monster=>{
+    },"high").then(monster=>{
       setSlots(p=>({...p,[regionId]:monster}));
     }).catch(e=>{
       console.error("[regenSlot]",e);
       setSlots(p=>({...p,[regionId]:null}));
+    });
+  },[]);
+
+  // Background pre-gen for the "next" monster of a region. Low priority,
+  // no onTextReady (we only swap in fully-imaged results).
+  const regenNextSlot=useCallback((regionId,basis=null)=>{
+    if(generatingNext.current.has(regionId))return;
+    const region=ACTIVE_REGIONS.find(r=>r.id===regionId);
+    if(!region)return;
+    generatingNext.current.add(regionId);
+    generateMonsterQueued(region,{basis},"normal").then(monster=>{
+      setNextSlots(p=>({...p,[regionId]:monster}));
+    }).catch(e=>{
+      console.error("[regenNextSlot]",e);
+    }).finally(()=>{
+      generatingNext.current.delete(regionId);
     });
   },[]);
 
@@ -1547,19 +1674,42 @@ function Game(){
   },[]);
 
   const ensureAllSlots=useCallback(()=>{
-    setSlots(prev=>{
-      const next={...prev};
-      ACTIVE_REGIONS.forEach(r=>{
-        const cur=next[r.id];
-        if(!cur){
-          regenSlot(r.id,pickSpawnBasis(defeated));
-        }else if(!cur.imageDataUrl){
-          retrySlotImage(r.id,cur);
-        }
-      });
-      return next;
+    // Phase 1: try the pre-baked region monsters first (instant, no API call).
+    // Fall back to live Gemini generation only when an asset is missing AND
+    // the player has already defeated this region's debut monster (so it's a
+    // genuine replacement, not a fresh game).
+    ACTIVE_REGIONS.forEach(r=>{
+      const cur=slots[r.id];
+      if(!cur){
+        const haveDefeatedHere=defeated.some(d=>d.regionId===r.id);
+        loadBakedMonster(r.id).then(baked=>{
+          if(baked&&!haveDefeatedHere){
+            setSlots(p=>p[r.id]?p:{...p,[r.id]:baked});
+          }else{
+            regenSlot(r.id,pickSpawnBasis(defeated));
+          }
+        });
+      }else if(!cur.imageDataUrl){
+        retrySlotImage(r.id,cur);
+      }
     });
-  },[defeated,regenSlot,retrySlotImage]);
+    // Phase 2: background pre-gen for the next-queue (queue handles concurrency)
+    ACTIVE_REGIONS.forEach(r=>{
+      if(!nextSlots[r.id]){
+        regenNextSlot(r.id,pickSpawnBasis(defeated));
+      }
+    });
+  },[slots,nextSlots,defeated,regenSlot,regenNextSlot,retrySlotImage]);
+
+  // Keep the next-queue topped up whenever a slot changes (e.g. after a victory swap).
+  useEffect(()=>{
+    if(!initialized.current)return;
+    ACTIVE_REGIONS.forEach(r=>{
+      if(slots[r.id]&&!nextSlots[r.id]&&!generatingNext.current.has(r.id)){
+        regenNextSlot(r.id,pickSpawnBasis(defeated));
+      }
+    });
+  },[slots,nextSlots,defeated,regenNextSlot]);
 
   const go=()=>{setTeam([]);setBodyTop5([]);used.current=new Set();setPh("quiz");};
   const startGame=(top5)=>{setBodyTop5(top5||[]);ensureAllSlots();setPh("map");};
@@ -1586,9 +1736,18 @@ function Game(){
       const trimmedMonster={...monster,imageDataUrl:null};
       const newDefeated=[...defeated,trimmedMonster].slice(-20);
       setDefeated(newDefeated);
-      setSlots(p=>({...p,[regionId]:null}));
       setHud(h=>({kills:h.kills+1,streak:h.streak+1}));
-      regenSlot(regionId,pickSpawnBasis(newDefeated));
+      const queued=nextSlots[regionId];
+      if(queued){
+        // Hot path: instant swap from pre-gen queue, then refill in background
+        setSlots(p=>({...p,[regionId]:queued}));
+        setNextSlots(p=>({...p,[regionId]:null}));
+        regenNextSlot(regionId,pickSpawnBasis(newDefeated));
+      }else{
+        // Cold fallback: queue wasn't ready, fall back to old foreground summon
+        setSlots(p=>({...p,[regionId]:null}));
+        regenSlot(regionId,pickSpawnBasis(newDefeated));
+      }
     }else{
       setHud(h=>({...h,streak:0}));
     }
@@ -1602,19 +1761,22 @@ function Game(){
     setDefeated([]);
     setHud({kills:0,streak:0});
     used.current=new Set();
+    generatingNext.current=new Set();
     const cleared=Object.fromEntries(ACTIVE_REGIONS.map(r=>[r.id,null]));
     setSlots(cleared);
+    setNextSlots(cleared);
     ACTIVE_REGIONS.forEach(r=>regenSlot(r.id,null));
+    // nextSlots will be refilled by the topped-up effect once slots arrive
   };
 
   const battleMonsters=currentRegion&&slots[currentRegion]?[slots[currentRegion]]:[];
 
   return(<div style={{minHeight:"100vh",background:T.bg,color:T.txt,backgroundImage:`radial-gradient(ellipse 80% 40% at 50% 0%,#2a004f 0%,transparent 55%),radial-gradient(ellipse 60% 30% at 50% 100%,#1a0033 0%,transparent 60%)`,position:"relative"}}>
     <style>{`@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');*{box-sizing:border-box;margin:0;padding:0}body{background:${T.bg};color:${T.txt};font-family:${T.bd}}::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:${T.pur};border-radius:0}::-webkit-scrollbar-track{background:${T.s1}}*{border-radius:0 !important}@keyframes flicker{0%,99%{opacity:1}50%{opacity:.96}}@keyframes blink{50%{opacity:.35}}@keyframes scrollx{from{transform:translateX(0)}to{transform:translateX(-50%)}}@keyframes pulse{50%{transform:scale(1.06)}}@keyframes shake{0%,100%{transform:translate(0,0)}25%{transform:translate(-4px,2px)}50%{transform:translate(4px,-2px)}75%{transform:translate(-2px,-3px)}}@keyframes announceIn{0%{opacity:0;transform:scale(.4) translateY(-30px)}30%{opacity:1;transform:scale(1.1)}55%{transform:scale(1)}100%{opacity:1;transform:scale(1)}}@keyframes announceOut{0%{opacity:1}100%{opacity:0;transform:scale(1.6)}}@keyframes hitSpark{0%{opacity:1;transform:scale(.4) rotate(0deg)}100%{opacity:0;transform:scale(2.4) rotate(180deg)}}body::after{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,0.28) 2px 3px);z-index:9998;mix-blend-mode:multiply}body::before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(0,0,0,0.45) 100%);z-index:9999}h1,h2,h3{font-family:${T.hd};letter-spacing:2px}button{font-family:${T.hd}}`}</style>
-    <div style={{position:"fixed",top:0,left:0,right:0,zIndex:50,background:"#000",borderTop:`2px solid ${T.blu}`,borderBottom:`2px solid ${T.pur}`,padding:"6px 0",fontFamily:T.hd,fontSize:9,letterSpacing:3,color:T.pur,overflow:"hidden",whiteSpace:"nowrap",pointerEvents:"none"}}><div style={{display:"inline-block",animation:"scrollx 28s linear infinite",color:T.pur,textShadow:`0 0 6px ${T.pur}`}}>★ INSERT COIN ★ OLYMPUS RISING ★ POWERED BY 128 YEARS OF REAL OLYMPIC DATA ★ DEFEND AMERICA ★ GO FOR GOLD ★ NO CONTINUES ★ INSERT COIN ★ OLYMPUS RISING ★ POWERED BY 128 YEARS OF REAL OLYMPIC DATA ★ DEFEND AMERICA ★ GO FOR GOLD ★ NO CONTINUES ★ </div></div>
+    <div style={{position:"fixed",top:0,left:0,right:0,zIndex:50,background:"#000",borderTop:`2px solid ${T.blu}`,borderBottom:`2px solid ${T.pur}`,padding:"6px 0",fontFamily:T.hd,fontSize:17,letterSpacing:3,color:T.pur,overflow:"hidden",whiteSpace:"nowrap",pointerEvents:"none"}}><div style={{display:"inline-block",animation:"scrollx 28s linear infinite",color:T.pur,textShadow:`0 0 6px ${T.pur}`}}>★ OLYMPUS RISING ★ DEFEND AMERICA ★ GO FOR GOLD ★ OLYMPUS RISING ★ DEFEND AMERICA ★ GO FOR GOLD ★ OLYMPUS RISING ★ DEFEND AMERICA ★ GO FOR GOLD ★</div></div>
     <div style={{height:28}}/>
-    <button onClick={()=>setAudioOn(v=>!v)} style={{position:"fixed",top:36,right:14,zIndex:60,fontFamily:T.hd,fontSize:9,letterSpacing:2,padding:"6px 10px",background:audioOn?T.grn+"22":"transparent",border:`2px solid ${audioOn?T.grn:T.pur}`,color:audioOn?T.grn:T.pur,cursor:"pointer",boxShadow:audioOn?`0 0 12px ${T.grn}88`:`0 0 8px ${T.pur}66`,textShadow:audioOn?`0 0 6px ${T.grn}`:`0 0 4px ${T.pur}`}}>{audioOn?"♪ MUSIC ON":"♪ MUSIC OFF"}</button>
-    {announce&&<div style={{position:"fixed",inset:0,zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",pointerEvents:"none",background:"radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.55) 0%, transparent 60%)",animation:"announceIn .35s ease-out"}}><div style={{textAlign:"center"}}><div style={{fontFamily:T.hd,fontSize:14,letterSpacing:6,color:T.cyan||T.blu,marginBottom:14,textShadow:`0 0 10px ${T.blu}`}}>{announce.sub}</div><div style={{fontFamily:T.hd,fontSize:88,letterSpacing:6,color:announce.color,textShadow:`4px 4px 0 ${T.red}, 8px 8px 0 ${T.s1}, 0 0 40px ${announce.color}`,animation:"pulse .8s ease-in-out infinite"}}>{announce.text}</div></div></div>}
+    <button onClick={()=>setAudioOn(v=>!v)} style={{position:"fixed",bottom:14,right:14,zIndex:60,fontFamily:T.hd,fontSize:8,letterSpacing:1.5,padding:"4px 7px",background:audioOn?T.grn+"22":"transparent",border:`1px solid ${audioOn?T.grn:T.pur}`,color:audioOn?T.grn:T.pur,cursor:"pointer",opacity:0.7,boxShadow:audioOn?`0 0 6px ${T.grn}66`:"none"}}>{audioOn?"♪ ON":"♪ OFF"}</button>
+    {announce&&<div style={{position:"fixed",inset:0,zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",pointerEvents:"none",background:"radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.55) 0%, transparent 60%)",animation:"announceIn .35s ease-out"}}><div style={{textAlign:"center"}}><div style={{fontFamily:T.hd,fontSize:24,letterSpacing:6,color:T.cyan||T.blu,marginBottom:14,textShadow:`0 0 10px ${T.blu}`}}>{announce.sub}</div><div style={{fontFamily:T.hd,fontSize:88,letterSpacing:6,color:announce.color,textShadow:`4px 4px 0 ${T.red}, 8px 8px 0 ${T.s1}, 0 0 40px ${announce.color}`,animation:"pulse .8s ease-in-out infinite"}}>{announce.text}</div></div></div>}
     {ph==="start"&&<Start go={go} howto={()=>setPh("howto")} explore={()=>setPh("explore")}/>}
     {ph==="explore"&&<Explorer back={()=>setPh("start")}/>}
     {ph==="quiz"&&<BodyQuiz done={startGame}/>}

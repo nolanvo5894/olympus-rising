@@ -1,0 +1,16 @@
+{
+  "id": "m_baked_4vmj3ynd",
+  "name": "Desert Scorch",
+  "emoji": "🏜️",
+  "hp": 180,
+  "maxHp": 180,
+  "special": "aoe",
+  "desc": "This monster hits all spirits each turn, draining their competitive zeal.",
+  "backstory": "Emerging from the sun-baked plains of the Southwest, the Desert Scorch manifests as a swirling vortex of sand and despair, awakened by the escalating fervor for the upcoming LA28 Games. It seeks to siphon the very essence of athletic ambition, leaving behind only the dust of shattered dreams and a profound sense of futility across the land.",
+  "regionId": "southwest",
+  "level": 1,
+  "basisId": null,
+  "imageDataUrl": "/monsters/southwest.jpg",
+  "imageStatus": "ready",
+  "baked": true
+}

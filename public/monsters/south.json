@@ -1,0 +1,16 @@
+{
+  "id": "m_baked_zko3enja",
+  "name": "The Agon Scourge",
+  "emoji": "🥀",
+  "hp": 220,
+  "maxHp": 220,
+  "special": "shift_weakness",
+  "desc": "Weakness shifts each turn — match the medal type for bonus damage.",
+  "backstory": "Forged in the crucible of forgotten Olympic dreams and the bitter tears of fallen champions, the Agon Scourge manifests to poison the spirit of competition. It draws strength from the collective dread of aspiring athletes across the South, threatening to unravel the very fabric of the games.",
+  "regionId": "south",
+  "level": 1,
+  "basisId": null,
+  "imageDataUrl": "/monsters/south.jpg",
+  "imageStatus": "ready",
+  "baked": true
+}
