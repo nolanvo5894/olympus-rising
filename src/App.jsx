@@ -518,11 +518,10 @@ function MoveBar({move}){
 
 function SpiritCard({spirit:s,compact,selected,onClick,disabled,showHp,hp:curHp,rgn,bodyMatch:bm}){
   const t=tier(s);const bc=s.para?T.para:t.c;const aff=rgn&&(s.regions.includes(rgn)||rgn==="la28");
-  return(<div onClick={disabled?undefined:onClick} style={{width:compact?120:200,minHeight:compact?undefined:280,background:`linear-gradient(150deg,${T.s1},${T.s2})`,border:`2px solid ${selected?bc:bc+"44"}`,borderRadius:12,padding:compact?7:12,cursor:disabled?"default":"pointer",opacity:disabled?.3:1,transition:"all .25s",boxShadow:selected?`0 0 18px ${bc}55`:"none",position:"relative",display:"flex",flexDirection:"column",gap:compact?2:5}}>
-    {s.para&&<div style={{position:"absolute",top:3,right:6,fontSize:16,color:T.para,fontFamily:T.hd,letterSpacing:2,fontWeight:700}}>MECH</div>}
+  return(<div onClick={disabled?undefined:onClick} style={{width:compact?120:200,minHeight:compact?undefined:280,height:compact?undefined:"100%",background:`linear-gradient(150deg,${T.s1},${T.s2})`,border:`2px solid ${selected?bc:bc+"44"}`,borderRadius:12,padding:compact?7:12,cursor:disabled?"default":"pointer",opacity:disabled?.3:1,transition:"all .25s",boxShadow:selected?`0 0 18px ${bc}55`:"none",position:"relative",display:"flex",flexDirection:"column",gap:compact?2:5}}>
     {aff&&!compact&&<div style={{position:"absolute",top:3,left:6,fontSize:16,background:T.grn+"22",color:T.grn,padding:"1px 5px",borderRadius:3,fontFamily:T.hd}}>+50%</div>}
     {bm&&!compact&&<div style={{position:"absolute",top:aff?18:3,left:6,fontSize:16,background:T.blu+"22",color:T.blu,padding:"1px 5px",borderRadius:3,fontFamily:T.hd}}>💪+15%</div>}
-    <div style={{fontSize:compact?7:8,color:t.c,fontFamily:T.hd,letterSpacing:1.5,marginTop:(s.para||aff)?10:0}}>{t.n}</div>
+    <div style={{fontSize:compact?7:8,color:t.c,fontFamily:T.hd,letterSpacing:1.5,marginTop:aff?10:0}}>{t.n}</div>
     <div style={{display:"flex",justifyContent:"center"}}>
       <SportAvatar sport={s.sport} emoji={s.emoji} size={compact?60:96} radius={6}/>
     </div>
@@ -567,7 +566,7 @@ function mapLpStyle(lp){
   };
 }
 
-function USMap({atk,results={},slots={},compact,onPick}){
+function USMap({atk,results={},slots={},compact,onPick,labels=true}){
   const rc={pacific:"#3b82f6",mountain:"#94a3b8",southwest:"#ef4444",heartland:"#eab308",south:"#22c55e",northeast:"#a855f7",capital:"#6366f1"};
   const LP=MAP_LP;
   return(<svg viewBox="-78 -50 758 420" preserveAspectRatio="xMidYMid meet" style={{maxWidth:compact?"min(540px,90vw)":"min(820px,82vw)",maxHeight:"100%",width:"100%",height:"auto",aspectRatio:"758 / 420",filter:"drop-shadow(0 8px 24px rgba(0,0,0,0.6))",display:"block"}}>
@@ -603,7 +602,7 @@ function USMap({atk,results={},slots={},compact,onPick}){
       return <g key={r.id} style={{pointerEvents:"none"}}>
         <line x1={lp.lx} y1={lp.ly} x2={r.cx} y2={r.cy} stroke={rcCol} strokeWidth={1.5} strokeDasharray="3 3" opacity={0.65}/>
         <circle cx={r.cx} cy={r.cy} r={3.5} fill={rcCol} opacity={0.9}/>
-        <text x={lp.lx} y={lp.ly} textAnchor={ta} dominantBaseline={db} fill={rcCol} fontFamily="Cinzel" fontWeight={900} fontSize={compact?13:16} letterSpacing="2" style={{textShadow:`0 0 8px ${rcCol}, 0 2px 4px #000`,paintOrder:"stroke",stroke:"#000",strokeWidth:0.6}}>{r.name.toUpperCase()}</text>
+        {labels&&<text x={lp.lx} y={lp.ly} textAnchor={ta} dominantBaseline={db} fill={rcCol} fontFamily="Cinzel" fontWeight={900} fontSize={compact?13:16} letterSpacing="2" style={{textShadow:`0 0 8px ${rcCol}, 0 2px 4px #000`,paintOrder:"stroke",stroke:"#000",strokeWidth:0.6}}>{r.name.toUpperCase()}</text>}
       </g>;
     })}
   </svg>);
@@ -1082,16 +1081,16 @@ function MapScr({slots,hud,onPick,onReset}){
         percentage anchors line up exactly with what USMap renders. */}
     <div style={{position:"relative",width:"100%",maxWidth:980,padding:"70px 8px",boxSizing:"border-box"}}>
       <div style={{position:"relative",width:"100%",maxWidth:820,aspectRatio:"758 / 420",margin:"0 auto"}}>
-        <USMap slots={slots} onPick={onPick}/>
+        <USMap slots={slots} onPick={onPick} labels={false}/>
         {ACTIVE_REGIONS.map(rg=>{
           const lp=MAP_LP[rg.id];if(!lp)return null;
           const m=slots[rg.id];const live=!!m;
-          return(<div key={rg.id} onClick={live?()=>onPick(rg.id):undefined} style={{...mapLpStyle(lp),width:150,background:"rgba(0,0,0,0.82)",border:`2px solid ${live?rg.color:T.fnt}`,padding:5,cursor:live?"pointer":"default",opacity:live?1:.6,display:"flex",gap:6,alignItems:"center",boxShadow:live?`0 0 10px ${rg.color}66`:"none",pointerEvents:live?"auto":"none"}}>
-            {m?(m.imageDataUrl?<img src={m.imageDataUrl} alt={m.name} style={{width:48,height:48,objectFit:"cover",flexShrink:0,border:`2px solid ${rg.color}88`}}/>:<div style={{width:48,height:48,background:T.s2,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:26,border:`2px solid ${rg.color}66`,position:"relative"}}>{m.emoji}{m.imageStatus==="loading"&&<div style={{position:"absolute",bottom:0,right:1,fontSize:13,color:T.gold,animation:"blink 1s infinite"}}>✨</div>}</div>):<div style={{width:48,height:48,background:T.s2,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:18,color:T.dim,fontFamily:T.bd,fontStyle:"italic",border:`2px dashed ${T.fnt}`}}>…</div>}
+          return(<div key={rg.id} onClick={live?()=>onPick(rg.id):undefined} style={{...mapLpStyle(lp),width:200,background:"rgba(0,0,0,0.92)",border:`2px solid ${live?rg.color:T.fnt}`,padding:6,cursor:live?"pointer":"default",opacity:live?1:.6,display:"flex",gap:8,alignItems:"center",boxShadow:live?`0 0 10px ${rg.color}66`:"none",pointerEvents:live?"auto":"none"}}>
+            {m?(m.imageDataUrl?<img src={m.imageDataUrl} alt={m.name} style={{width:54,height:54,objectFit:"cover",flexShrink:0,border:`2px solid ${rg.color}88`}}/>:<div style={{width:54,height:54,background:T.s2,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:28,border:`2px solid ${rg.color}66`,position:"relative"}}>{m.emoji}{m.imageStatus==="loading"&&<div style={{position:"absolute",bottom:0,right:1,fontSize:13,color:T.gold,animation:"blink 1s infinite"}}>✨</div>}</div>):<div style={{width:54,height:54,background:T.s2,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:20,color:T.dim,fontFamily:T.bd,fontStyle:"italic",border:`2px dashed ${T.fnt}`}}>…</div>}
             <div style={{flex:1,minWidth:0}}>
-              <div style={{fontSize:10,color:rg.color,fontFamily:T.hd,letterSpacing:1.5,textShadow:`0 0 4px ${rg.color}`}}>{rg.name.toUpperCase()}</div>
-              <div style={{fontFamily:T.bd,fontSize:15,color:live?T.txt:T.dim,overflowWrap:"break-word",lineHeight:1.15,marginTop:2}}>{m?m.name:"Summoning…"}</div>
-              {m&&<div style={{fontSize:13,color:T.dim,fontFamily:T.bd,marginTop:1}}>{m.hp} HP{m.level>1?` · Lv ${m.level}`:""}</div>}
+              <div style={{fontSize:11,color:rg.color,fontFamily:T.hd,letterSpacing:1.5,textShadow:`0 0 4px ${rg.color}`}}>{rg.name.toUpperCase()}</div>
+              <div style={{fontFamily:T.bd,fontSize:14,color:live?T.txt:T.dim,overflowWrap:"break-word",lineHeight:1.2,marginTop:2}}>{m?m.name:"Summoning…"}</div>
+              {m&&<div style={{fontSize:12,color:T.dim,fontFamily:T.bd,marginTop:2}}>{m.hp} HP{m.level>1?` · Lv ${m.level}`:""}</div>}
             </div>
           </div>);
         })}
@@ -1114,9 +1113,9 @@ function Scout({opts,lockIn,round,rgn,bodyTop5=[]}){
     <div style={{fontSize:17,color:T.gd,fontFamily:T.hd,letterSpacing:4}}>DEFENDING — DRAFT YOUR TEAM</div>
     <h2 style={{fontFamily:T.hd,color:T.gold,margin:0,fontSize:20}}>Pick 3 of 5 Spirits</h2>
     <p style={{fontFamily:T.bd,color:T.dim,fontSize:19}}>Defending <span style={{color:rg?.color,fontWeight:700}}>{rg?.name}</span> · Tap cards to draft · Tap Explore to study</p>
-    <div style={{display:"flex",gap:10,flexWrap:"wrap",justifyContent:"center",alignItems:"flex-start"}}>
+    <div style={{display:"flex",gap:10,flexWrap:"wrap",justifyContent:"center",alignItems:"stretch"}}>
       {opts.map(s=>{const picked=sel.has(s.id);return(<div key={s.id} style={{display:"flex",flexDirection:"column",gap:5,alignItems:"center"}}>
-        <div onClick={()=>toggle(s)} style={{cursor:"pointer",opacity:!picked&&sel.size>=3?.4:1,transition:"all .2s"}}>
+        <div onClick={()=>toggle(s)} style={{cursor:"pointer",opacity:!picked&&sel.size>=3?.4:1,transition:"all .2s",flex:1,display:"flex"}}>
           <SpiritCard spirit={s} rgn={rgn} selected={picked} bodyMatch={bodyTop5.some(b=>b.sport===s.sport)}/>
         </div>
         <Btn small onClick={()=>explore(s)} color={exp===s.id?T.grn:T.blu}>{exp===s.id?"Close":"🔍 Explore"}</Btn>
