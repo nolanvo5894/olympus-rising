@@ -852,13 +852,13 @@ function HowTo({back,go}){
 
       <div style={Card}>
         <h3 style={H}><span style={{color:T.pur}}>3.</span> 🔮 MEET THE ORACLE</h3>
-        <p style={P}>Before each battle, the Oracle asks a trivia question about Olympic or Paralympic <Strong>history, athletes, medals, hometowns, or regional connections</Strong>.</p>
-        <p style={{...P,margin:0}}>Answer correctly to earn a <Strong c={T.grn}>battle boost</Strong> and learn more about the real history behind the game.</p>
+        <p style={P}>Before each battle, the Oracle asks a trivia question about the sport itself — <Strong>rules, equipment, scoring, Team USA team milestones, and Olympic or Paralympic sport history</Strong>.</p>
+        <p style={{...P,margin:0}}>Answer correctly to earn a <Strong c={T.grn}>battle boost</Strong> and pick up a real fact along the way.</p>
       </div>
 
       <div style={Card}>
         <h3 style={H}><span style={{color:T.pur}}>4.</span> 👹 READ THE MONSTER</h3>
-        <p style={{...P,margin:0}}>Each monster is AI-generated with a unique name, portrait, lore, stats, and ability. Some target your strongest spirit, some hit the whole team, some regenerate, and others <Strong c={T.red}>shift weakness each turn</Strong>.</p>
+        <p style={{...P,margin:0}}>Each monster is AI-generated with a unique name, portrait, lore, stats, and ability. Some <Strong>target your strongest</Strong> spirit, some <Strong>pick off your weakest</Strong>, some <Strong>hit the whole team</Strong>, some <Strong>regenerate</Strong> each turn, some <Strong c={T.red}>block any move under 25%</Strong>, and others <Strong c={T.red}>shift weakness each turn</Strong>.</p>
       </div>
 
       <div style={Card}>
@@ -875,7 +875,8 @@ function HowTo({back,go}){
           <div><span style={{color:medalColors.bronze}}>🥉 Bronze</span> = <Strong c={medalColors.bronze}>10 damage</Strong></div>
           <div><span style={{color:T.dim}}>❌ Miss</span> = <Strong c={T.dim}>0 damage</Strong></div>
         </div>
-        <p style={{...P,margin:0}}>Some moves are steady. Others are risky but explosive. A <Strong>4×100m Relay</Strong>, for example, might have a big gold chance but no silver chance.</p>
+        <p style={P}>Some moves are steady. Others are risky but explosive. A <Strong>4×100m Relay</Strong>, for example, might have a big gold chance but no silver chance.</p>
+        <p style={{...P,margin:0}}>Each spirit has <Strong c={T.gold}>3 SP</Strong> — three attacks before they need to recover. When SP runs out, or when every move is blocked by the monster's ability, a <Strong c={T.grn}>💤 REST</Strong> option appears: spend the turn to gain <Strong c={T.grn}>+5 HP and +1 SP</Strong>. Tap a teammate's number badge to swap who's active mid-fight.</p>
       </div>
 
       <div style={Card}>
