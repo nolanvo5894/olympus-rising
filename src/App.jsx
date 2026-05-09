@@ -500,6 +500,11 @@ function simulateBattle(team,monsters,numSims=1000,regionId="",bodyTop5=[]){
   return{winRate:Math.round(wins/numSims*100),avgDmg:Math.round(damages.reduce((a,b)=>a+b,0)/numSims),damages,wins,numSims};
 }
 
+const NIL_RULES=`RULES:
+- NEVER mention any real athlete by name (no first name, last name, nickname, or initials).
+- NEVER include biographical details that identify a real athlete (hometown, birth year, specific Olympics, specific medal counts tied to a person).
+- You MAY discuss the sport itself, Team USA team-level achievements, sport history, rules, equipment, and aggregate stats.`;
+
 async function gemini(p){try{return await geminiText(p);}catch(e){console.warn("[gemini text]",e);return"";}}
 
 // ── Theme ───────────────────────────────────────────────────
@@ -1109,7 +1114,7 @@ function Scout({opts,lockIn,round,rgn,bodyTop5=[]}){
   const [ins,setIns]=useState({});const [ld,setLd]=useState({});
   const rg=REGIONS.find(r=>r.id===rgn);
   const toggle=s=>{setSel(p=>{const n=new Set(p);if(n.has(s.id))n.delete(s.id);else if(n.size<3)n.add(s.id);return n;});};
-  const explore=async s=>{if(exp===s.id){setExp(null);return;}setExp(s.id);if(!ins[s.id]){setLd(p=>({...p,[s.id]:true}));const best=s.moves.reduce((a,b)=>b[2]>a[2]?b:a);const aff=s.regions.includes(rgn)||rgn==="la28";const t=await gemini(`Oracle in Team USA card game. Spirit: "${s.sport}" (${s.para?"Paralympic":"Olympic"}) with ${s.moves.length} event moves. Best move: "${best[1]}" (in-game name: "${best[0]}") has ${Math.round(best[2]*100)}% gold rate. ${aff?"+50% affinity with "+rg?.name+".":""} 2 sentences for a 12-year-old: what the gold rate means in real life, one cool fact about this sport in Team USA history. Brief, exciting.`);setIns(p=>({...p,[s.id]:t||`${s.sport} has ${s.moves.length} moves. Best gold rate: ${Math.round(best[2]*100)}%. ${aff?"Strong here!":"A solid pick."}`}));setLd(p=>({...p,[s.id]:false}));}};
+  const explore=async s=>{if(exp===s.id){setExp(null);return;}setExp(s.id);if(!ins[s.id]){setLd(p=>({...p,[s.id]:true}));const best=s.moves.reduce((a,b)=>b[2]>a[2]?b:a);const aff=s.regions.includes(rgn)||rgn==="la28";const t=await gemini(`Oracle in Team USA card game. Spirit: "${s.sport}" (${s.para?"Paralympic":"Olympic"}) with ${s.moves.length} event moves. Best move: "${best[1]}" (in-game name: "${best[0]}") has ${Math.round(best[2]*100)}% gold rate. ${aff?"+50% affinity with "+rg?.name+".":""} 2 sentences for a 12-year-old: what the gold rate means in real life, one cool fact about the sport itself in Team USA history. Brief, exciting.\n${NIL_RULES}`);setIns(p=>({...p,[s.id]:t||`${s.sport} has ${s.moves.length} moves. Best gold rate: ${Math.round(best[2]*100)}%. ${aff?"Strong here!":"A solid pick."}`}));setLd(p=>({...p,[s.id]:false}));}};
   const team=opts.filter(s=>sel.has(s.id));
   const syn=team.length===3?detectSynergies(team,rgn):null;
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:16,gap:12}}>
@@ -1181,8 +1186,7 @@ function Trivia({spirit,onComplete}){
     const timeout=setTimeout(()=>{if(!cancelled&&!qData){const fb=getFallback();setQData(fb);setLoading(false);}},8000);
     (async()=>{
       const raw=await gemini(`You are a trivia generator for a Team USA Olympic education game. Generate ONE trivia question about the sport "${spirit.sport}".
-RULES:
-- NEVER mention any individual athlete by name
+${NIL_RULES}
 - Only ask about: sport rules, equipment, scoring, Team USA team-level achievements, Olympic history of this sport, or general facts
 - Make it fun and educational for a 12-year-old
 Return ONLY valid JSON, no other text: {"q":"the question","c":["choice A","choice B","choice C","choice D"],"a":0}
@@ -1523,7 +1527,7 @@ function SimScreen({team,monsters,regionId,bodyTop5,onContinue}){
 
 function Debrief({monsters,won,cards,rgn,round,next}){
   const [txt,setTxt]=useState(null);const rg=REGIONS.find(r=>r.id===rgn);
-  useEffect(()=>{gemini(`In one or two short sentences, share a real, interesting historical fact about Team USA Olympic or Paralympic athletes from the ${rg?.name} region (${rg?.states}). Mention a specific athlete, medal, hometown, or milestone if you can. No introductions or framing — just the fact.`).then(t=>setTxt(t||`${rg?.name} has produced champions across many decades of Olympic and Paralympic competition.`));},[]);
+  useEffect(()=>{gemini(`In one or two short sentences, share a real, interesting historical fact about Team USA Olympic or Paralympic competition tied to the ${rg?.name} region (${rg?.states}). Focus on team-level achievements, sport milestones, host cities, training hubs, or regional sport culture. ${NIL_RULES}\nNo introductions or framing — just the fact.`).then(t=>setTxt(t||`${rg?.name} has produced champions across many decades of Olympic and Paralympic competition.`));},[]);
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:24,gap:18,maxWidth:680,margin:"0 auto",textAlign:"center"}}>
     <div style={{fontSize:48}}>{won?"🛡️":"💀"}</div>
     <h2 style={{fontFamily:T.hd,color:won?T.grn:T.red,margin:0,fontSize:24,letterSpacing:3,textShadow:`0 0 12px ${won?T.grn:T.red}66`}}>{won?`${rg?.name} Defended!`:`${rg?.name} Falls`}</h2>
