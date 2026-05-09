@@ -378,8 +378,6 @@ const shuffle=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.ra
 const HP=100; // flat HP for all spirits
 const totalRate=m=>m[2]+m[3]+m[4];
 const bestGold=s=>Math.max(...s.moves.map(m=>m[2]));
-const tier=s=>{const g=bestGold(s);return g>=.30?{n:"Elite",c:"#ffd400"}:g>=.18?{n:"Strong",c:"#ff2d95"}:g>=.10?{n:"Solid",c:"#22e0ff"}:{n:"Underdog",c:"#9a7fc0"};};
-
 function rollMove(move,affinity,bodyAff,synergies={}){
   const [name,event,g,s,b,kw]=move;
   const r=Math.random();
@@ -500,12 +498,11 @@ function MoveBar({move}){
 }
 
 function SpiritCard({spirit:s,compact,selected,onClick,disabled,showHp,hp:curHp,rgn,bodyMatch:bm}){
-  const t=tier(s);const bc=s.para?T.para:t.c;const aff=rgn&&(s.regions.includes(rgn)||rgn==="la28");
+  const bc=s.para?T.para:T.gold;const aff=rgn&&(s.regions.includes(rgn)||rgn==="la28");
   return(<div onClick={disabled?undefined:onClick} style={{width:compact?130:230,minHeight:compact?undefined:280,height:compact?undefined:"100%",background:`linear-gradient(150deg,${T.s1},${T.s2})`,border:`2px solid ${selected?bc:bc+"44"}`,borderRadius:12,padding:compact?7:12,cursor:disabled?"default":"pointer",opacity:disabled?.3:1,transition:"all .25s",boxShadow:selected?`0 0 18px ${bc}55`:"none",position:"relative",display:"flex",flexDirection:"column",gap:compact?2:5}}>
     {aff&&!compact&&<div style={{position:"absolute",top:3,left:6,fontSize:16,background:T.grn+"22",color:T.grn,padding:"1px 5px",borderRadius:3,fontFamily:T.hd}}>+50%</div>}
     {bm&&!compact&&<div style={{position:"absolute",top:aff?18:3,left:6,fontSize:16,background:T.blu+"22",color:T.blu,padding:"1px 5px",borderRadius:3,fontFamily:T.hd}}>💪+15%</div>}
-    <div style={{fontSize:compact?7:8,color:t.c,fontFamily:T.hd,letterSpacing:1.5,marginTop:aff?10:0}}>{t.n}</div>
-    <div style={{display:"flex",justifyContent:"center"}}>
+    <div style={{display:"flex",justifyContent:"center",marginTop:!compact&&(aff||bm)?(aff&&bm?30:16):0}}>
       <SportAvatar sport={s.sport} emoji={s.emoji} size={compact?60:96} radius={6}/>
     </div>
     <div style={{fontSize:compact?12:16,marginTop:compact?0:2,textAlign:"center"}}><span style={{fontFamily:T.hd,fontWeight:700,color:T.txt}}>{s.sport}</span></div>
@@ -940,7 +937,6 @@ function Explorer({back}){
 }
 
 function SportDetail({spirit,stats,body,back}){
-  const t=tier(spirit);
   const decadeData=Object.entries(stats.medalsByDecade||{}).map(([dec,v])=>({decade:dec+"s",gold:v[0],silver:v[1],bronze:v[2]}));
   const totalMedals=stats.totalMedals.gold+stats.totalMedals.silver+stats.totalMedals.bronze;
   const genderTotal=(stats.gender.Male||0)+(stats.gender.Female||0);
@@ -957,7 +953,6 @@ function SportDetail({spirit,stats,body,back}){
       <SportAvatar sport={spirit.sport} emoji={spirit.emoji} size={160} radius={14} style={{margin:"0 auto",boxShadow:`0 0 20px ${T.gold}55`,border:`2px solid ${T.gold}66`}}/>
       <h2 style={{fontFamily:T.hd,fontSize:26,color:T.gold,margin:"10px 0 4px"}}>{spirit.sport}</h2>
       <div style={{display:"flex",gap:6,justifyContent:"center",flexWrap:"wrap"}}>
-        <span style={{fontSize:17,background:t.c+"22",color:t.c,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>{t.n}</span>
         <span style={{fontSize:17,background:T.blu+"22",color:T.blu,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>{stats.season}</span>
         {stats.la28&&<span style={{fontSize:17,background:T.grn+"22",color:T.grn,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>{stats.isNew?"NEW AT LA28":"IN LA28"}</span>}
         {spirit.para&&<span style={{fontSize:17,background:T.para+"22",color:T.para,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>PARALYMPIC</span>}
