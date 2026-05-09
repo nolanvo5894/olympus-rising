@@ -1,0 +1,256 @@
+{
+  "Alpine Skiing": [
+    "mountain",
+    "northeast",
+    "pacific"
+  ],
+  "Archery": [
+    "heartland",
+    "pacific",
+    "mountain"
+  ],
+  "Baseball": [
+    "south",
+    "southwest",
+    "pacific"
+  ],
+  "Basketball": [
+    "heartland",
+    "pacific",
+    "northeast"
+  ],
+  "Boxing": [
+    "heartland",
+    "pacific",
+    "south"
+  ],
+  "Canoe / Kayak": [
+    "pacific",
+    "capital",
+    "south"
+  ],
+  "Cycling": [
+    "pacific",
+    "mountain",
+    "northeast"
+  ],
+  "Diving": [
+    "pacific",
+    "heartland",
+    "south"
+  ],
+  "Equestrian": [
+    "northeast",
+    "south",
+    "pacific"
+  ],
+  "Fencing": [
+    "northeast",
+    "pacific",
+    "heartland"
+  ],
+  "Figure Skating": [
+    "heartland",
+    "pacific",
+    "northeast"
+  ],
+  "Freestyle Skiing": [
+    "mountain",
+    "northeast",
+    "heartland"
+  ],
+  "Goalball": [
+    "heartland",
+    "south",
+    "northeast"
+  ],
+  "Golf": [
+    "south",
+    "pacific",
+    "southwest"
+  ],
+  "Gymnastics": [
+    "southwest",
+    "heartland",
+    "northeast"
+  ],
+  "Ice Hockey": [
+    "heartland",
+    "northeast",
+    "mountain"
+  ],
+  "Judo": [
+    "heartland",
+    "mountain",
+    "pacific"
+  ],
+  "Modern Pentathlon": [
+    "mountain",
+    "south",
+    "northeast"
+  ],
+  "Para Alpine": [
+    "mountain",
+    "northeast",
+    "pacific"
+  ],
+  "Para Archery": [
+    "southwest",
+    "heartland",
+    "south"
+  ],
+  "Para Cycling": [
+    "pacific",
+    "heartland",
+    "northeast"
+  ],
+  "Para Nordic": [
+    "mountain",
+    "northeast",
+    "heartland"
+  ],
+  "Para Powerlifting": [
+    "south",
+    "heartland",
+    "pacific"
+  ],
+  "Para Swimming": [
+    "pacific",
+    "heartland",
+    "south"
+  ],
+  "Para Track & Field": [
+    "pacific",
+    "heartland",
+    "south"
+  ],
+  "Para Triathlon": [
+    "mountain",
+    "pacific",
+    "heartland"
+  ],
+  "Rowing": [
+    "northeast",
+    "pacific",
+    "heartland"
+  ],
+  "Rugby Sevens": [
+    "pacific",
+    "northeast",
+    "heartland"
+  ],
+  "Sailing": [
+    "pacific",
+    "south",
+    "northeast"
+  ],
+  "Shooting": [
+    "south",
+    "southwest",
+    "pacific"
+  ],
+  "Sitting Volleyball": [
+    "southwest",
+    "south",
+    "pacific"
+  ],
+  "Skateboarding": [
+    "pacific",
+    "southwest",
+    "south"
+  ],
+  "Sled Hockey": [
+    "northeast",
+    "heartland",
+    "south"
+  ],
+  "Snowboarding": [
+    "mountain",
+    "pacific",
+    "northeast"
+  ],
+  "Softball": [
+    "pacific",
+    "southwest",
+    "heartland"
+  ],
+  "Speed Skating": [
+    "heartland",
+    "northeast",
+    "south"
+  ],
+  "Sport Climbing": [
+    "mountain",
+    "heartland",
+    "southwest"
+  ],
+  "Surfing": [
+    "pacific",
+    "south"
+  ],
+  "Swimming": [
+    "pacific",
+    "south",
+    "capital"
+  ],
+  "Table Tennis": [
+    "pacific",
+    "northeast",
+    "heartland"
+  ],
+  "Taekwondo": [
+    "southwest",
+    "heartland",
+    "pacific"
+  ],
+  "Tennis": [
+    "south",
+    "pacific",
+    "heartland"
+  ],
+  "Track & Field": [
+    "heartland",
+    "pacific",
+    "south"
+  ],
+  "Triathlon": [
+    "northeast",
+    "heartland",
+    "mountain"
+  ],
+  "Volleyball": [
+    "pacific",
+    "heartland",
+    "southwest"
+  ],
+  "Water Polo": [
+    "pacific",
+    "south",
+    "northeast"
+  ],
+  "Weightlifting": [
+    "pacific",
+    "south",
+    "heartland"
+  ],
+  "Wheelchair Basketball": [
+    "heartland",
+    "pacific",
+    "south"
+  ],
+  "Wheelchair Rugby": [
+    "heartland",
+    "pacific",
+    "mountain"
+  ],
+  "Wheelchair Tennis": [
+    "pacific",
+    "heartland",
+    "south"
+  ],
+  "Wrestling": [
+    "heartland",
+    "northeast",
+    "capital"
+  ]
+}

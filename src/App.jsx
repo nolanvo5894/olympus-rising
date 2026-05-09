@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import medalRatesData from "./datasets/medal_rates.json";
 import sportStatsData from "./datasets/sport_stats.json";
+import regionSportStrengthData from "./datasets/region_sport_strength.json";
 import { geminiText, geminiImage, hasApiKey, GeminiKeyMissingError } from "./lib/gemini.js";
 import { generateMonster, pickSpawnBasis, buildImagePrompt } from "./lib/monsterGen.js";
 import { generateMonsterQueued } from "./lib/genQueue.js";
@@ -357,34 +358,9 @@ const SPIRITS=[
 
 // ── Data-driven regional sport strengths (regenerated from CSV hometown data) ──
 // For each sport: regions where it has ≥15% of its athletes OR is in the top 2.
-const REGION_SPORT_STRENGTH={
-  "Swimming":["pacific","heartland","south"],"Track & Field":["pacific","south","heartland"],
-  "Gymnastics":["southwest","northeast","heartland","pacific"],"Basketball":["heartland","pacific","south","northeast"],
-  "Wrestling":["heartland","northeast"],"Rowing":["northeast","pacific","heartland"],
-  "Shooting":["south","mountain","southwest"],"Diving":["heartland","pacific","south","southwest"],
-  "Fencing":["northeast","pacific"],"Boxing":["pacific","heartland","southwest"],
-  "Volleyball":["pacific","heartland"],"Water Polo":["pacific","northeast"],
-  "Surfing":["pacific","south"],"Skateboarding":["pacific","southwest","south"],
-  "Alpine Skiing":["mountain","pacific","northeast"],"Ice Hockey":["heartland","northeast"],
-  "Snowboarding":["mountain","pacific","northeast"],"Golf":["south","pacific","southwest"],
-  "Tennis":["south","pacific"],"Archery":["pacific","heartland","northeast"],
-  "Cycling":["pacific","mountain"],"Sailing":["south","pacific"],
-  "Figure Skating":["pacific","heartland","northeast"],"Speed Skating":["heartland","northeast"],
-  "Judo":["heartland","northeast","mountain","pacific"],"Triathlon":["northeast","mountain","pacific"],
-  "Weightlifting":["south","pacific","heartland"],"Baseball":["south","northeast","southwest","pacific"],"Softball":["pacific","heartland"],
-  "Rugby Sevens":["pacific","heartland"],"Sport Climbing":["mountain","heartland"],
-  "Table Tennis":["pacific","northeast","southwest"],"Equestrian":["south","northeast","pacific"],
-  "Freestyle Skiing":["mountain","northeast"],"Canoe / Kayak":["pacific","capital","south"],
-  "Taekwondo":["southwest","pacific","heartland"],"Modern Pentathlon":["south","mountain","southwest","northeast"],
-  "Flag Football":["heartland","south","southwest"],
-  "Para Swimming":["heartland","south","northeast"],"Para Track & Field":["pacific","heartland","south"],
-  "Wheelchair Rugby":["heartland","pacific","northeast","mountain"],"Sitting Volleyball":["south","southwest","pacific","heartland"],
-  "Wheelchair Basketball":["heartland","pacific"],"Sled Hockey":["northeast","south","heartland"],
-  "Para Alpine":["mountain","northeast","pacific"],"Para Nordic":["heartland","mountain","pacific"],
-  "Para Cycling":["pacific","northeast"],"Para Archery":["heartland","pacific","south","southwest"],
-  "Goalball":["heartland","south"],"Para Powerlifting":["south","heartland","pacific"],
-  "Para Triathlon":["heartland","mountain","south","northeast"],"Wheelchair Tennis":["pacific","heartland","south"],
-};
+// Region strongholds derived from data/team_usa_athletes_unified.csv —
+// see scripts/compute_region_sport_strength.py to regenerate.
+const REGION_SPORT_STRENGTH=regionSportStrengthData;
 // Apply data-driven regions to all spirits
 SPIRITS.forEach(s=>{if(REGION_SPORT_STRENGTH[s.sport])s.regions=REGION_SPORT_STRENGTH[s.sport];});
 
