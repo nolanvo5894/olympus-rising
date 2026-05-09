@@ -1318,9 +1318,9 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
         // Attack
         const liveS=ns2.map((x,i)=>({...x,_i:i})).filter(x=>x.hp>0);
         if(!liveS.length)break;
-        const dmg=12+round*6;
+        const dmg=20+round*9;
         if(mon.special==="aoe"){
-          const aoeD=10+round*3;
+          const aoeD=15+round*5;
           // Check ADAPT
           const adapted=syn.paraAlliance?ns2.find(x=>x.au&&!x.ac&&x.hp>0):ns2.find(x=>x.au&&!x.ac&&x.hp>0&&x.para);
           if(adapted){ml.push(`⚡ ${adapted.sport} ADAPT shields the team from ${mon.name}!`);ns2=ns2.map(x=>x.id===adapted.id?{...x,ac:true}:x);}
