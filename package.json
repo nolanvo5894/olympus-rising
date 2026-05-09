@@ -6,9 +6,13 @@
   "scripts": {
     "dev": "vite --port 5173",
     "build": "vite build",
+    "start": "node server.js",
     "gen:avatars": "node --env-file=.env.local scripts/generate-sport-avatars.js",
     "gen:monsters": "node --env-file=.env.local scripts/generate-region-monsters.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +24,7 @@
   },
   "dependencies": {
     "@google/genai": "^1.50.1",
+    "express": "^5.2.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "recharts": "^3.8.1"

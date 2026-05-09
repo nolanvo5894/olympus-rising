@@ -18,16 +18,44 @@ cp .env.example .env.local
 npm run dev        # http://localhost:5173
 ```
 
-⚠️ **Dev only**: `VITE_*` vars are bundled into the client. Before deploying
-publicly, route Gemini calls through a server-side proxy (e.g. Cloud Run)
-that holds the key.
+⚠️ `VITE_*` vars are bundled into the client — only safe locally. Production
+runs through `server.js`, which keeps the key server-side (see "Deploy" below).
 
 ## Scripts
 
 | Script | What it does |
 |---|---|
-| `npm run dev`   | Vite dev server on port 5173 |
+| `npm run dev`   | Vite dev server on port 5173 (calls Gemini directly with `VITE_GEMINI_API_KEY`) |
 | `npm run build` | Production build into `dist/` |
+| `npm start`     | Run `server.js` — serves `dist/` and proxies `/api/gemini-*` using `GEMINI_API_KEY` |
+
+## Deploy (Cloud Run)
+
+```bash
+# one-time GCP setup
+PROJECT_ID=olympus-rising-$(date +%s | tail -c 6)
+gcloud projects create "$PROJECT_ID" --name="Olympus Rising"
+gcloud config set project "$PROJECT_ID"
+BILLING=$(gcloud billing accounts list --filter=open=true --format="value(name)" --limit=1)
+gcloud billing projects link "$PROJECT_ID" --billing-account="$BILLING"
+gcloud services enable run.googleapis.com cloudbuild.googleapis.com \
+  artifactregistry.googleapis.com secretmanager.googleapis.com
+
+# store the API key in Secret Manager
+KEY=$(grep '^VITE_GEMINI_API_KEY=' .env.local | cut -d= -f2-)
+printf '%s' "$KEY" | gcloud secrets create GEMINI_API_KEY \
+  --data-file=- --replication-policy=automatic
+PROJECT_NUMBER=$(gcloud projects describe "$PROJECT_ID" --format="value(projectNumber)")
+gcloud secrets add-iam-policy-binding GEMINI_API_KEY \
+  --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
+  --role=roles/secretmanager.secretAccessor
+
+# deploy
+gcloud run deploy olympus-rising --source=. --region=us-central1 \
+  --allow-unauthenticated \
+  --set-secrets=GEMINI_API_KEY=GEMINI_API_KEY:latest \
+  --memory=512Mi --cpu=1 --max-instances=3
+```
 
 ## Data pipeline
 

@@ -1,0 +1,22 @@
+node_modules
+dist
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+.DS_Store
+.claude
+.venv
+__pycache__
+*.pyc
+
+# raw datasets / scrape scripts not needed in the container
+data
+scripts
+
+# auxiliary HTML mockups
+mockup-*.html
+prompt-lab.html
+
+README.md
