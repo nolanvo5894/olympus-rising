@@ -1271,7 +1271,8 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
 
     if(isRest){
       ns[activeIdx].hp=Math.min(HP,ns[activeIdx].hp+5);
-      nl.push(`${s.emoji} ${s.sport} rests and heals 5 HP.`);
+      ns[activeIdx].sp=Math.min(SP_MAX,ns[activeIdx].sp+1);
+      nl.push(`${s.emoji} ${s.sport} rests — +5 HP, +1 SP.`);
     }else{
       ns[activeIdx].sp--;
       const anyBlock=target.special==="block_weak"&&totalRate(move)<.25;
@@ -1374,7 +1375,7 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
             </div>
             <div style={{marginTop:4}}><PixelBar hp={active.hp} max={HP} color={active.hp>HP*.4?T.grn:T.red} height={7} segments={20}/></div>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:4,gap:8}}>
-              <span style={{display:"flex",gap:3}}>{spirits.map((s,i)=>(<button key={s.id} onClick={()=>{if(s.hp>0&&ph==="player"&&s.sp>0)setActiveIdx(i);}} title={s.sport} style={{width:18,height:18,padding:0,background:i===activeIdx?T.gold:s.hp<=0?T.fnt:"transparent",border:`1px solid ${i===activeIdx?T.gold:s.hp<=0?T.fnt:T.pur}`,color:i===activeIdx?T.bg:s.hp<=0?T.bg:T.txt,fontFamily:T.hd,fontSize:11,cursor:s.hp>0&&ph==="player"&&i!==activeIdx?"pointer":"default",opacity:s.hp<=0?.4:1}}>{i+1}</button>))}</span>
+              <span style={{display:"flex",gap:3}}>{spirits.map((s,i)=>(<button key={s.id} onClick={()=>{if(s.hp>0&&ph==="player")setActiveIdx(i);}} title={s.sport} style={{width:18,height:18,padding:0,background:i===activeIdx?T.gold:s.hp<=0?T.fnt:"transparent",border:`1px solid ${i===activeIdx?T.gold:s.hp<=0?T.fnt:T.pur}`,color:i===activeIdx?T.bg:s.hp<=0?T.bg:T.txt,fontFamily:T.hd,fontSize:11,cursor:s.hp>0&&ph==="player"&&i!==activeIdx?"pointer":"default",opacity:s.hp<=0?.4:1}}>{i+1}</button>))}</span>
               <span style={{display:"flex",gap:2,alignItems:"center"}}><span style={{fontFamily:T.hd,fontSize:13,color:T.dim,marginRight:4}}>SP</span>{Array.from({length:SP_MAX},(_,j)=><span key={j} style={{width:6,height:6,background:j<active.sp?T.gold:T.fnt,boxShadow:j<active.sp?`0 0 3px ${T.gold}`:"none"}}/>)}</span>
               {active.para&&!active.ac&&active.hp>0&&ph!=="done"&&<button onClick={()=>{if(!active.au)setSpirits(p=>p.map((x,j)=>j===activeIdx?{...x,au:true}:x));}} style={{fontSize:13,background:active.au?T.para+"33":"transparent",border:`1px solid ${active.au?T.para:T.fnt}`,color:active.au?T.para:T.dim,padding:"2px 8px",cursor:"pointer",fontFamily:T.hd,letterSpacing:1}}>{active.au?"⚡ARMED":"⚡ARM"}</button>}
             </div>
@@ -1456,7 +1457,7 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
             {blocked&&<div style={{fontFamily:T.hd,fontSize:14,color:T.red,letterSpacing:2,marginTop:1}}>BLOCKED</div>}
           </div>
         </div>);})}
-        {ph==="player"&&active&&active.hp>0&&active.sp<=0&&<div onClick={()=>setSelMove("rest")} style={{padding:"10px",cursor:"pointer",background:selMove==="rest"?T.grn+"22":"transparent",border:`2px solid ${selMove==="rest"?T.grn:T.fnt}`,textAlign:"center",fontFamily:T.hd,fontSize:18,color:T.grn,letterSpacing:2}}>💤 REST · HEAL 5 HP</div>}
+        {ph==="player"&&active&&active.hp>0&&(active.sp<=0||(target?.special==="block_weak"&&active.moves.every(m=>totalRate(m)<.25)))&&<div onClick={()=>setSelMove("rest")} style={{padding:"10px",cursor:"pointer",background:selMove==="rest"?T.grn+"22":"transparent",border:`2px solid ${selMove==="rest"?T.grn:T.fnt}`,textAlign:"center",fontFamily:T.hd,fontSize:18,color:T.grn,letterSpacing:2}}>💤 REST · +5 HP, +1 SP</div>}
         {ph==="player"&&active&&active.hp>0&&<button onClick={doAttack} disabled={selMove==null} style={{width:"100%",marginTop:8,fontFamily:T.hd,fontSize:19,letterSpacing:3,padding:"12px",background:selMove==null?"transparent":T.gold,color:selMove==null?T.dim:T.bg,border:`3px solid ${selMove==null?T.fnt:T.gold}`,cursor:selMove==null?"default":"pointer",boxShadow:selMove==null?"none":`0 0 16px ${T.gold}, 4px 4px 0 ${T.red}`,fontWeight:700}}>{selMove==null?"PICK A MOVE":"★ STRIKE! ★"}</button>}
         {ph==="done"&&<button onClick={()=>finish(won,spirits)} style={{width:"100%",marginTop:8,fontFamily:T.hd,fontSize:19,letterSpacing:3,padding:"12px",background:won?T.grn:T.pur,color:T.bg,border:`3px solid ${won?T.grn:T.pur}`,cursor:"pointer",boxShadow:`0 0 14px ${won?T.grn:T.pur}, 4px 4px 0 ${T.red}`,fontWeight:700}}>{won?"★ CONTINUE ★":"INSERT COIN →"}</button>}
       </div>
