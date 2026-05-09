@@ -82,7 +82,9 @@ const REGIONS=[
 ];
 
 // ── Spirits (1 per sport, moves = events) ───────────────────
-// Move: [name, gold%, silver%, bronze%, keyword|null]
+// Move: [name, event, gold%, silver%, bronze%, keyword|null]
+// `name` is the in-game ability name; `event` is the real Olympic event the
+// stats are sourced from (still used as the MEDAL_RATES lookup key).
 // Keywords: RELAY=hit twice on gold, ENDURANCE=heal 8 on hit, EXPLOSIVE=double gold dmg, PRECISION=+10 on silver/gold
 // ── Medal rates loaded from pre-computed JSON (run compute_medal_rates.py to regenerate) ──
 const MEDAL_RATES=medalRatesData.rates;
@@ -104,252 +106,252 @@ function r(sport,move){return rateFor(sport,move)||FALLBACK_RATES[sport+"|"+move
 const SPIRITS=[
   // ── Olympic spirits — rates from datasets/medal_rates.json ──
   {id:"swimming",sport:"Swimming",emoji:"🏊",para:false,regions:["pacific","capital","south"],moves:[
-    ["100m Freestyle",...r("Swimming","100m Freestyle"),null],
-    ["200m Butterfly",...r("Swimming","200m Butterfly"),null],
-    ["4×100m Medley Relay",...r("Swimming","4×100m Medley Relay"),"RELAY"],
-    ["10km Open Water",...r("Swimming","10km Open Water"),"ENDURANCE"],
-    ["200m Backstroke",...r("Swimming","200m Backstroke"),null],
+    ["Aegean Surge","100m Freestyle",...r("Swimming","100m Freestyle"),null],
+    ["Wingéd Tide","200m Butterfly",...r("Swimming","200m Butterfly"),null],
+    ["Triton Procession","4×100m Medley Relay",...r("Swimming","4×100m Medley Relay"),"RELAY"],
+    ["Long Crossing","10km Open Water",...r("Swimming","10km Open Water"),"ENDURANCE"],
+    ["Reverse Current","200m Backstroke",...r("Swimming","200m Backstroke"),null],
   ]},
   {id:"track",sport:"Track & Field",emoji:"🏃",para:false,regions:["southwest","south","capital"],moves:[
-    ["100m Sprint",...r("Track & Field","100m Sprint"),"EXPLOSIVE"],
-    ["400m Hurdles",...r("Track & Field","400m Hurdles"),null],
-    ["4×400m Relay",...r("Track & Field","4×400m Relay"),"RELAY"],
-    ["Marathon",...r("Track & Field","Marathon"),"ENDURANCE"],
-    ["Shot Put",...r("Track & Field","Shot Put"),null],
+    ["Hermes Burst","100m Sprint",...r("Track & Field","100m Sprint"),"EXPLOSIVE"],
+    ["Leaping Stride","400m Hurdles",...r("Track & Field","400m Hurdles"),null],
+    ["Olympian Chain","4×400m Relay",...r("Track & Field","4×400m Relay"),"RELAY"],
+    ["Pheidippides' March","Marathon",...r("Track & Field","Marathon"),"ENDURANCE"],
+    ["Atlas Heave","Shot Put",...r("Track & Field","Shot Put"),null],
   ]},
   {id:"gymnastics",sport:"Gymnastics",emoji:"🤸",para:false,regions:["southwest","south"],moves:[
-    ["All-Around",...r("Gymnastics","All-Around"),null],
-    ["Floor Exercise",...r("Gymnastics","Floor Exercise"),null],
-    ["Vault",...r("Gymnastics","Vault"),null],
-    ["Balance Beam",...r("Gymnastics","Balance Beam"),null],
+    ["Polymath's Display","All-Around",...r("Gymnastics","All-Around"),null],
+    ["Mortal Dance","Floor Exercise",...r("Gymnastics","Floor Exercise"),null],
+    ["Sky-Vault","Vault",...r("Gymnastics","Vault"),null],
+    ["Threadwalk","Balance Beam",...r("Gymnastics","Balance Beam"),null],
   ]},
   {id:"basketball",sport:"Basketball",emoji:"🏀",para:false,regions:["south","northeast","heartland"],moves:[
-    ["Men's Tournament",...r("Basketball","Men's Tournament"),"RELAY"],
-    ["Women's Tournament",...r("Basketball","Women's Tournament"),"RELAY"],
+    ["Phalanx Court","Men's Tournament",...r("Basketball","Men's Tournament"),"RELAY"],
+    ["Amazon Court","Women's Tournament",...r("Basketball","Women's Tournament"),"RELAY"],
   ]},
   {id:"wrestling",sport:"Wrestling",emoji:"🤼",para:false,regions:["heartland","southwest"],moves:[
-    ["Freestyle 74kg",...r("Wrestling","Freestyle 74kg"),null],
-    ["Greco-Roman 67kg",...r("Wrestling","Greco-Roman 67kg"),null],
-    ["Women's Freestyle 57kg",...r("Wrestling","Women's Freestyle 57kg"),null],
+    ["Lion's Grasp","Freestyle 74kg",...r("Wrestling","Freestyle 74kg"),null],
+    ["Spartan Lock","Greco-Roman 67kg",...r("Wrestling","Greco-Roman 67kg"),null],
+    ["Atalanta's Hold","Women's Freestyle 57kg",...r("Wrestling","Women's Freestyle 57kg"),null],
   ]},
   {id:"rowing",sport:"Rowing",emoji:"🚣",para:false,regions:["northeast","capital","heartland"],moves:[
-    ["Men's Eight",...r("Rowing","Men's Eight"),"RELAY"],
-    ["Women's Single Sculls",...r("Rowing","Women's Single Sculls"),"ENDURANCE"],
-    ["Men's Coxless Pair",...r("Rowing","Men's Coxless Pair"),null],
+    ["Argo's Eight","Men's Eight",...r("Rowing","Men's Eight"),"RELAY"],
+    ["Lone Oar","Women's Single Sculls",...r("Rowing","Women's Single Sculls"),"ENDURANCE"],
+    ["Twin Tide","Men's Coxless Pair",...r("Rowing","Men's Coxless Pair"),null],
   ]},
   {id:"shooting",sport:"Shooting",emoji:"🎯",para:false,regions:["mountain","heartland"],moves:[
-    ["Air Rifle 10m",...r("Shooting","Air Rifle 10m"),"PRECISION"],
-    ["Skeet",...r("Shooting","Skeet"),"PRECISION"],
-    ["Rapid Fire Pistol",...r("Shooting","Rapid Fire Pistol"),"PRECISION"],
+    ["Apollo's Eye","Air Rifle 10m",...r("Shooting","Air Rifle 10m"),"PRECISION"],
+    ["Skybreaker","Skeet",...r("Shooting","Skeet"),"PRECISION"],
+    ["Lightning Hand","Rapid Fire Pistol",...r("Shooting","Rapid Fire Pistol"),"PRECISION"],
   ]},
   {id:"diving",sport:"Diving",emoji:"🤿",para:false,regions:["pacific","south"],moves:[
-    ["10m Platform",...r("Diving","10m Platform"),"PRECISION"],
-    ["3m Springboard",...r("Diving","3m Springboard"),"PRECISION"],
-    ["Synchro 10m",...r("Diving","Synchro 10m"),null],
+    ["Icarus Plunge","10m Platform",...r("Diving","10m Platform"),"PRECISION"],
+    ["Naiad's Leap","3m Springboard",...r("Diving","3m Springboard"),"PRECISION"],
+    ["Twin Plunge","Synchro 10m",...r("Diving","Synchro 10m"),null],
   ]},
   {id:"fencing",sport:"Fencing",emoji:"🤺",para:false,regions:["northeast","capital"],moves:[
-    ["Foil Individual",...r("Fencing","Foil Individual"),null],
-    ["Épée Team",...r("Fencing","Épée Team"),"RELAY"],
-    ["Sabre Individual",...r("Fencing","Sabre Individual"),null],
+    ["Foil's Whisper","Foil Individual",...r("Fencing","Foil Individual"),null],
+    ["Blade Pact","Épée Team",...r("Fencing","Épée Team"),"RELAY"],
+    ["Sabre Crescent","Sabre Individual",...r("Fencing","Sabre Individual"),null],
   ]},
   {id:"boxing",sport:"Boxing",emoji:"🥊",para:false,regions:["southwest","northeast"],moves:[
-    ["Welterweight",...r("Boxing","Welterweight"),"EXPLOSIVE"],
-    ["Lightweight",...r("Boxing","Lightweight"),null],
-    ["Heavyweight",...r("Boxing","Heavyweight"),"EXPLOSIVE"],
+    ["Bronze Hook","Welterweight",...r("Boxing","Welterweight"),"EXPLOSIVE"],
+    ["Featherjab","Lightweight",...r("Boxing","Lightweight"),null],
+    ["Hephaestus Hammer","Heavyweight",...r("Boxing","Heavyweight"),"EXPLOSIVE"],
   ]},
   {id:"volleyball",sport:"Volleyball",emoji:"🏐",para:false,regions:["northeast","heartland"],moves:[
-    ["Indoor Men's",...r("Volleyball","Indoor Men's"),"RELAY"],
-    ["Indoor Women's",...r("Volleyball","Indoor Women's"),"RELAY"],
-    ["Beach Volleyball",...r("Volleyball","Beach Volleyball"),null],
+    ["Skyline Pact","Indoor Men's",...r("Volleyball","Indoor Men's"),"RELAY"],
+    ["Nike's Spike","Indoor Women's",...r("Volleyball","Indoor Women's"),"RELAY"],
+    ["Sandkiss","Beach Volleyball",...r("Volleyball","Beach Volleyball"),null],
   ]},
   {id:"waterpolo",sport:"Water Polo",emoji:"🤽",para:false,regions:["pacific","heartland"],moves:[
-    ["Men's Tournament",...r("Water Polo","Men's Tournament"),"RELAY"],
-    ["Women's Tournament",...r("Water Polo","Women's Tournament"),"RELAY"],
+    ["Triton's Pact","Men's Tournament",...r("Water Polo","Men's Tournament"),"RELAY"],
+    ["Nereid Volley","Women's Tournament",...r("Water Polo","Women's Tournament"),"RELAY"],
   ]},
   {id:"surfing",sport:"Surfing",emoji:"🏄",para:false,regions:["pacific"],moves:[
-    ["Shortboard Men's",...r("Surfing","Shortboard Men's"),null],
-    ["Shortboard Women's",...r("Surfing","Shortboard Women's"),null],
+    ["Wave Carve","Shortboard Men's",...r("Surfing","Shortboard Men's"),null],
+    ["Crescent Curl","Shortboard Women's",...r("Surfing","Shortboard Women's"),null],
   ]},
   {id:"skateboarding",sport:"Skateboarding",emoji:"🛹",para:false,regions:["pacific"],moves:[
-    ["Street",...r("Skateboarding","Street"),null],
-    ["Park",...r("Skateboarding","Park"),null],
+    ["Streetborne","Street",...r("Skateboarding","Street"),null],
+    ["Bowl Reign","Park",...r("Skateboarding","Park"),null],
   ]},
   {id:"alpine",sport:"Alpine Skiing",emoji:"⛷️",para:false,regions:["mountain"],moves:[
-    ["Slalom",...r("Alpine Skiing","Slalom"),null],
-    ["Giant Slalom",...r("Alpine Skiing","Giant Slalom"),null],
-    ["Downhill",...r("Alpine Skiing","Downhill"),"EXPLOSIVE"],
+    ["Serpentine Run","Slalom",...r("Alpine Skiing","Slalom"),null],
+    ["Titan's Edge","Giant Slalom",...r("Alpine Skiing","Giant Slalom"),null],
+    ["Avalanche Drop","Downhill",...r("Alpine Skiing","Downhill"),"EXPLOSIVE"],
   ]},
   {id:"icehockey",sport:"Ice Hockey",emoji:"🏒",para:false,regions:["heartland","mountain","northeast"],moves:[
-    ["Men's Tournament",...r("Ice Hockey","Men's Tournament"),"RELAY"],
-    ["Women's Tournament",...r("Ice Hockey","Women's Tournament"),"RELAY"],
+    ["Frostline","Men's Tournament",...r("Ice Hockey","Men's Tournament"),"RELAY"],
+    ["Aurora Strike","Women's Tournament",...r("Ice Hockey","Women's Tournament"),"RELAY"],
   ]},
   {id:"snowboard",sport:"Snowboarding",emoji:"🏂",para:false,regions:["mountain","pacific"],moves:[
-    ["Halfpipe",...r("Snowboarding","Halfpipe"),null],
-    ["Slopestyle",...r("Snowboarding","Slopestyle"),null],
-    ["Snowboard Cross",...r("Snowboarding","Snowboard Cross"),"EXPLOSIVE"],
+    ["Pipe Surge","Halfpipe",...r("Snowboarding","Halfpipe"),null],
+    ["Sigil Trick","Slopestyle",...r("Snowboarding","Slopestyle"),null],
+    ["Boreas Charge","Snowboard Cross",...r("Snowboarding","Snowboard Cross"),"EXPLOSIVE"],
   ]},
   {id:"golf",sport:"Golf",emoji:"⛳",para:false,regions:["capital","south"],moves:[
-    ["Men's Individual",...r("Golf","Men's Individual"),null],
-    ["Women's Individual",...r("Golf","Women's Individual"),null],
+    ["Sun Arc","Men's Individual",...r("Golf","Men's Individual"),null],
+    ["Crescent Drive","Women's Individual",...r("Golf","Women's Individual"),null],
   ]},
   {id:"tennis",sport:"Tennis",emoji:"🎾",para:false,regions:["northeast","capital","south"],moves:[
-    ["Men's Singles",...r("Tennis","Men's Singles"),null],
-    ["Women's Singles",...r("Tennis","Women's Singles"),null],
-    ["Mixed Doubles",...r("Tennis","Mixed Doubles"),"RELAY"],
+    ["Hero's Volley","Men's Singles",...r("Tennis","Men's Singles"),null],
+    ["Atalanta's Volley","Women's Singles",...r("Tennis","Women's Singles"),null],
+    ["Twin Crescent","Mixed Doubles",...r("Tennis","Mixed Doubles"),"RELAY"],
   ]},
   {id:"archery",sport:"Archery",emoji:"🏹",para:false,regions:["southwest","mountain"],moves:[
-    ["Individual Recurve",...r("Archery","Individual Recurve"),"PRECISION"],
-    ["Team Recurve",...r("Archery","Team Recurve"),"RELAY"],
-    ["Individual Compound",...r("Archery","Individual Compound"),"PRECISION"],
+    ["Artemis' Eye","Individual Recurve",...r("Archery","Individual Recurve"),"PRECISION"],
+    ["Hunter's Volley","Team Recurve",...r("Archery","Team Recurve"),"RELAY"],
+    ["Truestrike","Individual Compound",...r("Archery","Individual Compound"),"PRECISION"],
   ]},
   {id:"cycling",sport:"Cycling",emoji:"🚴",para:false,regions:["mountain","pacific","capital"],moves:[
-    ["Track Sprint",...r("Cycling","Track Sprint"),"EXPLOSIVE"],
-    ["Team Pursuit",...r("Cycling","Team Pursuit"),"RELAY"],
-    ["Road Race",...r("Cycling","Road Race"),"ENDURANCE"],
-    ["BMX Racing",...r("Cycling","BMX Racing"),"EXPLOSIVE"],
-    ["Mountain Bike XC",...r("Cycling","Mountain Bike XC"),"ENDURANCE"],
+    ["Wheelburst","Track Sprint",...r("Cycling","Track Sprint"),"EXPLOSIVE"],
+    ["Chariot Chain","Team Pursuit",...r("Cycling","Team Pursuit"),"RELAY"],
+    ["Long Procession","Road Race",...r("Cycling","Road Race"),"ENDURANCE"],
+    ["Spirit Sprint","BMX Racing",...r("Cycling","BMX Racing"),"EXPLOSIVE"],
+    ["Mountain Crossing","Mountain Bike XC",...r("Cycling","Mountain Bike XC"),"ENDURANCE"],
   ]},
   {id:"sailing",sport:"Sailing",emoji:"⛵",para:false,regions:["pacific","northeast"],moves:[
-    ["49er",...r("Sailing","49er"),null],
-    ["Laser/ILCA",...r("Sailing","Laser/ILCA"),"ENDURANCE"],
-    ["Nacra 17 Mixed",...r("Sailing","Nacra 17 Mixed"),"RELAY"],
+    ["Skiff Skip","49er",...r("Sailing","49er"),null],
+    ["Helmsman's Vigil","Laser/ILCA",...r("Sailing","Laser/ILCA"),"ENDURANCE"],
+    ["Twin Hull Pact","Nacra 17 Mixed",...r("Sailing","Nacra 17 Mixed"),"RELAY"],
   ]},
   {id:"figureskating",sport:"Figure Skating",emoji:"⛸️",para:false,regions:["heartland","northeast"],moves:[
-    ["Men's Singles",...r("Figure Skating","Men's Singles"),null],
-    ["Women's Singles",...r("Figure Skating","Women's Singles"),null],
-    ["Ice Dance",...r("Figure Skating","Ice Dance"),"RELAY"],
-    ["Pairs",...r("Figure Skating","Pairs"),"RELAY"],
+    ["Lone Aurora","Men's Singles",...r("Figure Skating","Men's Singles"),null],
+    ["Crystal Pirouette","Women's Singles",...r("Figure Skating","Women's Singles"),null],
+    ["Twin Glide","Ice Dance",...r("Figure Skating","Ice Dance"),"RELAY"],
+    ["Dual Aria","Pairs",...r("Figure Skating","Pairs"),"RELAY"],
   ]},
   {id:"speedskating",sport:"Speed Skating",emoji:"⏱️",para:false,regions:["heartland","mountain"],moves:[
-    ["500m",...r("Speed Skating","500m"),"EXPLOSIVE"],
-    ["1500m",...r("Speed Skating","1500m"),null],
-    ["5000m",...r("Speed Skating","5000m"),"ENDURANCE"],
-    ["Short Track 1000m",...r("Speed Skating","Short Track 1000m"),null],
-    ["Short Track Relay",...r("Speed Skating","Short Track Relay"),"RELAY"],
+    ["Frost Burst","500m",...r("Speed Skating","500m"),"EXPLOSIVE"],
+    ["Glacier Stride","1500m",...r("Speed Skating","1500m"),null],
+    ["Boreas March","5000m",...r("Speed Skating","5000m"),"ENDURANCE"],
+    ["Razor Edge","Short Track 1000m",...r("Speed Skating","Short Track 1000m"),null],
+    ["Frost Phalanx","Short Track Relay",...r("Speed Skating","Short Track Relay"),"RELAY"],
   ]},
   {id:"judo",sport:"Judo",emoji:"🥋",para:false,regions:["northeast","southwest"],moves:[
-    ["73kg",...r("Judo","73kg"),null],
-    ["57kg Women's",...r("Judo","57kg Women's"),null],
-    ["100kg+",...r("Judo","100kg+"),"EXPLOSIVE"],
+    ["Spartan Throw","73kg",...r("Judo","73kg"),null],
+    ["Athena's Hold","57kg Women's",...r("Judo","57kg Women's"),null],
+    ["Titan Toss","100kg+",...r("Judo","100kg+"),"EXPLOSIVE"],
   ]},
   {id:"triathlon",sport:"Triathlon",emoji:"🏊‍♂️",para:false,regions:["pacific","capital"],moves:[
-    ["Individual",...r("Triathlon","Individual"),"ENDURANCE"],
-    ["Mixed Relay",...r("Triathlon","Mixed Relay"),"RELAY"],
+    ["Trial of Three","Individual",...r("Triathlon","Individual"),"ENDURANCE"],
+    ["Three-Trial Pact","Mixed Relay",...r("Triathlon","Mixed Relay"),"RELAY"],
   ]},
   {id:"weightlifting",sport:"Weightlifting",emoji:"🏋️",para:false,regions:["southwest","south"],moves:[
-    ["61kg",...r("Weightlifting","61kg"),null],
-    ["81kg",...r("Weightlifting","81kg"),null],
-    ["109kg+",...r("Weightlifting","109kg+"),"EXPLOSIVE"],
+    ["Bronze Lift","61kg",...r("Weightlifting","61kg"),null],
+    ["Heroic Lift","81kg",...r("Weightlifting","81kg"),null],
+    ["Atlas Press","109kg+",...r("Weightlifting","109kg+"),"EXPLOSIVE"],
   ]},
   {id:"baseball",sport:"Baseball",emoji:"⚾",para:false,regions:["south","northeast","southwest","pacific"],moves:[
-    ["Tournament",...r("Baseball","Tournament"),"RELAY"],
+    ["Thunder Lineup","Tournament",...r("Baseball","Tournament"),"RELAY"],
   ]},
   {id:"softball",sport:"Softball",emoji:"🥎",para:false,regions:["pacific","heartland","southwest"],moves:[
-    ["Tournament",...r("Softball","Tournament"),"RELAY"],
+    ["Diamond Phalanx","Tournament",...r("Softball","Tournament"),"RELAY"],
   ]},
   {id:"rugby7s",sport:"Rugby Sevens",emoji:"🏉",para:false,regions:["pacific","southwest"],moves:[
-    ["Men's Tournament",...r("Rugby Sevens","Men's Tournament"),"RELAY"],
-    ["Women's Tournament",...r("Rugby Sevens","Women's Tournament"),"RELAY"],
+    ["Spartan Surge","Men's Tournament",...r("Rugby Sevens","Men's Tournament"),"RELAY"],
+    ["Amazonian Charge","Women's Tournament",...r("Rugby Sevens","Women's Tournament"),"RELAY"],
   ]},
   {id:"climbing",sport:"Sport Climbing",emoji:"🧗",para:false,regions:["mountain","pacific"],moves:[
-    ["Lead",...r("Sport Climbing","Lead"),null],
-    ["Bouldering",...r("Sport Climbing","Bouldering"),"EXPLOSIVE"],
-    ["Speed",...r("Sport Climbing","Speed"),"EXPLOSIVE"],
+    ["Vertical Pilgrimage","Lead",...r("Sport Climbing","Lead"),null],
+    ["Stone Bound","Bouldering",...r("Sport Climbing","Bouldering"),"EXPLOSIVE"],
+    ["Wallrush","Speed",...r("Sport Climbing","Speed"),"EXPLOSIVE"],
   ]},
   {id:"tabletennis",sport:"Table Tennis",emoji:"🏓",para:false,regions:["northeast","capital"],moves:[
-    ["Men's Singles",...r("Table Tennis","Men's Singles"),null],
-    ["Women's Singles",...r("Table Tennis","Women's Singles"),null],
-    ["Team Event",...r("Table Tennis","Team Event"),"RELAY"],
+    ["Featherstrike","Men's Singles",...r("Table Tennis","Men's Singles"),null],
+    ["Quill Volley","Women's Singles",...r("Table Tennis","Women's Singles"),null],
+    ["Triple Volley","Team Event",...r("Table Tennis","Team Event"),"RELAY"],
   ]},
   {id:"equestrian",sport:"Equestrian",emoji:"🐴",para:false,regions:["capital","heartland","south"],moves:[
-    ["Eventing Individual",...r("Equestrian","Eventing Individual"),"ENDURANCE"],
-    ["Jumping Team",...r("Equestrian","Jumping Team"),"RELAY"],
-    ["Dressage Individual",...r("Equestrian","Dressage Individual"),"PRECISION"],
+    ["Centaur's Run","Eventing Individual",...r("Equestrian","Eventing Individual"),"ENDURANCE"],
+    ["Cavalry Pact","Jumping Team",...r("Equestrian","Jumping Team"),"RELAY"],
+    ["Royal Cadence","Dressage Individual",...r("Equestrian","Dressage Individual"),"PRECISION"],
   ]},
   {id:"freestyleski",sport:"Freestyle Skiing",emoji:"🎿",para:false,regions:["mountain"],moves:[
-    ["Moguls",...r("Freestyle Skiing","Moguls"),null],
-    ["Aerials",...r("Freestyle Skiing","Aerials"),"EXPLOSIVE"],
-    ["Ski Cross",...r("Freestyle Skiing","Ski Cross"),"EXPLOSIVE"],
-    ["Halfpipe",...r("Freestyle Skiing","Halfpipe"),null],
+    ["Mogul Dance","Moguls",...r("Freestyle Skiing","Moguls"),null],
+    ["Sky Tumble","Aerials",...r("Freestyle Skiing","Aerials"),"EXPLOSIVE"],
+    ["Boreas Cross","Ski Cross",...r("Freestyle Skiing","Ski Cross"),"EXPLOSIVE"],
+    ["Vortex Pipe","Halfpipe",...r("Freestyle Skiing","Halfpipe"),null],
   ]},
   {id:"canoe",sport:"Canoe / Kayak",emoji:"🛶",para:false,regions:["heartland","pacific","northeast"],moves:[
-    ["Sprint K-1 1000m",...r("Canoe / Kayak","Sprint K-1 1000m"),"ENDURANCE"],
-    ["Sprint C-2 500m",...r("Canoe / Kayak","Sprint C-2 500m"),"RELAY"],
-    ["Slalom K-1",...r("Canoe / Kayak","Slalom K-1"),null],
+    ["Lone Paddle","Sprint K-1 1000m",...r("Canoe / Kayak","Sprint K-1 1000m"),"ENDURANCE"],
+    ["Twin Stroke","Sprint C-2 500m",...r("Canoe / Kayak","Sprint C-2 500m"),"RELAY"],
+    ["Rapids Twist","Slalom K-1",...r("Canoe / Kayak","Slalom K-1"),null],
   ]},
   {id:"taekwondo",sport:"Taekwondo",emoji:"🥋",para:false,regions:["southwest","south"],moves:[
-    ["68kg",...r("Taekwondo","68kg"),null],
-    ["57kg Women's",...r("Taekwondo","57kg Women's"),"EXPLOSIVE"],
+    ["Tempest Kick","68kg",...r("Taekwondo","68kg"),null],
+    ["Lightning Step","57kg Women's",...r("Taekwondo","57kg Women's"),"EXPLOSIVE"],
   ]},
   {id:"modernpentathlon",sport:"Modern Pentathlon",emoji:"🤺",para:false,regions:["capital","northeast"],moves:[
-    ["Individual",...r("Modern Pentathlon","Individual"),"ENDURANCE"],
+    ["Five Trials","Individual",...r("Modern Pentathlon","Individual"),"ENDURANCE"],
   ]},
   {id:"flagfootball",sport:"Flag Football",emoji:"🏈",para:false,regions:["south","heartland","southwest"],moves:[
-    ["Tournament",...r("Flag Football","Tournament"),"RELAY"],
+    ["Banner Charge","Tournament",...r("Flag Football","Tournament"),"RELAY"],
   ]},
   // ── Paralympic Mech Warriors ──
   {id:"paraswim",sport:"Para Swimming",emoji:"🏊",para:true,regions:["south","pacific","capital"],moves:[
-    ["50m Freestyle S7",.20,.15,.10,null],
-    ["100m Backstroke S9",.18,.12,.08,null],
-    ["4×100m Relay",.30,.08,.05,"RELAY"],
-    ["200m IM SM8",.10,.10,.15,"ENDURANCE"],
+    ["Adaptive Surge","50m Freestyle S7",.20,.15,.10,null],
+    ["Resolute Current","100m Backstroke S9",.18,.12,.08,null],
+    ["Unbroken Chain","4×100m Relay",.30,.08,.05,"RELAY"],
+    ["Steel Tide","200m IM SM8",.10,.10,.15,"ENDURANCE"],
   ]},
   {id:"paratrack",sport:"Para Track & Field",emoji:"🏃",para:true,regions:["south","southwest"],moves:[
-    ["100m T54 Wheelchair",.18,.10,.10,"EXPLOSIVE"],
-    ["Shot Put F46",.15,.12,.08,null],
-    ["1500m T13",.08,.08,.15,"ENDURANCE"],
-    ["Long Jump T64",.12,.10,.10,null],
+    ["Iron Wheel Burst","100m T54 Wheelchair",.18,.10,.10,"EXPLOSIVE"],
+    ["Adaptive Heave","Shot Put F46",.15,.12,.08,null],
+    ["Unyielding Stride","1500m T13",.08,.08,.15,"ENDURANCE"],
+    ["Unbreakable Leap","Long Jump T64",.12,.10,.10,null],
   ]},
   {id:"wchairrugby",sport:"Wheelchair Rugby",emoji:"🦽",para:true,regions:["south","heartland"],moves:[
-    ["Tournament",.45,.10,.08,"RELAY"],
+    ["Iron Phalanx","Tournament",.45,.10,.08,"RELAY"],
   ]},
   {id:"sitvol",sport:"Sitting Volleyball",emoji:"🏐",para:true,regions:["south"],moves:[
-    ["Women's Tournament",.40,.15,.05,"RELAY"],
-    ["Men's Tournament",.10,.12,.15,null],
+    ["Resolute Spike","Women's Tournament",.40,.15,.05,"RELAY"],
+    ["Steel Set","Men's Tournament",.10,.12,.15,null],
   ]},
   {id:"wchairbball",sport:"Wheelchair Basketball",emoji:"🏀",para:true,regions:["south","heartland"],moves:[
-    ["Men's Tournament",.18,.15,.10,"RELAY"],
-    ["Women's Tournament",.20,.12,.08,"RELAY"],
+    ["Iron Court","Men's Tournament",.18,.15,.10,"RELAY"],
+    ["Steel Court","Women's Tournament",.20,.12,.08,"RELAY"],
   ]},
   {id:"sledhockey",sport:"Sled Hockey",emoji:"🏒",para:true,regions:["heartland","northeast","mountain"],moves:[
-    ["Tournament",.55,.10,.05,"RELAY"],
+    ["Frost Iron Charge","Tournament",.55,.10,.05,"RELAY"],
   ]},
   {id:"paralpine",sport:"Para Alpine",emoji:"⛷️",para:true,regions:["mountain"],moves:[
-    ["Giant Slalom Standing",.18,.12,.08,null],
-    ["Super-G Sitting",.15,.10,.12,null],
-    ["Slalom VI",.10,.12,.10,"PRECISION"],
+    ["Adaptive Edge","Giant Slalom Standing",.18,.12,.08,null],
+    ["Steel Schuss","Super-G Sitting",.15,.10,.12,null],
+    ["Truesight Run","Slalom VI",.10,.12,.10,"PRECISION"],
   ]},
   {id:"paranordic",sport:"Para Nordic",emoji:"🎿",para:true,regions:["mountain","heartland"],moves:[
-    ["Biathlon Sprint",.20,.12,.08,"PRECISION"],
-    ["Cross-Country 10km",.18,.10,.10,"ENDURANCE"],
-    ["Relay",.25,.10,.05,"RELAY"],
+    ["Adaptive Marksman","Biathlon Sprint",.20,.12,.08,"PRECISION"],
+    ["Unyielding Trek","Cross-Country 10km",.18,.10,.10,"ENDURANCE"],
+    ["Resolute Chain","Relay",.25,.10,.05,"RELAY"],
   ]},
   {id:"paracycling",sport:"Para Cycling",emoji:"🚴",para:true,regions:["mountain","capital"],moves:[
-    ["Track Individual Pursuit",.20,.12,.08,null],
-    ["Road Time Trial",.15,.10,.10,"ENDURANCE"],
-    ["Road Race Tandem",.18,.08,.08,"RELAY"],
+    ["Iron Cadence","Track Individual Pursuit",.20,.12,.08,null],
+    ["Lone Wheel Vigil","Road Time Trial",.15,.10,.10,"ENDURANCE"],
+    ["Twin Wheel Pact","Road Race Tandem",.18,.08,.08,"RELAY"],
   ]},
   {id:"paraarchery",sport:"Para Archery",emoji:"🏹",para:true,regions:["southwest","mountain"],moves:[
-    ["W1 Individual",.15,.12,.10,"PRECISION"],
-    ["Open Compound",.18,.10,.08,"PRECISION"],
-    ["Team Recurve",.22,.08,.06,"RELAY"],
+    ["Resolute Eye","W1 Individual",.15,.12,.10,"PRECISION"],
+    ["Adaptive Arrow","Open Compound",.18,.10,.08,"PRECISION"],
+    ["Phalanx of Aim","Team Recurve",.22,.08,.06,"RELAY"],
   ]},
   {id:"goalball",sport:"Goalball",emoji:"🔔",para:true,regions:["northeast","heartland"],moves:[
-    ["Men's Tournament",.15,.10,.12,"RELAY"],
-    ["Women's Tournament",.20,.12,.08,"RELAY"],
+    ["Bell Pact","Men's Tournament",.15,.10,.12,"RELAY"],
+    ["Echo Strike","Women's Tournament",.20,.12,.08,"RELAY"],
   ]},
   {id:"parapowerlifting",sport:"Para Powerlifting",emoji:"🏋️",para:true,regions:["south","southwest"],moves:[
-    ["Up to 88kg",.18,.10,.12,"EXPLOSIVE"],
-    ["Up to 65kg Women's",.15,.12,.10,"EXPLOSIVE"],
+    ["Adaptive Press","Up to 88kg",.18,.10,.12,"EXPLOSIVE"],
+    ["Steel Press","Up to 65kg Women's",.15,.12,.10,"EXPLOSIVE"],
   ]},
   {id:"paratriathlon",sport:"Para Triathlon",emoji:"🏊‍♂️",para:true,regions:["pacific","capital"],moves:[
-    ["PTS5",.15,.10,.08,"ENDURANCE"],
-    ["PTVI",.12,.10,.12,"ENDURANCE"],
+    ["Three-Trial Resolve","PTS5",.15,.10,.08,"ENDURANCE"],
+    ["Bound Trial","PTVI",.12,.10,.12,"ENDURANCE"],
   ]},
   {id:"wchairtennis",sport:"Wheelchair Tennis",emoji:"🎾",para:true,regions:["south","northeast"],moves:[
-    ["Men's Singles",.10,.15,.10,null],
-    ["Women's Singles",.12,.12,.08,null],
-    ["Quad Singles",.18,.10,.08,"PRECISION"],
+    ["Iron Volley","Men's Singles",.10,.15,.10,null],
+    ["Steel Volley","Women's Singles",.12,.12,.08,null],
+    ["Adaptive Lance","Quad Singles",.18,.10,.08,"PRECISION"],
   ]},
 ];
 
@@ -398,12 +400,12 @@ const ACTIVE_REGIONS=REGIONS.filter(r=>r.id!=="la28");
 // ── Helpers ─────────────────────────────────────────────────
 const shuffle=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]];}return b;};
 const HP=100; // flat HP for all spirits
-const totalRate=m=>m[1]+m[2]+m[3];
-const bestGold=s=>Math.max(...s.moves.map(m=>m[1]));
+const totalRate=m=>m[2]+m[3]+m[4];
+const bestGold=s=>Math.max(...s.moves.map(m=>m[2]));
 const tier=s=>{const g=bestGold(s);return g>=.30?{n:"Elite",c:"#ffd400"}:g>=.18?{n:"Strong",c:"#ff2d95"}:g>=.10?{n:"Solid",c:"#22e0ff"}:{n:"Underdog",c:"#9a7fc0"};};
 
 function rollMove(move,affinity,bodyAff,synergies={}){
-  const [name,g,s,b,kw]=move;
+  const [name,event,g,s,b,kw]=move;
   const r=Math.random();
   let tier_="miss",baseDmg=0;
   if(r<g){tier_="gold";baseDmg=30;}
@@ -435,7 +437,7 @@ function detectSynergies(team,regionId){
   if(regionMatches>=2)syn.rally=true;
   // Keyword chains: 2+ spirits share a keyword
   const kwCount={};
-  team.forEach(s=>s.moves.forEach(m=>{const kw=m[4];if(kw){kwCount[kw]=(kwCount[kw]||0)+1;}}));
+  team.forEach(s=>s.moves.forEach(m=>{const kw=m[5];if(kw){kwCount[kw]=(kwCount[kw]||0)+1;}}));
   if(kwCount.RELAY>=2)syn.relayChain=true;
   if(kwCount.EXPLOSIVE>=2)syn.explosiveChain=true;
   if(kwCount.PRECISION>=2)syn.precisionChain=true;
@@ -509,7 +511,7 @@ const medalColors={gold:"#ffd400",silver:"#b8c4ff",bronze:"#ff8844",miss:"#3a1a6
 // ═══════════════════════════════════════════════════════════════
 
 function MoveBar({move}){
-  const [name,g,s,b]=move;const miss=1-g-s-b;
+  const [name,event,g,s,b]=move;const miss=1-g-s-b;
   const data=[{n:"🥇",v:Math.round(g*100),f:medalColors.gold},{n:"🥈",v:Math.round(s*100),f:medalColors.silver},{n:"🥉",v:Math.round(b*100),f:medalColors.bronze},{n:"❌",v:Math.round(miss*100),f:medalColors.miss}];
   return(<div style={{display:"flex",height:14,borderRadius:4,overflow:"hidden",width:"100%"}}>
     {data.filter(d=>d.v>0).map((d,i)=><div key={i} title={`${d.n} ${d.v}%`} style={{width:`${d.v}%`,background:d.f,minWidth:d.v>3?undefined:2,transition:"width .3s"}}/>)}
@@ -518,7 +520,7 @@ function MoveBar({move}){
 
 function SpiritCard({spirit:s,compact,selected,onClick,disabled,showHp,hp:curHp,rgn,bodyMatch:bm}){
   const t=tier(s);const bc=s.para?T.para:t.c;const aff=rgn&&(s.regions.includes(rgn)||rgn==="la28");
-  return(<div onClick={disabled?undefined:onClick} style={{width:compact?120:200,minHeight:compact?undefined:280,height:compact?undefined:"100%",background:`linear-gradient(150deg,${T.s1},${T.s2})`,border:`2px solid ${selected?bc:bc+"44"}`,borderRadius:12,padding:compact?7:12,cursor:disabled?"default":"pointer",opacity:disabled?.3:1,transition:"all .25s",boxShadow:selected?`0 0 18px ${bc}55`:"none",position:"relative",display:"flex",flexDirection:"column",gap:compact?2:5}}>
+  return(<div onClick={disabled?undefined:onClick} style={{width:compact?130:230,minHeight:compact?undefined:280,height:compact?undefined:"100%",background:`linear-gradient(150deg,${T.s1},${T.s2})`,border:`2px solid ${selected?bc:bc+"44"}`,borderRadius:12,padding:compact?7:12,cursor:disabled?"default":"pointer",opacity:disabled?.3:1,transition:"all .25s",boxShadow:selected?`0 0 18px ${bc}55`:"none",position:"relative",display:"flex",flexDirection:"column",gap:compact?2:5}}>
     {aff&&!compact&&<div style={{position:"absolute",top:3,left:6,fontSize:16,background:T.grn+"22",color:T.grn,padding:"1px 5px",borderRadius:3,fontFamily:T.hd}}>+50%</div>}
     {bm&&!compact&&<div style={{position:"absolute",top:aff?18:3,left:6,fontSize:16,background:T.blu+"22",color:T.blu,padding:"1px 5px",borderRadius:3,fontFamily:T.hd}}>💪+15%</div>}
     <div style={{fontSize:compact?7:8,color:t.c,fontFamily:T.hd,letterSpacing:1.5,marginTop:aff?10:0}}>{t.n}</div>
@@ -528,11 +530,12 @@ function SpiritCard({spirit:s,compact,selected,onClick,disabled,showHp,hp:curHp,
     <div style={{fontSize:compact?12:16,marginTop:compact?0:2,textAlign:"center"}}><span style={{fontFamily:T.hd,fontWeight:700,color:T.txt}}>{s.sport}</span></div>
     {!compact&&<div style={{display:"flex",gap:2,flexWrap:"wrap"}}>{s.regions.map(r=>{const rg=REGIONS.find(x=>x.id===r);return rg?<span key={r} style={{fontSize:13,background:rg.color+"22",color:rg.color,padding:"1px 4px",borderRadius:3,fontFamily:T.bd}}>{rg.name}</span>:null;})}</div>}
     {!compact&&<div style={{fontSize:17,color:T.gd,fontFamily:T.hd,letterSpacing:2,marginTop:3}}>MOVES</div>}
-    {!compact&&s.moves.map((m,i)=>{const [name,g,sv,b,kw]=m;return(<div key={i} style={{marginBottom:3}}>
+    {!compact&&s.moves.map((m,i)=>{const [name,event,g,sv,b,kw]=m;return(<div key={i} style={{marginBottom:5}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
         <span style={{fontSize:18,color:T.txt,fontFamily:T.bd}}>{name}</span>
         <span style={{fontSize:17,color:T.dim,fontFamily:T.bd}}>{Math.round(totalRate(m)*100)}%{kw?` ${kw==="RELAY"?"🤝":kw==="EXPLOSIVE"?"💥":kw==="ENDURANCE"?"💚":kw==="PRECISION"?"🎯":""}`:""}</span>
       </div>
+      <div style={{fontSize:13,color:T.dim,fontFamily:T.bd,fontStyle:"italic",letterSpacing:.3,marginTop:1,marginBottom:2}}>{event}</div>
       <MoveBar move={m}/>
     </div>);})}
     {compact&&<div style={{fontSize:17,color:T.dim,fontFamily:T.bd}}>{s.moves.length} moves · best: {Math.round(bestGold(s)*100)}%🥇</div>}
@@ -1106,7 +1109,7 @@ function Scout({opts,lockIn,round,rgn,bodyTop5=[]}){
   const [ins,setIns]=useState({});const [ld,setLd]=useState({});
   const rg=REGIONS.find(r=>r.id===rgn);
   const toggle=s=>{setSel(p=>{const n=new Set(p);if(n.has(s.id))n.delete(s.id);else if(n.size<3)n.add(s.id);return n;});};
-  const explore=async s=>{if(exp===s.id){setExp(null);return;}setExp(s.id);if(!ins[s.id]){setLd(p=>({...p,[s.id]:true}));const best=s.moves.reduce((a,b)=>b[1]>a[1]?b:a);const aff=s.regions.includes(rgn)||rgn==="la28";const t=await gemini(`Oracle in Team USA card game. Spirit: "${s.sport}" (${s.para?"Paralympic":"Olympic"}) with ${s.moves.length} event moves. Best move: "${best[0]}" has ${Math.round(best[1]*100)}% gold rate. ${aff?"+50% affinity with "+rg?.name+".":""} 2 sentences for a 12-year-old: what the gold rate means in real life, one cool fact about this sport in Team USA history. Brief, exciting.`);setIns(p=>({...p,[s.id]:t||`${s.sport} has ${s.moves.length} moves. Best gold rate: ${Math.round(best[1]*100)}%. ${aff?"Strong here!":"A solid pick."}`}));setLd(p=>({...p,[s.id]:false}));}};
+  const explore=async s=>{if(exp===s.id){setExp(null);return;}setExp(s.id);if(!ins[s.id]){setLd(p=>({...p,[s.id]:true}));const best=s.moves.reduce((a,b)=>b[2]>a[2]?b:a);const aff=s.regions.includes(rgn)||rgn==="la28";const t=await gemini(`Oracle in Team USA card game. Spirit: "${s.sport}" (${s.para?"Paralympic":"Olympic"}) with ${s.moves.length} event moves. Best move: "${best[1]}" (in-game name: "${best[0]}") has ${Math.round(best[2]*100)}% gold rate. ${aff?"+50% affinity with "+rg?.name+".":""} 2 sentences for a 12-year-old: what the gold rate means in real life, one cool fact about this sport in Team USA history. Brief, exciting.`);setIns(p=>({...p,[s.id]:t||`${s.sport} has ${s.moves.length} moves. Best gold rate: ${Math.round(best[2]*100)}%. ${aff?"Strong here!":"A solid pick."}`}));setLd(p=>({...p,[s.id]:false}));}};
   const team=opts.filter(s=>sel.has(s.id));
   const syn=team.length===3?detectSynergies(team,rgn):null;
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:16,gap:12}}>
@@ -1119,7 +1122,7 @@ function Scout({opts,lockIn,round,rgn,bodyTop5=[]}){
           <SpiritCard spirit={s} rgn={rgn} selected={picked} bodyMatch={bodyTop5.some(b=>b.sport===s.sport)}/>
         </div>
         <Btn small onClick={()=>explore(s)} color={exp===s.id?T.grn:T.blu}>{exp===s.id?"Close":"🔍 Explore"}</Btn>
-        {exp===s.id&&<div style={{background:T.s1,border:`1px solid ${T.blu}22`,borderRadius:8,padding:10,width:200}}>
+        {exp===s.id&&<div style={{background:T.s1,border:`1px solid ${T.blu}22`,borderRadius:8,padding:10,width:230}}>
           <div style={{fontFamily:T.bd,fontSize:19,color:T.txt,lineHeight:1.6}}>{ld[s.id]?<span style={{color:T.dim}}>Oracle speaks...</span>:ins[s.id]}</div>
         </div>}
       </div>);})}
@@ -1347,9 +1350,9 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
   // Pixel HP segmented bar (matches arcade mockup)
   const PixelBar=({hp,max,color,height=14,segments=20})=>{const filled=Math.round((Math.max(0,hp)/max)*segments);return(<div style={{display:"flex",gap:1,height,background:"#000",padding:2,border:`2px solid ${T.txt}`}}>{Array.from({length:segments}).map((_,i)=>{const lit=i<filled;const danger=lit&&filled<=4?T.red:color;return<div key={i} style={{flex:1,background:lit?danger:T.s1,boxShadow:lit?`0 0 5px ${danger}`:"none"}}/>;})}</div>);};
 
-  return(<div style={{padding:14,maxWidth:1280,margin:"0 auto"}}>
+  return(<div style={{padding:"24px 14px 8px",maxWidth:1280,margin:"0 auto"}}>
     {/* ───── TOP HUD: TEAM HP | VS | MONSTER HP ───── */}
-    <div style={{display:"grid",gridTemplateColumns:"1fr 180px 1fr",gap:14,marginBottom:14,alignItems:"start"}}>
+    <div style={{display:"grid",gridTemplateColumns:"minmax(0,1fr) 180px minmax(0,1fr)",gap:14,marginBottom:8,alignItems:"start"}}>
       {/* TEAM HP block */}
       <div>
         <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
@@ -1357,35 +1360,36 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
           <span style={{fontFamily:T.hd,fontSize:18,color:T.txt}}>{teamHp}/{teamMax}</span>
         </div>
         <PixelBar hp={teamHp} max={teamMax} color={T.grn} height={20}/>
-        <div style={{display:"flex",gap:6,marginTop:8}}>
-          {spirits.map((s,i)=>(<div key={s.id} onClick={()=>{if(s.hp>0&&ph==="player"&&s.sp>0)setActiveIdx(i);}} style={{flex:1,padding:6,background:i===activeIdx?T.gold+"22":"rgba(0,0,0,0.45)",border:`2px solid ${i===activeIdx?T.gold:s.hp<=0?T.fnt:T.pur}`,cursor:s.hp>0&&ph==="player"&&i!==activeIdx?"pointer":"default",opacity:s.hp<=0?.4:1,boxShadow:i===activeIdx?`0 0 10px ${T.gold}88`:"none",position:"relative"}}>
-            {i===activeIdx&&<span style={{position:"absolute",top:-10,left:4,background:T.gold,color:T.bg,fontFamily:T.hd,fontSize:16,letterSpacing:1,padding:"2px 5px",animation:"blink 1s infinite"}}>P1</span>}
-            <div style={{display:"flex",alignItems:"center",gap:5,fontFamily:T.hd,fontSize:16,letterSpacing:1,color:i===activeIdx?T.gold:T.txt,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>
-              <SportAvatar sport={s.sport} emoji={s.emoji} size={22} radius={4}/>
-              <span style={{overflow:"hidden",textOverflow:"ellipsis"}}>{s.sport.toUpperCase().slice(0,10)}</span>
+        {active&&<div style={{marginTop:8,padding:8,background:T.gold+"22",border:`2px solid ${T.gold}`,boxShadow:`0 0 10px ${T.gold}88`,position:"relative",display:"flex",alignItems:"center",gap:10}}>
+          <span style={{position:"absolute",top:-10,left:6,background:T.gold,color:T.bg,fontFamily:T.hd,fontSize:14,letterSpacing:1,padding:"2px 6px",animation:"blink 1s infinite"}}>P1</span>
+          <SportAvatar sport={active.sport} emoji={active.emoji} size={42} radius={4}/>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:8,fontFamily:T.hd,fontSize:17,letterSpacing:1,color:T.gold,whiteSpace:"nowrap",overflow:"hidden"}}>
+              <span style={{overflow:"hidden",textOverflow:"ellipsis"}}>{active.sport.toUpperCase()}</span>
+              <span style={{fontSize:15,color:T.dim,letterSpacing:1}}>HP {active.hp}/{HP}</span>
             </div>
-            <PixelBar hp={s.hp} max={HP} color={i===activeIdx?T.gold:s.hp>HP*.4?T.grn:T.red} height={7} segments={12}/>
-            <div style={{display:"flex",justifyContent:"space-between",marginTop:3}}>
-              <span style={{fontFamily:T.hd,fontSize:16,color:T.dim}}>HP {s.hp}</span>
-              <span style={{display:"flex",gap:1}}>{Array.from({length:SP_MAX},(_,j)=><span key={j} style={{width:5,height:5,background:j<s.sp?T.gold:T.fnt,boxShadow:j<s.sp?`0 0 3px ${T.gold}`:"none"}}/>)}</span>
+            <div style={{marginTop:4}}><PixelBar hp={active.hp} max={HP} color={active.hp>HP*.4?T.grn:T.red} height={7} segments={20}/></div>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:4,gap:8}}>
+              <span style={{display:"flex",gap:3}}>{spirits.map((s,i)=>(<button key={s.id} onClick={()=>{if(s.hp>0&&ph==="player"&&s.sp>0)setActiveIdx(i);}} title={s.sport} style={{width:18,height:18,padding:0,background:i===activeIdx?T.gold:s.hp<=0?T.fnt:"transparent",border:`1px solid ${i===activeIdx?T.gold:s.hp<=0?T.fnt:T.pur}`,color:i===activeIdx?T.bg:s.hp<=0?T.bg:T.txt,fontFamily:T.hd,fontSize:11,cursor:s.hp>0&&ph==="player"&&i!==activeIdx?"pointer":"default",opacity:s.hp<=0?.4:1}}>{i+1}</button>))}</span>
+              <span style={{display:"flex",gap:2,alignItems:"center"}}><span style={{fontFamily:T.hd,fontSize:13,color:T.dim,marginRight:4}}>SP</span>{Array.from({length:SP_MAX},(_,j)=><span key={j} style={{width:6,height:6,background:j<active.sp?T.gold:T.fnt,boxShadow:j<active.sp?`0 0 3px ${T.gold}`:"none"}}/>)}</span>
+              {active.para&&!active.ac&&active.hp>0&&ph!=="done"&&<button onClick={()=>{if(!active.au)setSpirits(p=>p.map((x,j)=>j===activeIdx?{...x,au:true}:x));}} style={{fontSize:13,background:active.au?T.para+"33":"transparent",border:`1px solid ${active.au?T.para:T.fnt}`,color:active.au?T.para:T.dim,padding:"2px 8px",cursor:"pointer",fontFamily:T.hd,letterSpacing:1}}>{active.au?"⚡ARMED":"⚡ARM"}</button>}
             </div>
-            {s.para&&!s.ac&&s.hp>0&&ph!=="done"&&<button onClick={(e)=>{e.stopPropagation();if(!s.au)setSpirits(p=>p.map((x,j)=>j===i?{...x,au:true}:x));}} style={{marginTop:4,width:"100%",fontSize:16,background:s.au?T.para+"33":"transparent",border:`1px solid ${s.au?T.para:T.fnt}`,color:s.au?T.para:T.dim,padding:"2px 4px",cursor:"pointer",fontFamily:T.hd,letterSpacing:1}}>{s.au?"⚡ARMED":"⚡ARM"}</button>}
-          </div>))}
-        </div>
+          </div>
+        </div>}
       </div>
 
       {/* VS center */}
-      <div style={{textAlign:"center",padding:"6px 0"}}>
-        <div style={{fontFamily:T.hd,fontSize:17,letterSpacing:3,color:T.blu,textShadow:`0 0 6px ${T.blu}`}}>ROUND {turn}</div>
-        <div style={{fontFamily:T.hd,fontSize:42,color:T.gold,textShadow:`3px 3px 0 ${T.red}, 0 0 22px ${T.gold}`,animation:"pulse 1.6s infinite",margin:"6px 0 4px"}}>VS</div>
-        <div style={{fontFamily:T.hd,fontSize:16,letterSpacing:3,color:T.pur,textShadow:`0 0 6px ${T.pur}`,animation:"blink .8s infinite"}}>{ph==="done"?(won?"WIN!":"K.O."):"FIGHT!"}</div>
+      <div style={{textAlign:"center",padding:"2px 0"}}>
+        <div style={{fontFamily:T.hd,fontSize:15,letterSpacing:3,color:T.blu,textShadow:`0 0 6px ${T.blu}`}}>ROUND {turn}</div>
+        <div style={{fontFamily:T.hd,fontSize:30,color:T.gold,textShadow:`3px 3px 0 ${T.red}, 0 0 22px ${T.gold}`,animation:"pulse 1.6s infinite",margin:"2px 0"}}>VS</div>
+        <div style={{fontFamily:T.hd,fontSize:14,letterSpacing:3,color:T.pur,textShadow:`0 0 6px ${T.pur}`,animation:"blink .8s infinite"}}>{ph==="done"?(won?"WIN!":"K.O."):"FIGHT!"}</div>
       </div>
 
       {/* MONSTER HP block */}
       <div>
         <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
           <span style={{fontFamily:T.hd,fontSize:18,color:T.txt}}>{Math.max(0,target.hp)}/{target.maxHp}</span>
-          <span style={{fontFamily:T.hd,fontSize:19,color:T.red,letterSpacing:2,textShadow:`0 0 6px ${T.red}`}}>{(target.name||"BOSS").toUpperCase()} · BOSS</span>
+          <span style={{fontFamily:T.hd,fontSize:19,color:T.red,letterSpacing:2,textShadow:`0 0 6px ${T.red}`,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{(target.name||"BOSS").toUpperCase()}</span>
         </div>
         <PixelBar hp={target.hp} max={target.maxHp} color={T.red} height={20}/>
         {ms.length>1&&<div style={{display:"flex",gap:6,marginTop:8}}>
@@ -1404,20 +1408,23 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
     </div>
 
     {/* ───── CENTER STAGE: PORTRAITS + HIT-SPARKS ───── */}
-    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:0,marginBottom:14,minHeight:280,position:"relative",border:`2px solid ${T.fnt}`,background:"#000",backgroundImage:`repeating-linear-gradient(0deg, ${T.blu}11 0 1px, transparent 1px 40px),repeating-linear-gradient(90deg, ${T.blu}11 0 1px, transparent 1px 40px)`}}>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:0,marginBottom:8,minHeight:200,position:"relative",border:`2px solid ${T.fnt}`,background:"#000",backgroundImage:`repeating-linear-gradient(0deg, ${T.blu}11 0 1px, transparent 1px 40px),repeating-linear-gradient(90deg, ${T.blu}11 0 1px, transparent 1px 40px)`}}>
       {/* SPIRIT side */}
-      <div style={{padding:18,textAlign:"center",background:`radial-gradient(circle at 50% 60%, ${T.blu}33 0%, transparent 70%)`,borderRight:`2px dashed ${T.gold}`,position:"relative",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
-        {active?<SportAvatar sport={active.sport} emoji={active.emoji} size={200} radius={12} style={{filter:`drop-shadow(0 0 22px ${T.blu}) drop-shadow(0 8px 4px rgba(0,0,0,0.6))`,animation:"pulse 1.6s infinite",border:`3px solid ${T.blu}66`}}/>:<div style={{fontSize:170,lineHeight:1,filter:`drop-shadow(0 0 22px ${T.blu})`}}>⚔</div>}
-        <div style={{fontFamily:T.hd,fontSize:24,color:T.gold,letterSpacing:2,marginTop:10,textShadow:`0 0 8px ${T.gold}`}}>{active?.sport?.toUpperCase()||"—"}</div>
-        {ph==="player"&&selMove!=null&&selMove!=="rest"&&active?.moves?.[selMove]&&<div style={{fontFamily:T.hd,fontSize:17,color:T.pur,letterSpacing:2,marginTop:4,textShadow:`0 0 6px ${T.pur}`,animation:"blink .9s infinite"}}>{active.moves[selMove][0].toUpperCase()}</div>}
+      <div style={{padding:10,textAlign:"center",background:`radial-gradient(circle at 50% 60%, ${T.blu}33 0%, transparent 70%)`,borderRight:`2px dashed ${T.gold}`,position:"relative",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+        {active?<SportAvatar sport={active.sport} emoji={active.emoji} size={140} radius={12} style={{filter:`drop-shadow(0 0 22px ${T.blu}) drop-shadow(0 8px 4px rgba(0,0,0,0.6))`,animation:"pulse 1.6s infinite",border:`3px solid ${T.blu}66`}}/>:<div style={{fontSize:120,lineHeight:1,filter:`drop-shadow(0 0 22px ${T.blu})`}}>⚔</div>}
+        <div style={{fontFamily:T.hd,fontSize:18,color:T.gold,letterSpacing:2,marginTop:6,textShadow:`0 0 8px ${T.gold}`}}>{active?.sport?.toUpperCase()||"—"}</div>
+        {ph==="player"&&selMove!=null&&selMove!=="rest"&&active?.moves?.[selMove]&&<div style={{textAlign:"center",marginTop:4}}>
+          <div style={{fontFamily:T.hd,fontSize:17,color:T.pur,letterSpacing:2,textShadow:`0 0 6px ${T.pur}`,animation:"blink .9s infinite"}}>{active.moves[selMove][0].toUpperCase()}</div>
+          <div style={{fontFamily:T.bd,fontSize:19,color:T.txt,letterSpacing:1,marginTop:4,fontStyle:"italic"}}>{active.moves[selMove][1]}</div>
+        </div>}
       </div>
 
       {/* MONSTER side */}
-      <div style={{padding:18,textAlign:"center",background:`radial-gradient(circle at 50% 60%, ${T.red}33 0%, transparent 70%)`,position:"relative",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
+      <div style={{padding:10,textAlign:"center",background:`radial-gradient(circle at 50% 60%, ${T.red}33 0%, transparent 70%)`,position:"relative",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
         {target.imageDataUrl
-          ? <img src={target.imageDataUrl} alt={target.name} style={{maxWidth:"80%",maxHeight:200,objectFit:"contain",filter:`drop-shadow(0 0 18px ${T.red})`,animation:"pulse 2s infinite"}}/>
-          : <div style={{fontSize:170,lineHeight:1,filter:`drop-shadow(0 0 22px ${T.red})`,animation:"pulse 2s infinite"}}>{target.emoji||"👹"}</div>}
-        <div style={{fontFamily:T.hd,fontSize:24,color:T.red,letterSpacing:2,marginTop:10,textShadow:`0 0 8px ${T.red}`}}>{(target.name||"BOSS").toUpperCase()}</div>
+          ? <img src={target.imageDataUrl} alt={target.name} style={{maxWidth:"80%",maxHeight:140,objectFit:"contain",filter:`drop-shadow(0 0 18px ${T.red})`,animation:"pulse 2s infinite"}}/>
+          : <div style={{fontSize:120,lineHeight:1,filter:`drop-shadow(0 0 22px ${T.red})`,animation:"pulse 2s infinite"}}>{target.emoji||"👹"}</div>}
+        <div style={{fontFamily:T.hd,fontSize:18,color:T.red,letterSpacing:2,marginTop:6,textShadow:`0 0 8px ${T.red}`}}>{(target.name||"BOSS").toUpperCase()}</div>
         {target.imageStatus==="loading"&&<div style={{position:"absolute",top:8,right:8,fontFamily:T.hd,fontSize:16,color:T.gold,background:"rgba(0,0,0,0.65)",padding:"3px 8px",letterSpacing:2,animation:"blink 1s infinite"}}>✨ RENDERING</div>}
 
         {/* Hit-spark FX */}
@@ -1429,19 +1436,20 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
     </div>
 
     {/* ───── BOTTOM: MOVES + LOG ───── */}
-    <div style={{display:"grid",gridTemplateColumns:"2fr 3fr",gap:12}}>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:0,alignItems:"stretch"}}>
       {/* MOVES */}
-      <div style={{background:"#000",border:`3px solid ${T.blu}`,padding:12,boxShadow:`0 0 14px ${T.blu}55`}}>
-        <div style={{fontFamily:T.hd,fontSize:17,letterSpacing:3,color:T.blu,marginBottom:10,textShadow:`0 0 6px ${T.blu}`}}>★ {ph==="done"?(won?"VICTORY":"K.O."):active?(active.sport+" — SELECT MOVE").toUpperCase():"—"} ★</div>
-        {ph==="player"&&active&&active.hp>0&&active.sp>0&&active.moves.map((mv,i)=>{const [name,g,sv,b,kw]=mv;const blocked=target?.special==="block_weak"&&totalRate(mv)<.25;return(<div key={i} onClick={()=>!blocked&&setSelMove(i)} style={{display:"grid",gridTemplateColumns:"32px 1fr",gap:10,alignItems:"center",padding:"8px 8px",marginBottom:4,background:selMove===i?T.gold+"22":"transparent",border:`2px solid ${selMove===i?T.gold:blocked?T.red+"55":"transparent"}`,cursor:blocked?"not-allowed":"pointer",opacity:blocked?.4:1,transition:"all .15s"}}>
-          <div style={{fontFamily:T.hd,fontSize:19,color:T.bg,background:selMove===i?T.gold:T.grn,width:30,height:26,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:selMove===i?`0 0 8px ${T.gold}`:"none"}}>{i+1}</div>
+      <div style={{background:"#000",border:`3px solid ${T.blu}`,padding:8,boxShadow:`0 0 14px ${T.blu}55`}}>
+        <div style={{fontFamily:T.hd,fontSize:15,letterSpacing:3,color:T.blu,marginBottom:6,textShadow:`0 0 6px ${T.blu}`}}>★ {ph==="done"?(won?"VICTORY":"K.O."):active?(active.sport+" — SELECT MOVE").toUpperCase():"—"} ★</div>
+        {ph==="player"&&active&&active.hp>0&&active.sp>0&&active.moves.map((mv,i)=>{const [name,event,g,sv,b,kw]=mv;const blocked=target?.special==="block_weak"&&totalRate(mv)<.25;return(<div key={i} onClick={()=>!blocked&&setSelMove(i)} style={{display:"grid",gridTemplateColumns:"28px 1fr",gap:8,alignItems:"center",padding:"4px 6px",marginBottom:2,background:selMove===i?T.gold+"22":"transparent",border:`2px solid ${selMove===i?T.gold:blocked?T.red+"55":"transparent"}`,cursor:blocked?"not-allowed":"pointer",opacity:blocked?.4:1,transition:"all .15s"}}>
+          <div style={{fontFamily:T.hd,fontSize:17,color:T.bg,background:selMove===i?T.gold:T.grn,width:26,height:22,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:selMove===i?`0 0 8px ${T.gold}`:"none"}}>{i+1}</div>
           <div>
-            <div style={{display:"flex",justifyContent:"space-between"}}>
-              <span style={{fontFamily:T.hd,fontSize:17,letterSpacing:1,color:T.txt}}>{name.toUpperCase()}{kw?` ${kw==="RELAY"?"🤝":kw==="EXPLOSIVE"?"💥":kw==="ENDURANCE"?"💚":"🎯"}`:""}</span>
-              <span style={{fontFamily:T.bd,fontSize:24,color:Math.round(totalRate(mv)*100)>50?T.grn:Math.round(totalRate(mv)*100)>30?T.blu:T.dim}}>{Math.round(totalRate(mv)*100)}%</span>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
+              <span style={{fontFamily:T.hd,fontSize:14,letterSpacing:1,color:T.txt}}>{name.toUpperCase()}{kw?` ${kw==="RELAY"?"🤝":kw==="EXPLOSIVE"?"💥":kw==="ENDURANCE"?"💚":"🎯"}`:""}</span>
+              <span style={{fontFamily:T.bd,fontSize:20,color:Math.round(totalRate(mv)*100)>50?T.grn:Math.round(totalRate(mv)*100)>30?T.blu:T.dim}}>{Math.round(totalRate(mv)*100)}%</span>
             </div>
-            <div style={{marginTop:4}}><MoveBar move={mv}/></div>
-            {blocked&&<div style={{fontFamily:T.hd,fontSize:16,color:T.red,letterSpacing:2,marginTop:2}}>BLOCKED</div>}
+            <div style={{fontFamily:T.bd,fontSize:18,color:T.txt,fontStyle:"italic",letterSpacing:.5,marginTop:1}}>{event}</div>
+            <div style={{marginTop:2}}><MoveBar move={mv}/></div>
+            {blocked&&<div style={{fontFamily:T.hd,fontSize:14,color:T.red,letterSpacing:2,marginTop:1}}>BLOCKED</div>}
           </div>
         </div>);})}
         {ph==="player"&&active&&active.hp>0&&active.sp<=0&&<div onClick={()=>setSelMove("rest")} style={{padding:"10px",cursor:"pointer",background:selMove==="rest"?T.grn+"22":"transparent",border:`2px solid ${selMove==="rest"?T.grn:T.fnt}`,textAlign:"center",fontFamily:T.hd,fontSize:18,color:T.grn,letterSpacing:2}}>💤 REST · HEAL 5 HP</div>}
