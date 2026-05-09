@@ -831,7 +831,7 @@ function HowTo({back,go}){
 
       <div style={Card}>
         <h3 style={H}><span style={{color:T.pur}}>4.</span> 👹 READ THE MONSTER</h3>
-        <p style={{...P,margin:0}}>Each monster is AI-generated with a unique name, portrait, lore, stats, and ability. Some <Strong>target your strongest</Strong> spirit, some <Strong>pick off your weakest</Strong>, some <Strong>hit the whole team</Strong>, some <Strong>regenerate</Strong> each turn, some <Strong c={T.red}>block any move under 25%</Strong>, and others <Strong c={T.red}>shift weakness each turn</Strong>.</p>
+        <p style={{...P,margin:0}}>Each monster is AI-generated with a unique name, portrait, lore, stats, and ability. Some <Strong>target your strongest</Strong> spirit, some <Strong>pick off your weakest</Strong>, some <Strong>hit the whole team</Strong>, some <Strong>regenerate</Strong> each turn, and some <Strong c={T.red}>block any move under 25%</Strong>.</p>
       </div>
 
       <div style={Card}>
@@ -1222,7 +1222,6 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
   const [log,setLog]=useState([`${initMonsters.map(m=>m.emoji+" "+m.name).join(" & ")} attack${initMonsters.length>1?"":"s"} ${REGIONS.find(r=>r.id===rgn)?.name}!`]);
   const [ph,setPh]=useState("player"); // player | monster | done
   const [turn,setTurn]=useState(1);
-  const [chiWeakness,setChiWeakness]=useState("gold"); // for Chimera
   const [fx,setFx]=useState(null); // {type:'gold'|'silver'|'bronze'|'miss'|'block', dmg, side:'mon'|'spirit', t}
   const lr=useRef(null);
   useEffect(()=>{lr.current&&(lr.current.scrollTop=lr.current.scrollHeight);},[log]);
@@ -1255,15 +1254,12 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
         const aff=s.regions.includes(rgn)||rgn==="la28";
         const bAff=bodyTop5.some(b=>b.sport===s.sport);
         const result=rollMove(move,aff,bAff,syn);
-        // Chimera weakness bonus
-        let chiBonus=0;
-        if(target.special==="shift_weakness"&&result.tier===chiWeakness&&result.tier!=="miss"){chiBonus=Math.round(result.total*.5);nl.push(`🎯 Matched ${target.name}'s weakness! +${chiBonus} dmg`);}
         const emoji=result.tier==="gold"?"🥇":result.tier==="silver"?"🥈":result.tier==="bronze"?"🥉":"❌";
         if(result.tier==="miss"){
           nl.push(`${s.emoji} ${s.sport} → ${move[0]} → ${emoji} MISS!`);
           setFx({type:"miss",dmg:0,side:"mon",t:Date.now()});
         }else{
-          const totalDmg=result.total+chiBonus;
+          const totalDmg=result.total;
           const ti=ms.findIndex(x=>x.name===target.name);
           nm[ti]={...nm[ti],hp:Math.max(0,nm[ti].hp-totalDmg)};
           nl.push(`${s.emoji} ${s.sport} → ${move[0]} → ${emoji} ${result.tier.toUpperCase()} ${totalDmg} dmg!${result.extra}`);
@@ -1308,8 +1304,6 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
           if(adapted){ml.push(`⚡ ${adapted.sport} ADAPT absorbs ${mon.name}'s blow!`);ns2=ns2.map(x=>x.id===adapted.id?{...x,ac:true}:x);}
           else{ns2[target._i]={...ns2[target._i],hp:Math.max(0,ns2[target._i].hp-dmg)};ml.push(`${mon.emoji} ${mon.name} hits ${target.sport} for ${dmg}!`);if(ns2[target._i].hp<=0)ml.push(`💀 ${target.sport} exhausted!`);}
         }
-        // Chimera weakness shift
-        if(mon.special==="shift_weakness"){const cycle=["gold","silver","bronze"];setChiWeakness(p=>cycle[(cycle.indexOf(p)+1)%3]);ml.push(`🔄 ${mon.name} shifts weakness to ${["gold","silver","bronze"][(["gold","silver","bronze"].indexOf(chiWeakness)+1)%3]}!`);}
       }
       setMs(nm2);setSpirits(ns2);setLog(p=>[...p,"─── Monster Phase ───",...ml]);
       if(ns2.every(x=>x.hp<=0)){setLog(p=>[...p,...ml,"💀 All spirits exhausted..."]);setPh("done");}
@@ -1379,7 +1373,7 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
         </div>}
         {target.special&&<div style={{marginTop:8,padding:"6px 8px",background:"rgba(255,57,57,0.08)",border:`2px solid ${T.red}`,fontFamily:T.bd,fontSize:24,color:T.txt}}>
           <span style={{color:T.red,fontFamily:T.hd,fontSize:16,letterSpacing:1.5,textShadow:`0 0 4px ${T.red}`}}>⚠ ABILITY:</span>{" "}
-          <span style={{color:T.gold}}>{target.special==="regenerate"?"REGEN":target.special==="aoe"?"ALL-STRIKE":target.special==="block_weak"?"AEGIS BLOCK":target.special==="hit_strongest"?"TARGET ALPHA":target.special==="hit_weakest"?"PICK OFF":target.special==="shift_weakness"?`SHIFT (weak: ${chiWeakness})`:target.special.toUpperCase()}</span>
+          <span style={{color:T.gold}}>{target.special==="regenerate"?"REGEN":target.special==="aoe"?"ALL-STRIKE":target.special==="block_weak"?"AEGIS BLOCK":target.special==="hit_strongest"?"TARGET ALPHA":target.special==="hit_weakest"?"PICK OFF":target.special.toUpperCase()}</span>
         </div>}
       </div>
     </div>

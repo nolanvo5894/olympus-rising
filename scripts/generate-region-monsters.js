@@ -23,14 +23,13 @@ const REGIONS = [
   { id: "capital",   name: "Capital",   states: "DC, MD, VA, WV, DE" },
 ];
 
-const SPECIALS = ["hit_strongest", "hit_weakest", "aoe", "regenerate", "block_weak", "shift_weakness"];
+const SPECIALS = ["hit_strongest", "hit_weakest", "aoe", "regenerate", "block_weak"];
 const SPECIAL_HINTS = {
   hit_strongest: "charges your strongest spirit first",
   hit_weakest: "swoops on the weakest spirit",
   aoe: "hits all spirits each turn",
   regenerate: "regenerates HP each turn — focus fire",
   block_weak: "blocks moves with low total hit rate",
-  shift_weakness: "weakness shifts each turn — match the medal type for bonus damage",
 };
 
 const MONSTER_SCHEMA = {

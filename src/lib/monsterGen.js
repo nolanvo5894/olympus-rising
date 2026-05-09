@@ -6,7 +6,6 @@ export const SPECIALS = [
   "aoe",
   "regenerate",
   "block_weak",
-  "shift_weakness",
 ];
 
 const MONSTER_SCHEMA = {
@@ -29,7 +28,6 @@ const SPECIAL_HINTS = {
   aoe: "hits all spirits each turn",
   regenerate: "regenerates HP each turn — focus fire",
   block_weak: "blocks moves with low total hit rate",
-  shift_weakness: "weakness shifts each turn — match the medal type for bonus damage",
 };
 
 function buildTextPrompt({ regionName, states, basis }) {
