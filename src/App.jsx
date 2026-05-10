@@ -626,37 +626,12 @@ function Start({go,howto,explore}){return(<div style={{display:"flex",flexDirect
   </div>
 </div>);}
 
-async function compressImageFile(file, maxEdge = 1024, quality = 0.85){
-  const url = URL.createObjectURL(file);
-  try {
-    const img = await new Promise((resolve, reject) => {
-      const i = new Image();
-      i.onload = () => resolve(i);
-      i.onerror = reject;
-      i.src = url;
-    });
-    const scale = Math.min(1, maxEdge / Math.max(img.width, img.height));
-    const w = Math.round(img.width * scale);
-    const h = Math.round(img.height * scale);
-    const canvas = document.createElement("canvas");
-    canvas.width = w; canvas.height = h;
-    canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-    const dataUrl = canvas.toDataURL("image/jpeg", quality);
-    const base64 = dataUrl.split(",")[1] || "";
-    return { dataUrl, base64, mimeType: "image/jpeg" };
-  } finally {
-    URL.revokeObjectURL(url);
-  }
-}
-
 const RANK_LABELS = ["1st", "2nd", "3rd", "4th", "5th"];
 
 function BodyQuiz({done,back}){
   const [unit,setUnit]=useState("imperial");
   const [ft,setFt]=useState("");const [inch,setInch]=useState("");const [cm,setCm]=useState("");
   const [lbs,setLbs]=useState("");const [kg,setKg]=useState("");
-  const [photo,setPhoto]=useState(null); // {dataUrl, base64, mimeType} or null
-  const [photoErr,setPhotoErr]=useState(null);
   const [personality,setPersonality]=useState({}); // {questionId: choiceText}
   const [results,setResults]=useState(null);
   const [loading,setLoading]=useState(false);
@@ -669,19 +644,11 @@ function BodyQuiz({done,back}){
   const personalityComplete=PERSONALITY_QUESTIONS.every(q=>personality[q.id]);
   const canSubmit=heightOk()&&weightOk()&&personalityComplete&&!loading;
 
-  const onPickPhoto=async(e)=>{
-    const file=e.target.files?.[0];e.target.value="";if(!file)return;
-    setPhotoErr(null);
-    try{const result=await compressImageFile(file);setPhoto(result);}
-    catch(err){console.error(err);setPhotoErr("Couldn't read that image. Try a JPEG or PNG.");}
-  };
-
   const run=async()=>{
     setError(null);setLoading(true);
     try{
       const ranked=await matchSports({
         heightCm:getH(),weightKg:getW(),personality,
-        photoBase64:photo?.base64,photoMimeType:photo?.mimeType,
       });
       if(!ranked.length)throw new Error("Empty ranking returned.");
       setResults(ranked);
@@ -697,7 +664,7 @@ function BodyQuiz({done,back}){
     <div style={{fontSize:19,letterSpacing:8,color:T.gd,fontFamily:T.hd}}>THE DELPHIC LENS</div>
     <h2 style={{fontSize:30,fontFamily:T.hd,color:T.gold,margin:0,textAlign:"center"}}>Sport Affinity Scanner</h2>
     <p style={{fontSize:22,color:T.dim,fontFamily:T.bd,maxWidth:480,lineHeight:1.6,fontStyle:"italic",textAlign:"center"}}>
-      Enter your height + weight, optionally upload a photo, and answer 5 quick scenarios. Gemini ranks the 5 sports that fit you best out of 39 Team USA Olympic sports.
+      Enter your height + weight and answer 5 quick scenarios. Gemini ranks the 5 sports that fit you best out of 39 Team USA Olympic sports.
     </p>
 
     {/* ── Section 1: body ── */}
@@ -731,25 +698,9 @@ function BodyQuiz({done,back}){
       </div>
     </div>
 
-    {/* ── Section 2: photo (optional) ── */}
+    {/* ── Section 2: personality ── */}
     <div style={sectionBox}>
-      <div style={{...sectionLabel,marginBottom:10,textAlign:"center"}}>2. PHOTO <span style={{color:T.dim}}>(optional)</span></div>
-      <div style={{display:"flex",gap:14,alignItems:"center",justifyContent:"center",flexWrap:"wrap"}}>
-        {photo?(<>
-          <img src={photo.dataUrl} alt="you" style={{width:80,height:80,objectFit:"cover",borderRadius:8,border:`1px solid ${T.gold}55`}}/>
-          <button onClick={()=>setPhoto(null)} style={{background:"transparent",border:`1px solid ${T.dim}`,color:T.dim,fontFamily:T.hd,fontSize:18,padding:"5px 10px",borderRadius:5,cursor:"pointer",letterSpacing:2,textTransform:"uppercase"}}>Remove</button>
-        </>):(<label style={{cursor:"pointer",border:`1px dashed ${T.fnt}`,borderRadius:8,padding:"14px 22px",color:T.dim,fontFamily:T.bd,fontSize:20}}>
-          <input type="file" accept="image/*" onChange={onPickPhoto} style={{display:"none"}}/>
-          + Upload a photo of yourself
-        </label>)}
-      </div>
-      {photoErr&&<div style={{color:T.red,fontSize:19,fontFamily:T.bd,textAlign:"center",marginTop:6}}>{photoErr}</div>}
-      <p style={{fontSize:18,color:T.dim,fontFamily:T.bd,fontStyle:"italic",textAlign:"center",lineHeight:1.5,marginTop:8}}>Photo is sent to Gemini for analysis and not stored anywhere.</p>
-    </div>
-
-    {/* ── Section 3: personality ── */}
-    <div style={sectionBox}>
-      <div style={{...sectionLabel,marginBottom:10,textAlign:"center"}}>3. QUICK VIBE CHECK</div>
+      <div style={{...sectionLabel,marginBottom:10,textAlign:"center"}}>2. QUICK VIBE CHECK</div>
       <div style={{display:"flex",flexDirection:"column",gap:14}}>
         {PERSONALITY_QUESTIONS.map((q)=>(<div key={q.id}>
           <div style={{fontFamily:T.hd,fontSize:22,color:T.txt,marginBottom:6}}>{q.q}</div>

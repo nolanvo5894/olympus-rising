@@ -117,7 +117,7 @@ function buildSchema(enumNames) {
   };
 }
 
-function buildPrompt({ heightCm, weightKg, personality, hasPhoto, shortlist }) {
+function buildPrompt({ heightCm, weightKg, personality, shortlist }) {
   const personalityLines = PERSONALITY_QUESTIONS.map(q => {
     const ans = personality?.[q.id];
     return `  · "${q.q}" → "${ans ?? "(no answer)"}"`;
@@ -134,19 +134,15 @@ function buildPrompt({ heightCm, weightKg, personality, hasPhoto, shortlist }) {
     "comparing the candidate's height/weight against the average build of Team USA Olympians",
     "per sport (lower body-fit distance = closer body match).",
     "",
-    "Your job: re-rank these 10 sports into a final TOP 5, using the photo (if attached)",
-    "and the personality answers to qualitatively reweight the body-fit shortlist.",
-    "Body fit is the strongest single signal, but personality and visible athletic indicators",
-    "in the photo can promote a sport up or down within the shortlist.",
+    "Your job: re-rank these 10 sports into a final TOP 5, using the personality answers to",
+    "qualitatively reweight the body-fit shortlist. Body fit is the strongest single signal,",
+    "but personality can promote a sport up or down within the shortlist.",
     "",
     "Candidate profile:",
     `- Height: ${heightCm.toFixed(1)} cm`,
     `- Weight: ${weightKg.toFixed(1)} kg`,
     "- Personality answers:",
     personalityLines,
-    hasPhoto
-      ? "- Reference photo attached. Use it for build, frame, posture, and visible athletic indicators only. Do not speculate about protected attributes."
-      : "- No photo provided.",
     "",
     "Body-type shortlist (rank from these 10 only):",
     shortlistTable,
@@ -160,25 +156,20 @@ function buildPrompt({ heightCm, weightKg, personality, hasPhoto, shortlist }) {
 /**
  * Match a candidate to top-5 sports using a hybrid pipeline:
  *   1. Deterministic body-type ranking → top 10 shortlist
- *   2. Gemini reranks the 10 to top 5 using photo + personality
+ *   2. Gemini reranks the 10 to top 5 using personality answers
  * @param {object} input
  * @param {number} input.heightCm
  * @param {number} input.weightKg
  * @param {{[id:string]: string}} input.personality
- * @param {string} [input.photoBase64]
- * @param {string} [input.photoMimeType]
  * @param {number} [input.shortlistSize=10]
  * @returns {Promise<Array<{rank,sport,emoji,avgH,avgW,n,dist}>>}
  */
-export async function matchSports({ heightCm, weightKg, personality, photoBase64, photoMimeType = "image/jpeg", shortlistSize = 10 }) {
+export async function matchSports({ heightCm, weightKg, personality, shortlistSize = 10 }) {
   const shortlist = rankByBodyMatch(heightCm, weightKg).slice(0, shortlistSize);
   const enumNames = shortlist.map(s => s.sport);
   const schema = buildSchema(enumNames);
-  const text = buildPrompt({ heightCm, weightKg, personality, hasPhoto: !!photoBase64, shortlist });
-  const parts = photoBase64
-    ? [{ text }, { inlineData: { mimeType: photoMimeType, data: photoBase64 } }]
-    : text;
-  const data = await geminiText(parts, schema);
+  const text = buildPrompt({ heightCm, weightKg, personality, shortlist });
+  const data = await geminiText(text, schema);
   const byName = Object.fromEntries(shortlist.map(s => [s.sport, s]));
   return (data.rankings || [])
     .slice()
