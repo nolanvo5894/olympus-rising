@@ -630,8 +630,10 @@ const RANK_LABELS = ["1st", "2nd", "3rd", "4th", "5th"];
 
 function BodyQuiz({done,back}){
   const [unit,setUnit]=useState("imperial");
-  const [ft,setFt]=useState("");const [inch,setInch]=useState("");const [cm,setCm]=useState("");
-  const [lbs,setLbs]=useState("");const [kg,setKg]=useState("");
+  // Prefilled with US-adult-average measurements so the quiz is one click away
+  // from "Find My Sports" — players just tweak if they want a personal match.
+  const [ft,setFt]=useState("5");const [inch,setInch]=useState("10");const [cm,setCm]=useState("178");
+  const [lbs,setLbs]=useState("160");const [kg,setKg]=useState("73");
   const [personality,setPersonality]=useState({}); // {questionId: choiceText}
   const [results,setResults]=useState(null);
   const [loading,setLoading]=useState(false);
