@@ -43,7 +43,7 @@ const SUBJECT_OVERRIDES = {
   "Para Powerlifting": "a heroic Paralympic athlete competing in Para Powerlifting, performing a bench press with a loaded barbell",
   "Para Triathlon": "a heroic Paralympic triathlete mid-race, suggestion of swim/bike/run gear, athletic and determined",
   "Para Swimming": "a heroic Paralympic athlete competing in Para Swimming, mid-stroke in clear pool water, goggles and cap",
-  "Para Track & Field": "a heroic Paralympic athlete competing in Para Track & Field, sprinting on a track (with a running blade prosthetic or racing chair as appropriate)",
+  "Para Track & Field": "a heroic Paralympic sprinter competing in Para Track & Field on a running track, with a carbon-fiber running blade prosthetic on the LOWER LEG (below the knee, replacing a foot/shin) — NOT on the arm; both arms must be fully intact, anatomically normal human arms with hands. Athlete is shown from chest up, but the blade may be hinted at the bottom edge of the frame; arms are visible and clearly biological",
   "Goalball": "a heroic Paralympic athlete competing in Goalball, wearing the sport's eyeshades, defending a goal with the bell-ball mid-roll",
 };
 
