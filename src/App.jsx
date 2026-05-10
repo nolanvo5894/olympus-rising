@@ -651,7 +651,7 @@ async function compressImageFile(file, maxEdge = 1024, quality = 0.85){
 
 const RANK_LABELS = ["1st", "2nd", "3rd", "4th", "5th"];
 
-function BodyQuiz({done}){
+function BodyQuiz({done,back}){
   const [unit,setUnit]=useState("imperial");
   const [ft,setFt]=useState("");const [inch,setInch]=useState("");const [cm,setCm]=useState("");
   const [lbs,setLbs]=useState("");const [kg,setKg]=useState("");
@@ -764,7 +764,10 @@ function BodyQuiz({done}){
     {!results&&(<>
       <Btn onClick={run} disabled={!canSubmit} color={T.gold}>{loading?"Reading the auras…":"Find My Sports"}</Btn>
       {error&&<div style={{color:T.red,fontFamily:T.bd,fontSize:20,maxWidth:480,textAlign:"center"}}>{error}</div>}
-      <button onClick={()=>done(null)} style={{background:"none",border:"none",color:T.dim,fontFamily:T.bd,fontSize:20,cursor:"pointer",textDecoration:"underline"}}>Skip →</button>
+      <div style={{display:"flex",gap:18,alignItems:"center"}}>
+        {back&&<button onClick={back} style={{background:"none",border:"none",color:T.dim,fontFamily:T.bd,fontSize:20,cursor:"pointer",textDecoration:"underline"}}>← Back</button>}
+        <button onClick={()=>done(null)} style={{background:"none",border:"none",color:T.dim,fontFamily:T.bd,fontSize:20,cursor:"pointer",textDecoration:"underline"}}>Skip →</button>
+      </div>
     </>)}
 
     {/* ── Results ── */}
@@ -1100,7 +1103,7 @@ function MapScr({slots,hud,onPick,onReset,onRetake}){
   </div>);
 }
 
-function Scout({opts,lockIn,round,rgn,bodyTop5=[]}){
+function Scout({opts,lockIn,round,rgn,bodyTop5=[],back}){
   const [sel,setSel]=useState(new Set());
   const [exp,setExp]=useState(null);
   const [ins,setIns]=useState({});const [ld,setLd]=useState({});
@@ -1133,7 +1136,10 @@ function Scout({opts,lockIn,round,rgn,bodyTop5=[]}){
       {syn.enduranceChain&&<span style={{fontSize:17,background:T.grn+"22",color:T.grn,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>💚 ENDURANCE CHAIN</span>}
       {syn.paraAlliance&&<span style={{fontSize:17,background:T.para+"22",color:T.para,padding:"2px 8px",borderRadius:4,fontFamily:T.hd}}>⚡ PARA ALLIANCE</span>}
     </div>}
-    <Btn onClick={()=>lockIn(team)} disabled={sel.size!==3} color={T.gold}>Lock In Team ({sel.size}/3)</Btn>
+    <div style={{display:"flex",gap:14,alignItems:"center"}}>
+      {back&&<Btn onClick={back} color={T.dim}>← Back to Map</Btn>}
+      <Btn onClick={()=>lockIn(team)} disabled={sel.size!==3} color={T.gold}>Lock In Team ({sel.size}/3)</Btn>
+    </div>
   </div>);
 }
 
@@ -1162,10 +1168,13 @@ const TRIVIA_BANK=[
 ];
 const SPORT_CATS={"Swimming":"water","Diving":"water","Water Polo":"water","Surfing":"water","Sailing":"water","Para Swimming":"water","Track & Field":"individual","Gymnastics":"individual","Fencing":"individual","Archery":"individual","Cycling":"individual","Triathlon":"individual","Modern Pentathlon":"individual","Table Tennis":"individual","Golf":"individual","Sport Climbing":"individual","Weightlifting":"individual","Speed Skating":"individual","Figure Skating":"individual","Freestyle Skiing":"individual","Skateboarding":"individual","Snowboarding":"individual","Alpine Skiing":"individual","Boxing":"combat","Wrestling":"combat","Judo":"combat","Taekwondo":"combat","Basketball":"ball","Volleyball":"ball","Baseball":"ball","Softball":"ball","Rugby Sevens":"ball","Flag Football":"ball","Ice Hockey":"winter","Sled Hockey":"winter","Para Alpine":"para","Para Nordic":"para","Para Track & Field":"para","Para Cycling":"para","Wheelchair Rugby":"para","Wheelchair Basketball":"para","Sitting Volleyball":"para","Goalball":"para","Para Archery":"para","Para Powerlifting":"para","Para Triathlon":"para","Wheelchair Tennis":"para"};
 
-function Trivia({spirit,onComplete}){
-  const [qData,setQData]=useState(null);
-  const [sel,setSel]=useState(null);
-  const [loading,setLoading]=useState(true);
+function Trivia({spirit,onComplete,cache,setCache,back}){
+  // If we already have a cached question for THIS spirit (e.g. user backed out
+  // and came back), reuse it instead of burning another Gemini call.
+  const cached=cache&&cache.spiritId===spirit.id?cache:null;
+  const [qData,setQData]=useState(cached?.qData||null);
+  const [sel,setSel]=useState(cached?.sel??null);
+  const [loading,setLoading]=useState(!cached);
 
   const getFallback=()=>{
     const cat=SPORT_CATS[spirit.sport]||"team";
@@ -1174,8 +1183,9 @@ function Trivia({spirit,onComplete}){
   };
 
   useEffect(()=>{
+    if(cached){return;}
     let cancelled=false;
-    const timeout=setTimeout(()=>{if(!cancelled&&!qData){const fb=getFallback();setQData(fb);setLoading(false);}},8000);
+    const timeout=setTimeout(()=>{if(!cancelled&&!qData){const fb=getFallback();setQData(fb);setLoading(false);setCache?.({spiritId:spirit.id,qData:fb,sel:null});}},8000);
     (async()=>{
       const raw=await gemini(`You are a trivia generator for a Team USA Olympic education game. Generate ONE trivia question about the sport "${spirit.sport}".
 ${NIL_RULES}
@@ -1186,12 +1196,15 @@ where "a" is the 0-based index of the correct answer.`);
       if(cancelled)return;clearTimeout(timeout);
       try{
         const j=JSON.parse(raw.replace(/```json\n?/g,"").replace(/```/g,"").trim());
-        if(j.q&&j.c&&j.c.length===4&&typeof j.a==="number"){setQData(j);setLoading(false);return;}
+        if(j.q&&j.c&&j.c.length===4&&typeof j.a==="number"){setQData(j);setLoading(false);setCache?.({spiritId:spirit.id,qData:j,sel:null});return;}
       }catch{}
-      const fb=getFallback();setQData(fb);setLoading(false);
+      const fb=getFallback();setQData(fb);setLoading(false);setCache?.({spiritId:spirit.id,qData:fb,sel:null});
     })();
     return()=>{cancelled=true;clearTimeout(timeout);};
   },[]);
+
+  // Persist user's answer choice to the cache so back/forward keeps it.
+  const pick=(i)=>{if(sel===null){setSel(i);setCache?.({spiritId:spirit.id,qData,sel:i});}};
 
   const correct=sel!==null&&sel===qData?.a;
   const wrong=sel!==null&&sel!==qData?.a;
@@ -1211,7 +1224,7 @@ where "a" is the 0-based index of the correct answer.`);
             const isCorrect=i===qData.a;const isSel=sel===i;
             const bg=sel===null?T.s1:isCorrect?T.grn+"22":isSel?T.red+"22":T.s1;
             const border=sel===null?T.fnt:isCorrect?T.grn:isSel?T.red:T.fnt;
-            return(<button key={i} onClick={()=>{if(sel===null)setSel(i);}} style={{background:bg,border:`1px solid ${border}`,borderRadius:8,padding:"10px 14px",cursor:sel===null?"pointer":"default",textAlign:"left",fontFamily:T.bd,fontSize:22,color:isCorrect&&sel!==null?T.grn:isSel&&wrong?T.red:T.txt,transition:"all .2s"}}>
+            return(<button key={i} onClick={()=>pick(i)} style={{background:bg,border:`1px solid ${border}`,borderRadius:8,padding:"10px 14px",cursor:sel===null?"pointer":"default",textAlign:"left",fontFamily:T.bd,fontSize:22,color:isCorrect&&sel!==null?T.grn:isSel&&wrong?T.red:T.txt,transition:"all .2s"}}>
               <span style={{fontFamily:T.hd,color:T.gd,marginRight:8}}>{String.fromCharCode(65+i)}.</span>{choice}
               {sel!==null&&isCorrect&&" ✓"}
             </button>);
@@ -1228,11 +1241,14 @@ where "a" is the 0-based index of the correct answer.`);
       </div>
     )}
 
-    <button onClick={onComplete} style={{background:"none",border:"none",color:T.dim,fontFamily:T.bd,fontSize:19,cursor:"pointer",textDecoration:"underline",marginTop:8}}>Skip trivia →</button>
+    <div style={{display:"flex",gap:18,alignItems:"center",marginTop:8}}>
+      {back&&<button onClick={back} style={{background:"none",border:"none",color:T.dim,fontFamily:T.bd,fontSize:19,cursor:"pointer",textDecoration:"underline"}}>← Back to Scout</button>}
+      <button onClick={onComplete} style={{background:"none",border:"none",color:T.dim,fontFamily:T.bd,fontSize:19,cursor:"pointer",textDecoration:"underline"}}>Skip trivia →</button>
+    </div>
   </div>);
 }
 
-function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[],upgrades={}}){
+function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[],upgrades={},restart}){
   const syn=detectSynergies(team,rgn);
   const [ms,setMs]=useState(initMonsters.map(m=>({...m,maxHp:m.hp})));
   const [spirits,setSpirits]=useState(team.map(s=>{
@@ -1451,6 +1467,7 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[],upgrade
         {ph==="player"&&active&&active.hp>0&&(active.sp<=0||(target?.special==="block_weak"&&active.moves.every(m=>totalRate(m)<.25)))&&<div onClick={()=>setSelMove("rest")} style={{padding:"10px",cursor:"pointer",background:selMove==="rest"?T.grn+"22":"transparent",border:`2px solid ${selMove==="rest"?T.grn:T.fnt}`,textAlign:"center",fontFamily:T.hd,fontSize:18,color:T.grn,letterSpacing:2}}>💤 REST · +5 HP, +1 SP</div>}
         {ph==="player"&&active&&active.hp>0&&<button onClick={doAttack} disabled={selMove==null} style={{width:"100%",marginTop:8,fontFamily:T.hd,fontSize:19,letterSpacing:3,padding:"12px",background:selMove==null?"transparent":T.gold,color:selMove==null?T.dim:T.bg,border:`3px solid ${selMove==null?T.fnt:T.gold}`,cursor:selMove==null?"default":"pointer",boxShadow:selMove==null?"none":`0 0 16px ${T.gold}, 4px 4px 0 ${T.red}`,fontWeight:700}}>{selMove==null?"PICK A MOVE":"★ STRIKE! ★"}</button>}
         {ph==="done"&&<button onClick={()=>finish(won,spirits)} style={{width:"100%",marginTop:8,fontFamily:T.hd,fontSize:19,letterSpacing:3,padding:"12px",background:won?T.grn:T.pur,color:T.bg,border:`3px solid ${won?T.grn:T.pur}`,cursor:"pointer",boxShadow:`0 0 14px ${won?T.grn:T.pur}, 4px 4px 0 ${T.red}`,fontWeight:700}}>{won?"★ CONTINUE ★":"INSERT COIN →"}</button>}
+        {restart&&ph!=="done"&&<button onClick={restart} title="Restart this battle (no penalty)" style={{marginTop:6,width:"100%",fontFamily:T.hd,fontSize:13,letterSpacing:2,padding:"6px",background:"transparent",color:T.dim,border:`1px solid ${T.dim}55`,cursor:"pointer"}}>↻ Restart Battle</button>}
       </div>
 
       {/* BATTLE LOG */}
@@ -1471,7 +1488,7 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[],upgrade
   </div>);
 }
 
-function SimScreen({team,monsters,regionId,bodyTop5,onContinue}){
+function SimScreen({team,monsters,regionId,bodyTop5,onContinue,back}){
   const [result,setResult]=useState(null);
   const run=()=>{setResult(simulateBattle(team,monsters,1000,regionId,bodyTop5));};
   const syn=detectSynergies(team,regionId);
@@ -1513,7 +1530,10 @@ function SimScreen({team,monsters,regionId,bodyTop5,onContinue}){
       </div>
       <p style={{fontSize:18,color:T.dim,fontFamily:T.bd,fontStyle:"italic",lineHeight:1.5}}>💡 {tip}</p>
     </div>)}
-    <Btn onClick={onContinue}>{result?"Continue to Battle":"Skip Simulation"}</Btn>
+    <div style={{display:"flex",gap:14,alignItems:"center"}}>
+      {back&&<Btn onClick={back} color={T.dim}>← Back</Btn>}
+      <Btn onClick={onContinue}>{result?"Continue to Battle":"Skip Simulation"}</Btn>
+    </div>
   </div>);
 }
 
@@ -1637,6 +1657,12 @@ function Game(){
   const [opts,setOpts]=useState([]);
   const [bodyTop5,setBodyTop5]=useState([]);
   const [triviaSpirit,setTriviaSpirit]=useState(null);
+  // Cache the Trivia component's question + chosen answer so back/forward
+  // through trivia ↔ simulate doesn't re-call Gemini or lose the user's pick.
+  const [triviaCache,setTriviaCache]=useState(null);
+  // Bumping this remounts the Battle component, giving a clean restart with
+  // upgrades re-applied and no streak/gold penalty.
+  const [battleKey,setBattleKey]=useState(0);
   const [slots,setSlots]=useState(()=>Object.fromEntries(ACTIVE_REGIONS.map(r=>[r.id,null])));
   const [nextSlots,setNextSlots]=useState(()=>Object.fromEntries(ACTIVE_REGIONS.map(r=>[r.id,null])));
   const generatingNext=useRef(new Set());
@@ -1823,12 +1849,22 @@ function Game(){
     setPh("scout");
   };
 
-  const lockIn=(picked)=>{picked.forEach(s=>used.current.add(s.id));setTeam(picked);setTriviaSpirit(picked[0]);setPh("trivia");};
+  // Don't burn spirits at lockIn time — that would permanently consume them
+  // even if the player backs out before battle starts. Burn happens in fin().
+  const lockIn=(picked)=>{
+    setTeam(picked);
+    setTriviaSpirit(picked[0]);
+    // Invalidate trivia cache — it was tied to a different draft.
+    setTriviaCache(null);
+    setPh("trivia");
+  };
 
   const fin=(won,cards)=>{
     const regionId=currentRegion;
     const monster=slots[regionId];
     setLastWon(won);setLastCards(cards);
+    // The team actually fought — burn these spirits from future drafts now.
+    team.forEach(s=>used.current.add(s.id));
     if(won&&monster){
       const trimmedMonster={...monster,imageDataUrl:null};
       const newDefeated=[...defeated,trimmedMonster].slice(-20);
@@ -1881,14 +1917,14 @@ function Game(){
     {announce&&<div style={{position:"fixed",inset:0,zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",pointerEvents:"none",background:"radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.55) 0%, transparent 60%)",animation:"announceIn .35s ease-out"}}><div style={{textAlign:"center"}}><div style={{fontFamily:T.hd,fontSize:24,letterSpacing:6,color:T.cyan||T.blu,marginBottom:14,textShadow:`0 0 10px ${T.blu}`}}>{announce.sub}</div><div style={{fontFamily:T.hd,fontSize:88,letterSpacing:6,color:announce.color,textShadow:`4px 4px 0 ${T.red}, 8px 8px 0 ${T.s1}, 0 0 40px ${announce.color}`,animation:"pulse .8s ease-in-out infinite"}}>{announce.text}</div></div></div>}
     {ph==="start"&&<Start go={go} howto={()=>setPh("howto")} explore={()=>setPh("explore")}/>}
     {ph==="explore"&&<Explorer back={()=>setPh("start")}/>}
-    {ph==="quiz"&&<BodyQuiz done={startGame}/>}
+    {ph==="quiz"&&<BodyQuiz done={startGame} back={()=>setPh(hud.profileSet?"map":"start")}/>}
     {ph==="howto"&&<HowTo back={()=>setPh("start")} go={go}/>}
     {ph==="map"&&<MapScr slots={slots} hud={hud} onPick={pickRegion} onReset={reset} onRetake={retakeProfile}/>}
-    {ph==="scout"&&currentRegion&&<Scout opts={opts} lockIn={lockIn} rgn={currentRegion} bodyTop5={bodyTop5}/>}
-    {ph==="trivia"&&<Trivia spirit={triviaSpirit} onComplete={()=>setPh("simulate")}/>}
-    {ph==="simulate"&&currentRegion&&<SimScreen team={team} monsters={battleMonsters} regionId={currentRegion} bodyTop5={bodyTop5} onContinue={()=>setPh("forge")}/>}
+    {ph==="scout"&&currentRegion&&<Scout opts={opts} lockIn={lockIn} rgn={currentRegion} bodyTop5={bodyTop5} back={()=>{setTeam([]);setCurrentRegion(null);setTriviaCache(null);setPh("map");}}/>}
+    {ph==="trivia"&&<Trivia spirit={triviaSpirit} onComplete={()=>setPh("simulate")} cache={triviaCache} setCache={setTriviaCache} back={()=>setPh("scout")}/>}
+    {ph==="simulate"&&currentRegion&&<SimScreen team={team} monsters={battleMonsters} regionId={currentRegion} bodyTop5={bodyTop5} onContinue={()=>setPh("forge")} back={()=>setPh("trivia")}/>}
     {ph==="forge"&&currentRegion&&<Forge team={team} gold={hud.gold} onCommit={(picked,cost)=>{setUpgrades(picked);setHud(h=>({...h,gold:h.gold-cost}));setPh("battle");}} onBack={()=>setPh("simulate")}/>}
-    {ph==="battle"&&currentRegion&&<Battle monsters={battleMonsters} team={team} rgn={currentRegion} finish={fin} round={Math.max(1,Math.floor(hud.kills/3)+1)} bodyTop5={bodyTop5} upgrades={upgrades}/>}
+    {ph==="battle"&&currentRegion&&<Battle key={battleKey} monsters={battleMonsters} team={team} rgn={currentRegion} finish={fin} round={Math.max(1,Math.floor(hud.kills/3)+1)} bodyTop5={bodyTop5} upgrades={upgrades} restart={()=>setBattleKey(k=>k+1)}/>}
     {ph==="debrief"&&currentRegion&&<Debrief monsters={[lastWon?defeated[defeated.length-1]:slots[currentRegion]].filter(Boolean)} won={lastWon} cards={lastCards} rgn={currentRegion} next={nxt}/>}
   </div>);
 }
