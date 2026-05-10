@@ -1638,7 +1638,7 @@ function Game(){
   const [nextSlots,setNextSlots]=useState(()=>Object.fromEntries(ACTIVE_REGIONS.map(r=>[r.id,null])));
   const generatingNext=useRef(new Set());
   const [defeated,setDefeated]=useState([]);
-  const [hud,setHud]=useState({kills:0,streak:0,gold:0});
+  const [hud,setHud]=useState({kills:0,streak:0,gold:200});
   // Per-battle consumable upgrades, keyed by spirit id. Cleared after every battle.
   // Shape: { [spiritId]: { hp?:true, sp?:true, hit?:true } }
   const [upgrades,setUpgrades]=useState({});
@@ -1690,7 +1690,7 @@ function Game(){
       setSlots(safeSlots);
       setNextSlots(safeNext);
       setDefeated(saved.defeated||[]);
-      setHud(saved.hud||{kills:0,streak:0,gold:0});
+      setHud(saved.hud||{kills:0,streak:0,gold:200});
     }
   },[]);
 
@@ -1833,7 +1833,7 @@ function Game(){
   const reset=()=>{
     clearCampaign();
     setDefeated([]);
-    setHud({kills:0,streak:0,gold:0});
+    setHud({kills:0,streak:0,gold:200});
     setUpgrades({});
     used.current=new Set();
     generatingNext.current=new Set();
