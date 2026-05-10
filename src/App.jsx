@@ -378,8 +378,15 @@ const shuffle=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.ra
 const HP=100; // flat HP for all spirits
 const totalRate=m=>m[2]+m[3]+m[4];
 const bestGold=s=>Math.max(...s.moves.map(m=>m[2]));
-function rollMove(move,affinity,bodyAff,synergies={}){
-  const [name,event,g,s,b,kw]=move;
+function rollMove(move,affinity,bodyAff,synergies={},hitBoost=0){
+  const [name,event,g0,s0,b0,kw]=move;
+  // Olympian Surge upgrade adds hitBoost percentage points to overall hit rate,
+  // distributed across tiers proportionally (so a balanced move stays balanced).
+  let g=g0,s=s0,b=b0;
+  if(hitBoost>0){
+    const tot=g0+s0+b0;
+    if(tot>0){g+=hitBoost*g0/tot;s+=hitBoost*s0/tot;b+=hitBoost*b0/tot;}
+  }
   const r=Math.random();
   let tier_="miss",baseDmg=0;
   if(r<g){tier_="gold";baseDmg=30;}
@@ -860,8 +867,18 @@ function HowTo({back,go}){
         <p style={{...P,margin:0}}>💚 <Strong c={T.grn}>ENDURANCE</Strong> — Any hit heals 8 HP</p>
       </div>
 
+      <div style={Card}>
+        <h3 style={H}><span style={{color:T.pur}}>8.</span> 💰 EARN GOLD AT THE AGORA</h3>
+        <p style={P}>Win battles to earn <Strong c={T.gold}>gold</Strong>. Base reward is <Strong c={T.gold}>50g per win</Strong>, plus <Strong c={T.gold}>+10g for every win in your current streak</Strong> — losing resets the streak.</p>
+        <p style={P}>Before each battle, the <Strong c={T.gold}>Agora</Strong> opens. Spend gold on consumable upgrades for any spirit on your team:</p>
+        <p style={P}>🛡️ <Strong>Aegis Brew</Strong> — +30 max HP <span style={{color:T.gold}}>(80g)</span></p>
+        <p style={P}>⚡ <Strong>Hermes Boost</Strong> — +1 SP <span style={{color:T.gold}}>(60g)</span></p>
+        <p style={P}>💪 <Strong>Olympian Surge</Strong> — +15% hit rate on every move <span style={{color:T.gold}}>(120g)</span></p>
+        <p style={{...P,margin:0}}>Upgrades last for <Strong>that battle only</Strong>. Save gold for when the simulator says you're an underdog.</p>
+      </div>
+
       <div style={{...Card,borderColor:T.para+"66"}}>
-        <h3 style={{...H,color:T.para,textShadow:`0 0 8px ${T.para}55`}}><span style={{color:T.pur}}>8.</span> ⚡ PARALYMPIC POWERS</h3>
+        <h3 style={{...H,color:T.para,textShadow:`0 0 8px ${T.para}55`}}><span style={{color:T.pur}}>9.</span> ⚡ PARALYMPIC POWERS</h3>
         <p style={P}>Paralympic spirits have <Strong c={T.para}>ADAPT</Strong>, a once-per-game ability that <Strong c={T.para}>cancels a monster attack</Strong>.</p>
         <p style={{...P,margin:0}}>Many Para moves also have strong medal odds, making them powerful attackers <em>and</em> clutch defenders.</p>
       </div>
@@ -870,7 +887,7 @@ function HowTo({back,go}){
 
     {/* Closing line */}
     <div style={{...Card,borderColor:T.gold+"55",textAlign:"center",marginTop:8}}>
-      <p style={{...P,margin:0,fontSize:20}}>There is <Strong c={T.red}>no final round</Strong>. As your campaign continues, your kill count and win streak grow, monsters return stronger, and each battle reveals more about the <Strong>athletes, regions, rivalries, and milestones</Strong> that shaped America's Olympic and Paralympic story.</p>
+      <p style={{...P,margin:0,fontSize:20}}>There is <Strong c={T.red}>no final round</Strong>. As your campaign continues, your gold purse grows, monsters return stronger, and each battle reveals more about the <Strong>athletes, regions, rivalries, and milestones</Strong> that shaped America's Olympic and Paralympic story.</p>
     </div>
 
     {/* Buttons — match the 2-col card grid above (same minmax, same gap, centered in each column) */}
@@ -1050,9 +1067,9 @@ function MapScr({slots,hud,onPick,onReset}){
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"40px 20px",gap:18}}>
     <div style={{fontSize:22,color:T.blu,fontFamily:T.hd,letterSpacing:5,textShadow:`0 0 8px ${T.blu}`}}>★ ENDLESS DEFENSE — TAP A REGION TO ENGAGE ★</div>
     {/* HUD */}
-    <div style={{display:"flex",gap:24,background:"rgba(0,0,0,0.55)",border:`2px solid ${T.pur}`,padding:"10px 22px",fontFamily:T.bd,fontSize:22,color:T.txt,boxShadow:`0 0 14px ${T.pur}66`}}>
-      <span>⚔ Kills <span style={{color:T.gold,fontWeight:700,fontFamily:T.hd,fontSize:21,marginLeft:6,textShadow:`0 0 6px ${T.gold}`}}>{hud.kills}</span></span>
-      <span>🔥 Streak <span style={{color:hud.streak>=3?T.gold:T.txt,fontWeight:700,fontFamily:T.hd,fontSize:21,marginLeft:6,textShadow:hud.streak>=3?`0 0 6px ${T.gold}`:"none"}}>{hud.streak}</span></span>
+    <div style={{display:"flex",gap:24,background:"rgba(0,0,0,0.55)",border:`2px solid ${T.pur}`,padding:"10px 22px",fontFamily:T.bd,fontSize:22,color:T.txt,boxShadow:`0 0 14px ${T.pur}66`,alignItems:"center"}}>
+      <span>💰 Gold <span style={{color:T.gold,fontWeight:700,fontFamily:T.hd,fontSize:21,marginLeft:6,textShadow:`0 0 6px ${T.gold}`}}>{hud.gold||0}</span></span>
+      {hud.streak>=2&&<span title={`Win streak — next win earns +${hud.streak*10}g bonus`} style={{fontSize:16,color:T.gold,fontFamily:T.hd,letterSpacing:1,padding:"2px 8px",border:`1px solid ${T.gold}88`,borderRadius:4}}>🔥 ×{hud.streak}</span>}
       <span>🛡 Held <span style={{color:T.grn,fontWeight:700,fontFamily:T.hd,fontSize:21,marginLeft:6,textShadow:`0 0 6px ${T.grn}`}}>{liveCount}/{ACTIVE_REGIONS.length}</span></span>
     </div>
     {/* Map + slot card overlay. Outer container has padding so cards anchored
@@ -1212,10 +1229,15 @@ where "a" is the 0-based index of the correct answer.`);
   </div>);
 }
 
-function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
+function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[],upgrades={}}){
   const syn=detectSynergies(team,rgn);
   const [ms,setMs]=useState(initMonsters.map(m=>({...m,maxHp:m.hp})));
-  const [spirits,setSpirits]=useState(team.map(s=>({...s,hp:HP,sp:SP_MAX,au:false,ac:false})));
+  const [spirits,setSpirits]=useState(team.map(s=>{
+    const u=upgrades[s.id]||{};
+    const maxHp=HP+(u.hp?30:0);
+    const maxSp=SP_MAX+(u.sp?1:0);
+    return {...s,hp:maxHp,maxHp,sp:maxSp,maxSp,hitBoost:u.hit?0.15:0,au:false,ac:false};
+  }));
   const [activeIdx,setActiveIdx]=useState(0); // which spirit is acting (0,1,2)
   const [selMove,setSelMove]=useState(null);
   const [selTarget,setSelTarget]=useState(0); // which monster to target
@@ -1241,8 +1263,8 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
     let nl=[],nm=[...ms],ns=spirits.map(x=>({...x}));
 
     if(isRest){
-      ns[activeIdx].hp=Math.min(HP,ns[activeIdx].hp+5);
-      ns[activeIdx].sp=Math.min(SP_MAX,ns[activeIdx].sp+1);
+      ns[activeIdx].hp=Math.min(ns[activeIdx].maxHp,ns[activeIdx].hp+5);
+      ns[activeIdx].sp=Math.min(ns[activeIdx].maxSp,ns[activeIdx].sp+1);
       nl.push(`${s.emoji} ${s.sport} rests — +5 HP, +1 SP.`);
     }else{
       ns[activeIdx].sp--;
@@ -1253,7 +1275,7 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
       }else{
         const aff=s.regions.includes(rgn)||rgn==="la28";
         const bAff=bodyTop5.some(b=>b.sport===s.sport);
-        const result=rollMove(move,aff,bAff,syn);
+        const result=rollMove(move,aff,bAff,syn,s.hitBoost||0);
         const emoji=result.tier==="gold"?"🥇":result.tier==="silver"?"🥈":result.tier==="bronze"?"🥉":"❌";
         if(result.tier==="miss"){
           nl.push(`${s.emoji} ${s.sport} → ${move[0]} → ${emoji} MISS!`);
@@ -1266,7 +1288,7 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
           if(nm[ti].hp<=0)nl.push(`🏆 ${nm[ti].name} defeated!`);
           setFx({type:result.tier,dmg:totalDmg,side:"mon",t:Date.now()});
         }
-        if(result.heal>0){ns[activeIdx].hp=Math.min(HP,ns[activeIdx].hp+result.heal);}
+        if(result.heal>0){ns[activeIdx].hp=Math.min(ns[activeIdx].maxHp,ns[activeIdx].hp+result.heal);}
       }
     }
 
@@ -1315,7 +1337,7 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
   const won=ms.every(m=>m.hp<=0);
   const target=ms[selTarget]||ms[0];
   const teamHp=spirits.reduce((a,s)=>a+Math.max(0,s.hp),0);
-  const teamMax=spirits.length*HP;
+  const teamMax=spirits.reduce((a,s)=>a+s.maxHp,0);
   const sparkColor=fx?(fx.type==="gold"?T.gold:fx.type==="silver"?medalColors.silver:fx.type==="bronze"?medalColors.bronze:fx.type==="miss"?T.dim:T.red):null;
 
   // Pixel HP segmented bar (matches arcade mockup)
@@ -1337,12 +1359,12 @@ function Battle({monsters:initMonsters,team,rgn,finish,round,bodyTop5=[]}){
           <div style={{flex:1,minWidth:0}}>
             <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:8,fontFamily:T.hd,fontSize:17,letterSpacing:1,color:T.gold,whiteSpace:"nowrap",overflow:"hidden"}}>
               <span style={{overflow:"hidden",textOverflow:"ellipsis"}}>{active.sport.toUpperCase()}</span>
-              <span style={{fontSize:15,color:T.dim,letterSpacing:1}}>HP {active.hp}/{HP}</span>
+              <span style={{fontSize:15,color:T.dim,letterSpacing:1}}>HP {active.hp}/{active.maxHp}</span>
             </div>
-            <div style={{marginTop:4}}><PixelBar hp={active.hp} max={HP} color={active.hp>HP*.4?T.grn:T.red} height={7} segments={20}/></div>
+            <div style={{marginTop:4}}><PixelBar hp={active.hp} max={active.maxHp} color={active.hp>active.maxHp*.4?T.grn:T.red} height={7} segments={20}/></div>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:4,gap:8}}>
               <span style={{display:"flex",gap:3}}>{spirits.map((s,i)=>(<button key={s.id} onClick={()=>{if(s.hp>0&&ph==="player")setActiveIdx(i);}} title={s.sport} style={{width:18,height:18,padding:0,background:i===activeIdx?T.gold:s.hp<=0?T.fnt:"transparent",border:`1px solid ${i===activeIdx?T.gold:s.hp<=0?T.fnt:T.pur}`,color:i===activeIdx?T.bg:s.hp<=0?T.bg:T.txt,fontFamily:T.hd,fontSize:11,cursor:s.hp>0&&ph==="player"&&i!==activeIdx?"pointer":"default",opacity:s.hp<=0?.4:1}}>{i+1}</button>))}</span>
-              <span style={{display:"flex",gap:2,alignItems:"center"}}><span style={{fontFamily:T.hd,fontSize:13,color:T.dim,marginRight:4}}>SP</span>{Array.from({length:SP_MAX},(_,j)=><span key={j} style={{width:6,height:6,background:j<active.sp?T.gold:T.fnt,boxShadow:j<active.sp?`0 0 3px ${T.gold}`:"none"}}/>)}</span>
+              <span style={{display:"flex",gap:2,alignItems:"center"}}><span style={{fontFamily:T.hd,fontSize:13,color:T.dim,marginRight:4}}>SP</span>{Array.from({length:active.maxSp},(_,j)=><span key={j} style={{width:6,height:6,background:j<active.sp?T.gold:T.fnt,boxShadow:j<active.sp?`0 0 3px ${T.gold}`:"none"}}/>)}</span>
               {active.para&&!active.ac&&active.hp>0&&ph!=="done"&&<button onClick={()=>{if(!active.au)setSpirits(p=>p.map((x,j)=>j===activeIdx?{...x,au:true}:x));}} style={{fontSize:13,background:active.au?T.para+"33":"transparent",border:`1px solid ${active.au?T.para:T.fnt}`,color:active.au?T.para:T.dim,padding:"2px 8px",cursor:"pointer",fontFamily:T.hd,letterSpacing:1}}>{active.au?"⚡ARMED":"⚡ARM"}</button>}
             </div>
           </div>
@@ -1492,6 +1514,74 @@ function SimScreen({team,monsters,regionId,bodyTop5,onContinue}){
   </div>);
 }
 
+// Per-battle consumable upgrades. Costs are fixed; effects apply only to the
+// next battle and are cleared in fin() afterward (win or loss).
+const UPGRADES=[
+  {key:"hp",  icon:"🛡️",label:"AEGIS BREW",   desc:"+30 max HP this battle",     cost:80, color:"#22e0ff"},
+  {key:"sp",  icon:"⚡",label:"HERMES BOOST", desc:"+1 SP this battle",           cost:60, color:"#ffd400"},
+  {key:"hit", icon:"💪",label:"OLYMPIAN SURGE",desc:"+15% hit rate this battle",  cost:120,color:"#ff2d95"},
+];
+
+function Forge({team,gold,onCommit,onBack}){
+  // Local pending state — committed only when player hits "To Battle ▶".
+  // Letting them experiment without burning gold or polluting parent state.
+  const [pending,setPending]=useState({});
+  const has=(spiritId,key)=>!!(pending[spiritId]||{})[key];
+  const totalSpent=Object.values(pending).reduce((a,u)=>a+UPGRADES.reduce((b,up)=>b+(u[up.key]?up.cost:0),0),0);
+  const remaining=gold-totalSpent;
+  const toggle=(spiritId,u)=>{
+    const owned=has(spiritId,u.key);
+    if(owned){
+      setPending(p=>{const c={...p};const c2={...(c[spiritId]||{})};delete c2[u.key];if(Object.keys(c2).length)c[spiritId]=c2;else delete c[spiritId];return c;});
+    }else{
+      if(remaining<u.cost)return;
+      setPending(p=>({...p,[spiritId]:{...(p[spiritId]||{}),[u.key]:true}}));
+    }
+  };
+  return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:20,gap:14,maxWidth:760,margin:"0 auto"}}>
+    <div style={{fontSize:19,letterSpacing:8,color:T.gd,fontFamily:T.hd}}>AGORA</div>
+    <h2 style={{fontSize:22,fontFamily:T.hd,color:T.gold,margin:0,textAlign:"center"}}>Outfit Your Spirits</h2>
+    <div style={{display:"flex",alignItems:"center",gap:12}}>
+      <span style={{fontSize:28,fontFamily:T.hd,color:T.gold,textShadow:`0 0 8px ${T.gold}`}}>💰 {remaining}</span>
+      {totalSpent>0&&<span style={{fontSize:14,color:T.dim,fontFamily:T.bd}}>({totalSpent}g committed · {gold} before)</span>}
+    </div>
+    <p style={{fontSize:16,color:T.dim,fontFamily:T.bd,fontStyle:"italic",margin:0,textAlign:"center",maxWidth:520}}>
+      Tap an upgrade to buy it for that spirit. Tap again to refund. Upgrades last for this battle only.
+    </p>
+    <div style={{display:"flex",gap:10,flexWrap:"wrap",justifyContent:"center",width:"100%"}}>
+      {team.map(s=>(<div key={s.id} style={{background:`linear-gradient(150deg,${T.s1},${T.s2})`,border:`2px solid ${T.gold}55`,borderRadius:10,padding:10,width:220,display:"flex",flexDirection:"column",gap:6}}>
+        <div style={{display:"flex",alignItems:"center",gap:8}}>
+          <SportAvatar sport={s.sport} emoji={s.emoji} size={44} radius={4}/>
+          <div style={{fontFamily:T.hd,fontSize:15,color:T.txt,letterSpacing:1}}>{s.sport.toUpperCase()}</div>
+        </div>
+        {UPGRADES.map(u=>{
+          const owned=has(s.id,u.key);
+          const affordable=owned||remaining>=u.cost;
+          return(<button key={u.key} onClick={()=>toggle(s.id,u)} disabled={!affordable}
+            style={{display:"grid",gridTemplateColumns:"24px 1fr auto",gap:6,alignItems:"center",padding:"6px 8px",
+              background:owned?u.color+"22":"transparent",
+              border:`2px solid ${owned?u.color:affordable?u.color+"55":T.fnt}`,
+              color:owned?u.color:affordable?T.txt:T.dim,
+              cursor:affordable?"pointer":"not-allowed",
+              fontFamily:T.bd,fontSize:13,textAlign:"left",borderRadius:4,
+              boxShadow:owned?`0 0 8px ${u.color}55`:"none"}}>
+            <span style={{fontSize:16}}>{u.icon}</span>
+            <span style={{display:"flex",flexDirection:"column",lineHeight:1.2}}>
+              <span style={{fontFamily:T.hd,fontSize:11,letterSpacing:1}}>{u.label}</span>
+              <span style={{fontSize:11,color:T.dim}}>{u.desc}</span>
+            </span>
+            <span style={{fontFamily:T.hd,fontSize:13,color:owned?u.color:T.gold,whiteSpace:"nowrap"}}>{owned?"✓":`${u.cost}g`}</span>
+          </button>);
+        })}
+      </div>))}
+    </div>
+    <div style={{display:"flex",gap:14,marginTop:6}}>
+      <Btn onClick={onBack} color={T.dim}>← Back</Btn>
+      <Btn onClick={()=>onCommit(pending,totalSpent)} color={T.gold}>To Battle ▶</Btn>
+    </div>
+  </div>);
+}
+
 function Debrief({monsters,won,cards,rgn,round,next}){
   const [txt,setTxt]=useState(null);const rg=REGIONS.find(r=>r.id===rgn);
   useEffect(()=>{gemini(`In one or two short sentences, share a real, interesting historical fact about Team USA Olympic or Paralympic competition tied to the ${rg?.name} region (${rg?.states}). Focus on team-level achievements, sport milestones, host cities, training hubs, or regional sport culture. ${NIL_RULES}\nNo introductions or framing — just the fact.`).then(t=>setTxt(t||`${rg?.name} has produced champions across many decades of Olympic and Paralympic competition.`));},[]);
@@ -1548,7 +1638,10 @@ function Game(){
   const [nextSlots,setNextSlots]=useState(()=>Object.fromEntries(ACTIVE_REGIONS.map(r=>[r.id,null])));
   const generatingNext=useRef(new Set());
   const [defeated,setDefeated]=useState([]);
-  const [hud,setHud]=useState({kills:0,streak:0});
+  const [hud,setHud]=useState({kills:0,streak:0,gold:0});
+  // Per-battle consumable upgrades, keyed by spirit id. Cleared after every battle.
+  // Shape: { [spiritId]: { hp?:true, sp?:true, hit?:true } }
+  const [upgrades,setUpgrades]=useState({});
   const [currentRegion,setCurrentRegion]=useState(null);
   const [lastWon,setLastWon]=useState(false);
   const [lastCards,setLastCards]=useState([]);
@@ -1597,7 +1690,7 @@ function Game(){
       setSlots(safeSlots);
       setNextSlots(safeNext);
       setDefeated(saved.defeated||[]);
-      setHud(saved.hud||{kills:0,streak:0});
+      setHud(saved.hud||{kills:0,streak:0,gold:0});
     }
   },[]);
 
@@ -1714,7 +1807,8 @@ function Game(){
       const trimmedMonster={...monster,imageDataUrl:null};
       const newDefeated=[...defeated,trimmedMonster].slice(-20);
       setDefeated(newDefeated);
-      setHud(h=>({kills:h.kills+1,streak:h.streak+1}));
+      // Streak BEFORE increment drives the multiplier — first win = 50g, second = 60g, …
+      setHud(h=>({...h,kills:h.kills+1,streak:h.streak+1,gold:h.gold+50+10*h.streak}));
       const queued=nextSlots[regionId];
       if(queued){
         // Hot path: instant swap from pre-gen queue, then refill in background
@@ -1729,6 +1823,8 @@ function Game(){
     }else{
       setHud(h=>({...h,streak:0}));
     }
+    // Consumable upgrades are spent regardless of outcome.
+    setUpgrades({});
     setPh("debrief");
   };
 
@@ -1737,7 +1833,8 @@ function Game(){
   const reset=()=>{
     clearCampaign();
     setDefeated([]);
-    setHud({kills:0,streak:0});
+    setHud({kills:0,streak:0,gold:0});
+    setUpgrades({});
     used.current=new Set();
     generatingNext.current=new Set();
     const cleared=Object.fromEntries(ACTIVE_REGIONS.map(r=>[r.id,null]));
@@ -1762,8 +1859,9 @@ function Game(){
     {ph==="map"&&<MapScr slots={slots} hud={hud} onPick={pickRegion} onReset={reset}/>}
     {ph==="scout"&&currentRegion&&<Scout opts={opts} lockIn={lockIn} rgn={currentRegion} bodyTop5={bodyTop5}/>}
     {ph==="trivia"&&<Trivia spirit={triviaSpirit} onComplete={()=>setPh("simulate")}/>}
-    {ph==="simulate"&&currentRegion&&<SimScreen team={team} monsters={battleMonsters} regionId={currentRegion} bodyTop5={bodyTop5} onContinue={()=>setPh("battle")}/>}
-    {ph==="battle"&&currentRegion&&<Battle monsters={battleMonsters} team={team} rgn={currentRegion} finish={fin} round={Math.max(1,Math.floor(hud.kills/3)+1)} bodyTop5={bodyTop5}/>}
+    {ph==="simulate"&&currentRegion&&<SimScreen team={team} monsters={battleMonsters} regionId={currentRegion} bodyTop5={bodyTop5} onContinue={()=>setPh("forge")}/>}
+    {ph==="forge"&&currentRegion&&<Forge team={team} gold={hud.gold} onCommit={(picked,cost)=>{setUpgrades(picked);setHud(h=>({...h,gold:h.gold-cost}));setPh("battle");}} onBack={()=>setPh("simulate")}/>}
+    {ph==="battle"&&currentRegion&&<Battle monsters={battleMonsters} team={team} rgn={currentRegion} finish={fin} round={Math.max(1,Math.floor(hud.kills/3)+1)} bodyTop5={bodyTop5} upgrades={upgrades}/>}
     {ph==="debrief"&&currentRegion&&<Debrief monsters={[lastWon?defeated[defeated.length-1]:slots[currentRegion]].filter(Boolean)} won={lastWon} cards={lastCards} rgn={currentRegion} next={nxt}/>}
   </div>);
 }
