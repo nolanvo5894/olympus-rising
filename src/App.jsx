@@ -1062,7 +1062,7 @@ function SportDetail({spirit,stats,body,back}){
   </div>);
 }
 
-function MapScr({slots,hud,onPick,onReset}){
+function MapScr({slots,hud,onPick,onReset,onRetake}){
   const liveCount=Object.values(slots).filter(Boolean).length;
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"40px 20px",gap:18}}>
     <div style={{fontSize:22,color:T.blu,fontFamily:T.hd,letterSpacing:5,textShadow:`0 0 8px ${T.blu}`}}>★ ENDLESS DEFENSE — TAP A REGION TO ENGAGE ★</div>
@@ -1093,7 +1093,10 @@ function MapScr({slots,hud,onPick,onReset}){
         })}
       </div>
     </div>
-    <Btn onClick={onReset} color={T.red}>Reset Campaign</Btn>
+    <div style={{display:"flex",gap:12,justifyContent:"center",alignItems:"center"}}>
+      <Btn onClick={onRetake} color={T.blu}>↻ Retake Profile</Btn>
+      <Btn onClick={onReset} color={T.red}>Reset Campaign</Btn>
+    </div>
   </div>);
 }
 
@@ -1638,7 +1641,7 @@ function Game(){
   const [nextSlots,setNextSlots]=useState(()=>Object.fromEntries(ACTIVE_REGIONS.map(r=>[r.id,null])));
   const generatingNext=useRef(new Set());
   const [defeated,setDefeated]=useState([]);
-  const [hud,setHud]=useState({kills:0,streak:0,gold:200});
+  const [hud,setHud]=useState({kills:0,streak:0,gold:200,profileSet:false});
   // Per-battle consumable upgrades, keyed by spirit id. Cleared after every battle.
   // Shape: { [spiritId]: { hp?:true, sp?:true, hit?:true } }
   const [upgrades,setUpgrades]=useState({});
@@ -1690,14 +1693,15 @@ function Game(){
       setSlots(safeSlots);
       setNextSlots(safeNext);
       setDefeated(saved.defeated||[]);
-      setHud(saved.hud||{kills:0,streak:0,gold:200});
+      setHud(saved.hud||{kills:0,streak:0,gold:200,profileSet:false});
+      setBodyTop5(saved.bodyTop5||[]);
     }
   },[]);
 
   // Persist whenever campaign-relevant state changes
   useEffect(()=>{
-    saveCampaign({slots,nextSlots,defeated,hud});
-  },[slots,nextSlots,defeated,hud]);
+    saveCampaign({slots,nextSlots,defeated,hud,bodyTop5});
+  },[slots,nextSlots,defeated,hud,bodyTop5]);
 
   // Debug exposure (verification)
   useEffect(()=>{window.__debug_nextSlots=nextSlots;window.__debug_slots=slots;},[slots,nextSlots]);
@@ -1782,8 +1786,30 @@ function Game(){
     });
   },[slots,nextSlots,defeated,regenNextSlot]);
 
-  const go=()=>{setTeam([]);setBodyTop5([]);used.current=new Set();setPh("quiz");};
-  const startGame=(top5)=>{setBodyTop5(top5||[]);ensureAllSlots();setPh("map");};
+  // Returning player with a saved profile skips straight to the map.
+  // First-time and post-Retake players go through the quiz once.
+  const go=()=>{
+    setTeam([]);
+    used.current=new Set();
+    if(hud.profileSet){
+      ensureAllSlots();
+      setPh("map");
+    }else{
+      setBodyTop5([]);
+      setPh("quiz");
+    }
+  };
+  const startGame=(top5)=>{
+    setBodyTop5(top5||[]);
+    setHud(h=>({...h,profileSet:true}));
+    ensureAllSlots();
+    setPh("map");
+  };
+  const retakeProfile=()=>{
+    setBodyTop5([]);
+    setHud(h=>({...h,profileSet:false}));
+    setPh("quiz");
+  };
 
   const pickRegion=(regionId)=>{
     if(!slots[regionId])return;
@@ -1833,7 +1859,8 @@ function Game(){
   const reset=()=>{
     clearCampaign();
     setDefeated([]);
-    setHud({kills:0,streak:0,gold:200});
+    setHud({kills:0,streak:0,gold:200,profileSet:false});
+    setBodyTop5([]);
     setUpgrades({});
     used.current=new Set();
     generatingNext.current=new Set();
@@ -1856,7 +1883,7 @@ function Game(){
     {ph==="explore"&&<Explorer back={()=>setPh("start")}/>}
     {ph==="quiz"&&<BodyQuiz done={startGame}/>}
     {ph==="howto"&&<HowTo back={()=>setPh("start")} go={go}/>}
-    {ph==="map"&&<MapScr slots={slots} hud={hud} onPick={pickRegion} onReset={reset}/>}
+    {ph==="map"&&<MapScr slots={slots} hud={hud} onPick={pickRegion} onReset={reset} onRetake={retakeProfile}/>}
     {ph==="scout"&&currentRegion&&<Scout opts={opts} lockIn={lockIn} rgn={currentRegion} bodyTop5={bodyTop5}/>}
     {ph==="trivia"&&<Trivia spirit={triviaSpirit} onComplete={()=>setPh("simulate")}/>}
     {ph==="simulate"&&currentRegion&&<SimScreen team={team} monsters={battleMonsters} regionId={currentRegion} bodyTop5={bodyTop5} onContinue={()=>setPh("forge")}/>}
