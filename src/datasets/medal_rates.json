@@ -2,7 +2,7 @@
   "_meta": {
     "description": "Team USA Olympic/Paralympic medal rates per event",
     "method": "Option A: deduplicated team events, rate = medals / Games entered",
-    "source": "data/team_usa_results_unified.csv",
+    "source": "data/usa_results.csv",
     "total_results": 26859,
     "total_deduped_entries": 8343,
     "moves_computed": 137,

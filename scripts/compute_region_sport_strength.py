@@ -1,4 +1,4 @@
-"""Derive REGION_SPORT_STRENGTH from team_usa_athletes_unified.csv.
+"""Derive REGION_SPORT_STRENGTH from usa_athletes.csv.
 
 For each in-game sport, pick the top N regions ranked by Team USA athlete
 count, weighted by total_medals + 1 so medal-winners count more than
@@ -15,7 +15,7 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-CSV_PATH = ROOT / "data" / "team_usa_athletes_unified.csv"
+CSV_PATH = ROOT / "data" / "usa_athletes.csv"
 OUT_PATH = ROOT / "src" / "datasets" / "region_sport_strength.json"
 
 # State -> region id, mirroring REGIONS in src/App.jsx (la28 is excluded;
