@@ -32,3 +32,7 @@ npm run dev          # dev server at http://localhost:5173
 # or
 npm run build && npm start   # production build at http://localhost:8080
 ```
+
+## License
+
+[MIT](LICENSE)
