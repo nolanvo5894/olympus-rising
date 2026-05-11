@@ -35,4 +35,4 @@ npm run build && npm start   # production build at http://localhost:8080
 
 ## License
 
-[MIT](LICENSE)
+[Apache License 2.0](LICENSE)
