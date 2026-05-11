@@ -13,3 +13,6 @@ __pycache__/
 !.env.example
 
 .DS_Store
+
+# Scraping scripts (kept locally, not tracked)
+scripts/scrape_*.py
