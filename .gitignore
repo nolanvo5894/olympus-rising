@@ -16,3 +16,6 @@ __pycache__/
 
 # Scraping scripts (kept locally, not tracked)
 scripts/scrape_*.py
+
+# Raw data files (kept locally, not tracked)
+data/*.csv
