@@ -17,5 +17,9 @@ __pycache__/
 # Scraping scripts (kept locally, not tracked)
 scripts/scrape_*.py
 
-# Raw data files (kept locally, not tracked)
-data/*.csv
+# Raw scrape outputs (kept locally, not tracked).
+# Inputs to build_unified_dataset.py only; the unified CSVs are tracked
+# so the compute scripts can be re-run from a fresh clone.
+data/olympic_results_global.csv
+data/paralympic_medalists_global.csv
+data/usa_athlete_profiles.csv
