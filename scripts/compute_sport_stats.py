@@ -3,8 +3,8 @@
 Compute aggregate sport statistics for the Explorer mode.
 All data is team-level — no individual athlete names (NIL compliance).
 
-Input:  datasets/team_usa_results_unified.csv, datasets/team_usa_athletes_unified.csv,
-        datasets/la28_sports.csv, datasets/medal_rates.json
+Input:  datasets/usa_results.csv, datasets/usa_athletes.csv,
+        datasets/la28_sport_program.csv, datasets/medal_rates.json
 Output: datasets/sport_stats.json
 
 Run once. The game app loads the JSON at build time.
@@ -15,9 +15,9 @@ import json
 from collections import defaultdict, Counter
 from pathlib import Path
 
-RESULTS_FILE = Path("data/team_usa_results_unified.csv")
-ATHLETES_FILE = Path("data/team_usa_athletes_unified.csv")
-LA28_FILE = Path("data/la28_sports.csv")
+RESULTS_FILE = Path("data/usa_results.csv")
+ATHLETES_FILE = Path("data/usa_athletes.csv")
+LA28_FILE = Path("data/la28_sport_program.csv")
 MEDAL_RATES_FILE = Path("src/datasets/medal_rates.json")
 OUTPUT_FILE = Path("src/datasets/sport_stats.json")
 
@@ -169,14 +169,14 @@ def main():
             athletes.append(row)
     print(f"Loaded {len(athletes):,} athletes")
 
-    # ── Load LA28 sports (game spirit names, curated from la28_sports.csv) ──
+    # ── Load LA28 sports (game spirit names, curated from la28_sport_program.csv) ──
     # The LA28 CSV uses different sport names than our game (e.g., "Athletics"
     # vs "Track & Field"), and some LA28 sports don't have game spirits (e.g.,
     # Cricket, Squash, Handball). Rather than fuzzy substring matching which
     # creates false positives, we maintain an explicit list of which game
     # spirits are at LA28, with optional "new at LA28" flags.
     #
-    # Source: datasets/la28_sports.csv (2028 Summer Olympics + Paralympics)
+    # Source: datasets/la28_sport_program.csv (2028 Summer Olympics + Paralympics)
     # Winter sports (Alpine, Ice Hockey, etc.) are NOT at LA28.
     LA28_SPIRITS = {
         # Olympic spirits at LA28 (Summer 2028)

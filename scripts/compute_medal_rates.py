@@ -5,7 +5,7 @@ Compute Team USA Olympic/Paralympic medal rates per event using Option A:
   - Rate = medals won / Games entered for that event
   - Combines men's + women's events where applicable
 
-Input:  datasets/team_usa_results_unified.csv
+Input:  datasets/usa_results.csv
 Output: datasets/medal_rates.json
 
 Run once. The game app loads the JSON at build time.
@@ -16,7 +16,7 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
-RESULTS_FILE = Path("data/team_usa_results_unified.csv")
+RESULTS_FILE = Path("data/usa_results.csv")
 OUTPUT_FILE = Path("src/datasets/medal_rates.json")
 
 # Olympic sport mapping (applied when games_type != Paralympic)

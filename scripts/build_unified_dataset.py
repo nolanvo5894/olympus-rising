@@ -8,8 +8,8 @@ Merges:
 - Team USA website profiles (current athletes)
 
 Output matches (or exceeds) the reference dataset schema:
-- team_usa_athletes_unified.csv (~12K+ athletes)
-- team_usa_results_unified.csv (~24K+ results)
+- usa_athletes.csv (~12K+ athletes)
+- usa_results.csv (~24K+ results)
 """
 
 import csv
@@ -22,12 +22,12 @@ BASE = Path(__file__).parent.parent  # repo root; scripts/ sits one level down
 DATA = BASE / "data"
 KAGGLE_RESULTS = DATA / "kaggle" / "results.csv"  # optional; only for full rebuild
 KAGGLE_BIOS = DATA / "kaggle" / "bios.csv"        # optional; only for full rebuild
-OLYMPIC_RESULTS = DATA / "olympic_results.csv"
-PARALYMPIC_RESULTS = DATA / "paralympic_results.csv"
-TEAMUSA_ATHLETES = DATA / "team_usa_athletes.csv"
+OLYMPIC_RESULTS = DATA / "olympic_results_global.csv"
+PARALYMPIC_RESULTS = DATA / "paralympic_medalists_global.csv"
+TEAMUSA_ATHLETES = DATA / "usa_athlete_profiles.csv"
 
-OUT_ATHLETES = DATA / "team_usa_athletes_unified.csv"
-OUT_RESULTS = DATA / "team_usa_results_unified.csv"
+OUT_ATHLETES = DATA / "usa_athletes.csv"
+OUT_RESULTS = DATA / "usa_results.csv"
 
 RESULTS_COLS = [
     "athlete_id", "athlete_name", "games_year", "games_season",

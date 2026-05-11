@@ -358,7 +358,7 @@ const SPIRITS=[
 
 // ── Data-driven regional sport strengths (regenerated from CSV hometown data) ──
 // For each sport: regions where it has ≥15% of its athletes OR is in the top 2.
-// Region strongholds derived from data/team_usa_athletes_unified.csv —
+// Region strongholds derived from data/usa_athletes.csv —
 // see scripts/compute_region_sport_strength.py to regenerate.
 const REGION_SPORT_STRENGTH=regionSportStrengthData;
 // Apply data-driven regions to all spirits
