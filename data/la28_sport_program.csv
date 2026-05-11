@@ -1,0 +1,53 @@
+sport,is_new,has_paralympic_equivalent,venue
+Archery,False,True,Dream Park
+Artistic Gymnastics,False,False,Crypto.com Arena
+Artistic Swimming,False,False,Long Beach Marine Stadium
+Athletics,False,True,LA Memorial Coliseum
+Badminton,False,True,LA Convention Center
+Baseball/Softball,True,False,Dodger Stadium
+Basketball,False,True,Crypto.com Arena
+Basketball 3x3,False,True,South LA
+Beach Volleyball,False,True,Long Beach
+Boxing,False,False,Galen Center
+Breaking,False,False,TBD
+Canoe Slalom,False,True,Oklahoma City
+Canoe Sprint,False,True,Long Beach Marine Stadium
+Cricket,True,False,Eisenhower Park
+Cycling BMX Freestyle,False,False,TBD
+Cycling BMX Racing,False,False,TBD
+Cycling Mountain Bike,False,False,Wrightwood
+Cycling Road,False,True,LA Metro Area
+Cycling Track,False,True,VELO Sports Center
+Diving,False,False,Long Beach Marine Stadium
+Equestrian Dressage,False,True,Temecula
+Equestrian Eventing,False,True,Temecula
+Equestrian Jumping,False,True,Temecula
+Fencing,False,True,LA Convention Center
+Field Hockey,False,False,Sofi Stadium Campus
+Flag Football,True,False,SoFi Stadium
+Football,False,True,SoFi Stadium
+Golf,False,False,Riviera Country Club
+Handball,False,False,The Forum
+Judo,False,True,LA Convention Center
+Lacrosse,True,False,SoFi Stadium Campus
+Marathon Swimming,False,False,Long Beach
+Modern Pentathlon,False,False,Dream Park
+Rhythmic Gymnastics,False,False,Crypto.com Arena
+Rowing,False,True,Long Beach Marine Stadium
+Rugby Sevens,False,True,Dignity Health Sports Park
+Sailing,False,True,Long Beach
+Shooting,False,True,Dream Park
+Skateboarding,False,False,Dream Park
+Sport Climbing,False,False,Dream Park
+Squash,True,False,TBD
+Surfing,False,False,"Teahupo'o, Tahiti"
+Swimming,False,True,Long Beach Marine Stadium
+Table Tennis,False,True,LA Convention Center
+Taekwondo,False,True,LA Convention Center
+Tennis,False,True,The Intuit Dome
+Trampoline Gymnastics,False,False,Crypto.com Arena
+Triathlon,False,True,Long Beach
+Volleyball,False,True,Crypto.com Arena
+Water Polo,False,False,Long Beach Marine Stadium
+Weightlifting,False,True,LA Convention Center
+Wrestling,False,True,Honda Center
