@@ -32,14 +32,3 @@ npm run dev          # dev server at http://localhost:5173
 # or
 npm run build && npm start   # production build at http://localhost:8080
 ```
-
-### 4. Regenerate the game data (optional)
-The app ships with pre-built JSON in [`src/datasets/`](src/datasets), so this is only needed if you change the source CSVs in [`data/`](data) or the compute logic. Inputs: `usa_athletes.csv`, `usa_results.csv`, `la28_sport_program.csv` (all tracked).
-
-```bash
-python3 scripts/compute_medal_rates.py
-python3 scripts/compute_region_sport_strength.py
-python3 scripts/compute_sport_stats.py
-```
-
-> The raw scrape outputs and `scripts/scrape_*.py` are intentionally local-only — they hit external sites (Olympedia, paralympic.org, teamusa.com) and aren't needed to run or reproduce the game.
